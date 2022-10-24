@@ -1,0 +1,31 @@
+<RT3>
+    <lookat look_from="0 0 -12" look_at="0 0 1" up="0 1 0" />
+    <camera type="perspective" fovy="65" /> 
+    <integrator type="depth_map" zmin="0.1" zmax="0.8" near_color="0 50 0" far_color="0 220 0" />
+    <film type="image" x_res="800" y_res="600" filename="test_flat_persp.png" img_type="png" />
+
+    <!-- The Scene -->
+    <world_begin/>
+        <!-- The Background -->
+        <background type="color" color="0 220 0"/>
+
+        <material type="flat" color="236 236 17" /> <!-- Yellow -->
+        <object type="sphere" radius="0.5" center="0 1.25 1" />
+
+        <material type="flat" color="253 3 3" /> <!-- Red -->
+        <object type="sphere" radius="1.8" center="4 5.5 5"  />
+
+        <material type="flat" color="122 199 243" /> <!-- Bluish -->
+        <object type="sphere" radius="1.5" center="4 2.5 5"/>
+
+        <material type="flat" color=" 17 17 236" /> <!-- Blue -->
+        <object type="sphere" radius="2.0" center="0 0 -14"/>
+
+        <material type="flat" color="166 137 217" /> <!-- Blue -->
+        <object type="sphere" radius="1.5" center="-8 5 -4" />
+
+        <material type="flat" color="42 201 51" /> <!-- Green -->
+        <object type="sphere" radius="1000." center="0 -1000 1" />
+
+    <world_end/>
+</RT3>
