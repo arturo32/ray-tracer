@@ -22,7 +22,7 @@ bool is_ambient( int flag ) {
 class VisibilityTester {
 	public:
 		VisibilityTester()=default;
-		VisibilityTester( const Surfel&, const Surfel& );
+		VisibilityTester( const Surfel& a, const Surfel& b);
 		bool unoccluded( const Scene& scene );
 	public:
 		Surfel p0, p1;
@@ -31,8 +31,10 @@ class VisibilityTester {
 class Light {
   public:
     light_flag_e flags;
+	Vector3f intensity;
+
   public:
-    Light(/* args */);
+    Light(light_flag_e t, Vector3f intensity);
     virtual ~Light() = 0;
     virtual ColorXYZ sample_Li( const Surfel& hit     /*in*/,
 								Vector3f *wi          /*out*/,
@@ -42,8 +44,48 @@ class Light {
 };
 
 class PointLight : public Light {
-    // TODO
-}
+  public:
+	Point3f from;
+	PointLight(Point3f from, Vector3f intensity);
+	~PointLight() {};
+    ColorXYZ sample_Li( const Surfel& hit     /*in*/,
+						Vector3f *wi          /*out*/,
+						VisibilityTester *vis /*out*/ );
+
+};
+
+class DirectionalLight : public Light {
+  public:
+	Point3f from;
+	Point3f to;
+	DirectionalLight(Point3f from, Point3f to, Vector3f intensity);
+	~DirectionalLight() {};
+    ColorXYZ sample_Li( const Surfel& hit     /*in*/,
+						Vector3f *wi          /*out*/,
+						VisibilityTester *vis /*out*/ );
+};
+
+class AmbientLight : public Light {
+  public:
+  	AmbientLight(Vector3f intensity);
+	~AmbientLight() {};
+    ColorXYZ sample_Li( const Surfel& hit     /*in*/,
+						Vector3f *wi          /*out*/,
+						VisibilityTester *vis /*out*/ );
+};
+
+class SpotLight : public Light {
+  public:
+  	Point3f from;
+	Point3f to;
+	real_type cutoff;
+	real_type fallof;
+	SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type fallof);
+	~SpotLight() {};
+    ColorXYZ sample_Li( const Surfel& hit     /*in*/,
+						Vector3f *wi          /*out*/,
+						VisibilityTester *vis /*out*/ );
+};
 
 
 }
