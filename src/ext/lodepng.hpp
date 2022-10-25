@@ -1487,7 +1487,7 @@ with pragmas though: warning 4244 about implicit conversions, and warning 4996
 where it wants to use a non-standard function fopen_s instead of the standard C
 fopen.
 
-Visual Studio may want "stdafx.h" files to be included in each source file and
+Visual Studio may want "stdafx.hpp" files to be included in each source file and
 give an error "unexpected end of file while looking for precompiled header".
 This is not standard C++ and will not be added to the stock LodePNG. You can
 disable it for lodepng.cpp only by right clicking it, Properties, C/C++,
@@ -1516,7 +1516,7 @@ examples can be found on the LodePNG website.
 10.1. decoder C++ example
 -------------------------
 
-#include "lodepng.h"
+#include "lodepng.hpp"
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -1537,7 +1537,7 @@ int main(int argc, char *argv[])
 10.2. decoder C example
 -----------------------
 
-#include "lodepng.h"
+#include "lodepng.hpp"
 
 int main(int argc, char *argv[])
 {

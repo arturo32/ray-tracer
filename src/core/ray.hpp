@@ -1,10 +1,10 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "rt3-base.h"
-#include "rt3.h"
+#include "rt3-base.hpp"
+#include "rt3.hpp"
 
-#include "../ext/vec3.h"
+#include "../ext/vec3.hpp"
 
 namespace rt3 {
 using Point3f = vec3<float>;

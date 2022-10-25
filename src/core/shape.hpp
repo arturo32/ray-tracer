@@ -1,7 +1,7 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
-#include "rt3-base.h"
+#include "rt3-base.hpp"
 
 
 namespace rt3 {

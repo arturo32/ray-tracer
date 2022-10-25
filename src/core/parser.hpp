@@ -37,8 +37,8 @@ using std::pair;
 #include <optional>
 using std::optional;
 
-#include "paramset.h"
-#include "error.h"
+#include "paramset.hpp"
+#include "error.hpp"
 
 namespace rt3 {
 

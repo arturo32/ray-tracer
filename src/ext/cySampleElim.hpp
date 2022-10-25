@@ -60,9 +60,9 @@
 
 //-------------------------------------------------------------------------------
 
-#include "cyCore.h"
-#include "cyHeap.h"
-#include "cyPointCloud.h"
+#include "cyCore.hpp"
+#include "cyHeap.hpp"
+#include "cyPointCloud.hpp"
 #include <vector>
 
 //-------------------------------------------------------------------------------

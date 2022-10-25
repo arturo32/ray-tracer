@@ -1,10 +1,10 @@
-#include "film.h"
+#include "film.hpp"
 
 #include <cmath>
 
-#include "api.h"
-#include "image_io.h"
-#include "paramset.h"
+#include "api.hpp"
+#include "image_io.hpp"
+#include "paramset.hpp"
 
 namespace rt3 {
 

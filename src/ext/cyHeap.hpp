@@ -40,7 +40,7 @@
 
 #include <cassert>
 #include <cstdint>
-#include "cyCore.h"
+#include "cyCore.hpp"
 
 //-------------------------------------------------------------------------------
 namespace cy {

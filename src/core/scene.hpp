@@ -2,12 +2,12 @@
 #define SCENE_H
 
 #include <vector>
-#include "primitive.h"
-#include "background.h"
-#include "rt3-base.h"
-#include "rt3.h"
-#include "../ext/vec2.h"
-#include "../ext/vec3.h"
+#include "primitive.hpp"
+#include "background.hpp"
+#include "rt3-base.hpp"
+#include "rt3.hpp"
+#include "../ext/vec2.hpp"
+#include "../ext/vec3.hpp"
 
 namespace rt3 {
 

@@ -1,4 +1,4 @@
-#include "integrator.h"
+#include "integrator.hpp"
 
 namespace rt3 {
 

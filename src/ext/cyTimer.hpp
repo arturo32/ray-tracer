@@ -41,7 +41,7 @@
 //-------------------------------------------------------------------------------
 
 #include <chrono>
-#include "cyCore.h"
+#include "cyCore.hpp"
 #ifdef _WIN32
 # include <windows.h>
 #endif

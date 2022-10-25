@@ -1,9 +1,9 @@
 #ifndef FILM_H
 #define FILM_H
 
-#include "error.h"
-#include "paramset.h"
-#include "rt3.h"
+#include "error.hpp"
+#include "paramset.hpp"
+#include "rt3.hpp"
 
 namespace rt3 {
 using Point2i = vec2<int>;

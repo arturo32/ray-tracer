@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "rt3-base.h"
-#include "scene.h"
-#include "integrator.h"
+#include "rt3-base.hpp"
+#include "scene.hpp"
+#include "integrator.hpp"
 
 //=== API Macro definitions
 

@@ -20,9 +20,9 @@ using std::tuple;
 #include <array>
 using std::array;
 
-#include "../ext/vec4.h"
-#include "../ext/vec3.h"
-#include "../ext/vec2.h"
+#include "../ext/vec4.hpp"
+#include "../ext/vec3.hpp"
+#include "../ext/vec2.hpp"
 
 //== Alias to the chosen data structure to implement a dictionary.
 //#define Dictionary std::unordered_map

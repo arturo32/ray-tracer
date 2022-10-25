@@ -36,7 +36,7 @@
 
 //-------------------------------------------------------------------------------
 
-#include "cyVector.h"
+#include "cyVector.hpp"
 #include <vector>
 #include <iostream>
 

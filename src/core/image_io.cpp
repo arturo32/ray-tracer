@@ -1,13 +1,13 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "image_io.h"
+#include "image_io.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <iterator>
 #include <vector>
 
-#include "../ext/lodepng.h"
-#include "../ext/stb_image_write.h"
+#include "../ext/lodepng.hpp"
+#include "../ext/stb_image_write.hpp"
 
 namespace rt3 {
 

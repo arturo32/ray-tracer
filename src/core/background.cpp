@@ -1,4 +1,4 @@
-#include "background.h"
+#include "background.hpp"
 
 namespace rt3 {
 /*!

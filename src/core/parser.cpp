@@ -3,11 +3,11 @@
  * @file parser.h
  */
 
-#include "parser.h"
+#include "parser.hpp"
 
-#include "api.h"
-#include "paramset.h"
-#include "rt3.h"
+#include "api.hpp"
+#include "paramset.hpp"
+#include "rt3.hpp"
 
 // === Function Implementation
 

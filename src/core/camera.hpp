@@ -1,9 +1,9 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "rt3-base.h"
-#include "rt3.h"
-#include "ray.h"
+#include "rt3-base.hpp"
+#include "rt3.hpp"
+#include "ray.hpp"
 #include <memory>
 #include <vector>
 

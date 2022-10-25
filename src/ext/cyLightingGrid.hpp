@@ -51,10 +51,10 @@
 
 //-------------------------------------------------------------------------------
 
-#include "cyVector.h"
-#include "cyIVector.h"
-#include "cyColor.h"
-#include "cyPointCloud.h"
+#include "cyVector.hpp"
+#include "cyIVector.hpp"
+#include "cyColor.hpp"
+#include "cyPointCloud.hpp"
 #include <random>
 
 //-------------------------------------------------------------------------------

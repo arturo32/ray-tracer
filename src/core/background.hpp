@@ -1,8 +1,8 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include "rt3-base.h"
-#include "rt3.h"
+#include "rt3-base.hpp"
+#include "rt3.hpp"
 
 namespace rt3 {
 // Create a virtual class Background and derive BackgroundColor,

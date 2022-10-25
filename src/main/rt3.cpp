@@ -6,8 +6,8 @@ using std::ostringstream;
 #include <string>
 using std::string;
 
-#include "../core/api.h"
-#include "../core/rt3.h"
+#include "../core/api.hpp"
+#include "../core/rt3.hpp"
 
 using namespace rt3;
 

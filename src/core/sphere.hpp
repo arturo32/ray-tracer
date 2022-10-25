@@ -1,8 +1,8 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "rt3-base.h"
-#include "shape.h"
+#include "rt3-base.hpp"
+#include "shape.hpp"
 
 namespace rt3 {
 

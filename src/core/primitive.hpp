@@ -2,13 +2,13 @@
 #define PRIMITIVE_H
 
 #include <cassert>
-#include "rt3-base.h"
-#include "rt3.h"
-#include "paramset.h"
-#include "ray.h"
-#include "../ext/vec3.h"
-#include "surfel.h"
-#include "shape.h"
+#include "rt3-base.hpp"
+#include "rt3.hpp"
+#include "paramset.hpp"
+#include "ray.hpp"
+#include "../ext/vec3.hpp"
+#include "surfel.hpp"
+#include "shape.hpp"
 
 namespace rt3 {
 

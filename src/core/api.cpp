@@ -1,8 +1,8 @@
-#include "api.h"
-#include "background.h"
-#include "camera.h"
-#include "sphere.h"
-#include "scene.h"
+#include "api.hpp"
+#include "background.hpp"
+#include "camera.hpp"
+#include "sphere.hpp"
+#include "scene.hpp"
 
 #include <chrono>
 #include <memory>
