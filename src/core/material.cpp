@@ -1,4 +1,4 @@
-#include "blinnphong_material.hpp"
+#include "material.hpp"
 
 namespace rt3 {
 

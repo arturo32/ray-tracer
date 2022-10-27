@@ -6,6 +6,7 @@
 #include "rt3-base.hpp"
 #include "scene.hpp"
 #include "integrator.hpp"
+#include "material.hpp"
 
 //=== API Macro definitions
 
@@ -57,6 +58,7 @@ struct RenderOptions {
   string bkg_type{"solid"};  // "image", "interpolated"
   ParamSet bkg_ps;
   std::shared_ptr<Material> curr_material;
+  std::map<std::string, std::shared_ptr<Material>> named_materials;
   Scene curr_scene;
   std::shared_ptr<Integrator> integrator;
 };
@@ -119,9 +121,12 @@ class API {
   static void look_at(const ParamSet& ps);
   static void background(const ParamSet& ps);
   static void material(const ParamSet& ps);
+  static void named_material(const ParamSet& ps);
   static void world_begin(void);
   static void object(const ParamSet& ps);
   static void world_end(void);
+
+  static std::shared_ptr<GeometricPrimitive> create_sphere(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
 };
 }  // namespace rt3
 

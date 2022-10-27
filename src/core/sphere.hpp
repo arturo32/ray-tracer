@@ -16,7 +16,5 @@ class Sphere : public Shape {
 		bool intersect_p( const Ray& r ) const;
 		Bounds3f world_bounds() const;
 };
-
-std::shared_ptr<GeometricPrimitive> create_sphere(const ParamSet &object_ps, std::shared_ptr<Material> material);
 }
 #endif  

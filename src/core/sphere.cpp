@@ -73,11 +73,4 @@ namespace rt3 {
 
         return Bounds3f{nearest_point, furthest_point};
     }
-
-    std::shared_ptr<GeometricPrimitive> create_sphere(const ParamSet &object_ps, std::shared_ptr<Material> material) {
-        real_type radius = retrieve(object_ps, "radius", real_type{0});
-        Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
-        std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
-        return make_shared<GeometricPrimitive>(material, sphere);
-    }
 }

@@ -138,7 +138,9 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level)
       vector<std::pair<param_type_e, string>> param_list{ 
         { param_type_e::STRING, "type" },
         { param_type_e::REAL, "radius" },
-        { param_type_e::POINT3F, "center" }};
+        { param_type_e::POINT3F, "center" },
+        { param_type_e::STRING, "material" }
+      };
 
       parse_parameters(p_element, param_list, /* out */ &ps);
       API::object(ps);
@@ -151,12 +153,31 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level)
       // List of parameters that might be defined inside the material's tag.
       vector<std::pair<param_type_e, string>> param_list{
         { param_type_e::STRING, "type" },
-        { param_type_e::COLOR, "color" }
+        { param_type_e::COLOR, "color" },
+        { param_type_e::VEC3F, "ambient" },
+        { param_type_e::VEC3F, "diffuse" },
+        { param_type_e::VEC3F, "specular" },
+        { param_type_e::REAL, "glossiness" },
       };
 
       parse_parameters(p_element, param_list, /* out */ &ps);
 
       API::material(ps);
+    } else if (tag_name == "named_material") {
+      ParamSet ps;
+      // List of parameters that might be defined inside the material's tag.
+      vector<std::pair<param_type_e, string>> param_list{
+        { param_type_e::STRING, "type" },
+        { param_type_e::STRING, "name" },
+        { param_type_e::VEC3F, "ambient" },
+        { param_type_e::VEC3F, "diffuse" },
+        { param_type_e::VEC3F, "specular" },
+        { param_type_e::REAL, "glossiness" },
+      };
+
+      parse_parameters(p_element, param_list, /* out */ &ps);
+
+      API::named_material(ps);
     } else if (tag_name == "integrator") {
       ParamSet ps;
       vector<std::pair<param_type_e, string>> param_list{ 

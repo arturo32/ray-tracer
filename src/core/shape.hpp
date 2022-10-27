@@ -8,6 +8,8 @@ namespace rt3 {
 
 using Bounds3f = vec2<Point3f>;
 
+class Surfel;
+
 class Shape {
     protected:
         bool flip_normals;

@@ -10,14 +10,11 @@
 #include "surfel.hpp"
 #include "shape.hpp"
 #include "material.hpp"
-#include "flat_material.hpp"
 
 namespace rt3 {
 
 using Bounds3f = vec2<Point3f>;
 using ColorXYZ = vec3<float>;
-
-class Surfel;
 
 class Primitive {
 	public:

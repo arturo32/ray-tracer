@@ -56,7 +56,7 @@ std::shared_ptr<Camera> make_camera(const std::string &type, const ParamSet &cam
 std::shared_ptr<Primitive> API::make_object(const std::string &type, const ParamSet &object_ps) {
   std::shared_ptr<Primitive> object{nullptr};
   if(type == "sphere") {
-    object = create_sphere(object_ps, render_opt->curr_material);
+    object = create_sphere(object_ps, render_opt);
   } else {
     RT3_ERROR("Type of object not valid.");
   }
@@ -187,14 +187,49 @@ void API::material(const ParamSet &ps) {
   VERIFY_WORLD_BLOCK("API::material");
   // retrieve type from ps.
   std::string type = retrieve(ps, "type", string{"unknown"});
-  // retrieve color from ps.
-  ColorXYZ c = retrieve(ps, "color", ColorXYZ{0,0,0});
-  // check interval of values and convert if needed
-  if(c.x() <= 1.0 && c.y() <= 1.0 && c.z() <= 1.0) {
-    c *= 255.0;
-    c.clamp(0.0, 255.0);
+
+  if (type == "flat") {
+      // retrieve color from ps.
+      ColorXYZ c = retrieve(ps, "color", ColorXYZ{0,0,0});
+      // check interval of values and convert if needed
+      if(c.x() <= 1.0 && c.y() <= 1.0 && c.z() <= 1.0) {
+        c *= 255.0;
+        c.clamp(0.0, 255.0);
+      }
+      render_opt->curr_material = std::make_shared<FlatMaterial>(c);
+  } else if (type == "blinn") {
+      Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
+      Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
+      Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+      real_type g = retrieve(ps, "glossiness", real_type{0});
+      render_opt->curr_material = std::make_shared<BlinnPhongMaterial>(a,d,s,g);
   }
-  render_opt->curr_material = std::make_shared<FlatMaterial>(c);
+
+}
+
+void API::named_material(const ParamSet &ps) {
+  std::cout << ">>> Inside API::named_material()\n";
+  VERIFY_WORLD_BLOCK("API::named_material");
+  // retrieve type from ps.
+  std::string type = retrieve(ps, "type", string{"unknown"});
+  std::string name = retrieve(ps, "name", string{"unknown"});
+  if (type == "flat") {
+    // retrieve color from ps.
+    ColorXYZ c = retrieve(ps, "color", ColorXYZ{0,0,0});
+    // check interval of values and convert if needed
+    if(c.x() <= 1.0 && c.y() <= 1.0 && c.z() <= 1.0) {
+      c *= 255.0;
+      c.clamp(0.0, 255.0);
+    }
+    render_opt->named_materials[name] = std::make_shared<FlatMaterial>(c);
+  } else if (type == "blinn") {
+    // check interval of values and convert if needed?
+    Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
+    Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
+    Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+    real_type g = retrieve(ps, "glossiness", real_type{0});
+    render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,g);
+  }
 }
 
 void API::film(const ParamSet &ps) {
@@ -247,4 +282,21 @@ void API::integrator(const ParamSet &object_ps) {
   render_opt->integrator = object;
 }
 
-}  // namespace rt3
+std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps, std::unique_ptr<RenderOptions> &opt) {
+    real_type radius = retrieve(object_ps, "radius", real_type{0});
+    Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
+    std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
+
+    std::string name = retrieve(object_ps, "material", std::string{""});
+
+    if (name == "") {
+        return make_shared<GeometricPrimitive>(opt->curr_material, sphere);
+    } else {
+        if (opt->named_materials.find(name) == opt->named_materials.end()){
+            RT3_ERROR("Material of name '" + name + "' not found!");
+        }
+        return make_shared<GeometricPrimitive>(opt->named_materials[name], sphere);
+    }
+}
+
+}
