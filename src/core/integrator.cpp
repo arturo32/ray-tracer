@@ -48,7 +48,8 @@ ColorXYZ FlatIntegrator::Li( Ray& ray,  Scene& scene, Spectrum bkg_color)
     ColorXYZ L(0,0,0); // The radiance
     // Find closest ray intersection or return background radiance.
     Surfel isect; // Intersection information.  
-    if (!scene.intersect(ray, &isect)) {
+    scene.intersect(ray, &isect);
+    if (!isect.hit) {
         // This might be just:
         L = bkg_color;
     }
@@ -82,7 +83,8 @@ void DepthIntegrator::preprocess(  Scene& scene ) {
             z_buffer[j][i] = INFINITY;
             Ray ray = camera->generate_ray( Point2f{float(i), float(j)} );
             Surfel isect;
-            if (scene.intersect(ray, &isect)) {
+            scene.intersect(ray, &isect);
+            if (isect.hit) {
                 if(ray.t_max < cz_min) {
                     cz_min = ray.t_max; 
                 }
@@ -137,7 +139,8 @@ ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
 {
     ColorXYZ L(0,0,0);
     Surfel isect;
-    if (!scene.intersect(ray, &isect)) {
+    scene.intersect(ray, &isect);
+    if (!isect.hit) {
         L = bkg_color;
     } else {
         Point3f normal = isect.n;

@@ -33,6 +33,7 @@ class Surfel{
 		float time;     //!< Time of contact.
 		Point2f uv;     //!< Parametric coordinate (u,v) of the hit surface.
 		const Primitive* primitive=nullptr; //!< Pointer to the primitive.
+		bool hit;
 };
 }
 

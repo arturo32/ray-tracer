@@ -9,6 +9,8 @@
 #include "../ext/vec3.hpp"
 #include "surfel.hpp"
 #include "shape.hpp"
+#include "material.hpp"
+#include "flat_material.hpp"
 
 namespace rt3 {
 
@@ -17,29 +19,12 @@ using ColorXYZ = vec3<float>;
 
 class Surfel;
 
-class Material {
-	public:
-		virtual ~Material(){};
-		virtual void scatter(Surfel* sf, Ray* r) = 0;
-};
-
-class FlatMaterial : public Material {
-	public:
-		FlatMaterial(const ColorXYZ& color): Material(), color{color}{}
-		~FlatMaterial() {};
-		void scatter(Surfel* sf, Ray* r) {
-			/* EMPTY */
-		};
-		ColorXYZ kd() { return color; };
-		const ColorXYZ color;
-};
-
 class Primitive {
 	public:
 		Primitive(){};
 		~Primitive() = default;
 		virtual Bounds3f world_bounds() = 0;
-		virtual bool intersect( Ray& r, Surfel *sf ) const = 0;
+		virtual void intersect( Ray& r, Surfel *sf ) const = 0;
 		// Simpler & faster version of intersection that only return true/false.
 		// It does not compute the hit point information.
 		virtual bool intersect_p( const Ray& r ) const = 0;
@@ -50,7 +35,7 @@ class AggregatePrimitive : public Primitive {
 	public:
 		AggregatePrimitive(){};
 		virtual Bounds3f world_bounds() = 0;
-		virtual bool intersect( Ray& r, Surfel *sf ) const = 0;
+		virtual void intersect( Ray& r, Surfel *sf ) const = 0;
 		virtual bool intersect_p( const Ray& r ) const = 0;
 		const std::shared_ptr<Material> get_material(void) const { 
 			std::cerr << "Não se deve chamar esse método nessa classe!" << std::endl;
@@ -67,14 +52,10 @@ class PrimList : public AggregatePrimitive {
 		Bounds3f world_bounds() {
 			return Bounds3f(Point3f(0,0,0), Point3f(0,0,0));
 		};
-		bool intersect( Ray& r, Surfel *sf ) const {
-            bool b = false;
+		void intersect( Ray& r, Surfel *sf ) const {
             for (size_t i = 0; i < primitives.size(); ++i) {
-                if(primitives.at(i)->intersect(r, sf)) {
-                    b = true;
-                }
+                primitives.at(i)->intersect(r, sf);
             }
-            return b;
 		};
 		bool intersect_p( const Ray& r ) const{
 			for (size_t i = 0; i < primitives.size(); ++i) {
@@ -103,14 +84,13 @@ class GeometricPrimitive : public Primitive {
 		Bounds3f world_bounds() { 
 			return this->shape->world_bounds(); 
 		}
-		bool intersect( Ray& r, Surfel *sf ) const { 
+		void intersect( Ray& r, Surfel *sf ) const { 
 			real_type t_hit;
 			if(this->shape->intersect(r, t_hit, sf)) {
+				sf->hit = true;
 				sf->primitive = this;
 				r.t_max = t_hit;
-				return true;
 			}
-			return false;
 		}
 		bool intersect_p( const Ray& r ) const { 
 			return this->shape->intersect_p(r); 

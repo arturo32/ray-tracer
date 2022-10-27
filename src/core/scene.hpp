@@ -25,8 +25,8 @@ class Scene {
         Scene(){agg = make_shared<PrimList>();}
 
         /// Determines the intersection info; return true if there is an intersection.
-        bool intersect( Ray& r, Surfel *sf ) const {
-            return agg->intersect(r, sf);
+        void intersect( Ray& r, Surfel *sf ) const {
+            agg->intersect(r, sf);
         };
         /*! A faster version that only determines whether there is an intersection or not;
          * it doesn't calculate the intersection info.
