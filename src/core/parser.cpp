@@ -169,6 +169,7 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level)
       vector<std::pair<param_type_e, string>> param_list{
         { param_type_e::STRING, "type" },
         { param_type_e::STRING, "name" },
+        { param_type_e::COLOR, "color" },
         { param_type_e::VEC3F, "ambient" },
         { param_type_e::VEC3F, "diffuse" },
         { param_type_e::VEC3F, "specular" },

@@ -221,6 +221,7 @@ void API::named_material(const ParamSet &ps) {
       c *= 255.0;
       c.clamp(0.0, 255.0);
     }
+    std::cout << "color: " << c << std::endl;
     render_opt->named_materials[name] = std::make_shared<FlatMaterial>(c);
   } else if (type == "blinn") {
     // check interval of values and convert if needed?
