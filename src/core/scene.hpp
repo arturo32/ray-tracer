@@ -6,6 +6,7 @@
 #include "background.hpp"
 #include "rt3-base.hpp"
 #include "rt3.hpp"
+#include "light.hpp"
 #include "../ext/vec2.hpp"
 #include "../ext/vec3.hpp"
 
@@ -18,9 +19,9 @@ using Vector3f = vec3<float>;
 class Scene {
     //=== Public data
     public:
-        //std::vector<shared_ptr<Light>> lights; // list of lights
-        std::shared_ptr< Background > background; // The background object.
-        std::shared_ptr< AggregatePrimitive > agg; // The scene graph of objects, acceleration structure.
+        std::vector<shared_ptr<Light>> lights; // list of lights
+        std::shared_ptr<Background> background; // The background object.
+        std::shared_ptr<AggregatePrimitive> agg; // The scene graph of objects, acceleration structure.
 
         Scene(){agg = make_shared<PrimList>();}
 
@@ -34,7 +35,8 @@ class Scene {
         bool intersect_p( const Ray& r ) const {
             return agg->intersect_p(r);
         };
-        void add(std::shared_ptr< Primitive > p) {agg->add(p);};
+        void add_object(std::shared_ptr<Primitive> p) {agg->add(p);};
+        void add_light(std::shared_ptr<Light> l) {lights.push_back(l);};
 };
 
 }

@@ -3,9 +3,20 @@
 
 #include "rt3.hpp"
 #include "surfel.hpp"
-#include "scene.hpp"
 
 namespace rt3 {
+
+class Scene;
+
+class VisibilityTester {
+	public:
+		VisibilityTester()=default;
+		~VisibilityTester()=default;
+		VisibilityTester( const Surfel& a, const Surfel& b);
+		bool unoccluded( const Scene& scene );
+	public:
+		Surfel p0, p1;
+};
 
 enum class light_flag_e : int {
 	point = 1,
@@ -15,18 +26,9 @@ enum class light_flag_e : int {
 	spot = 16
 };
 
-bool is_ambient( int flag ) {
-	return flag & (int) light_flag_e::ambient;
-}
-
-class VisibilityTester {
-	public:
-		VisibilityTester()=default;
-		VisibilityTester( const Surfel& a, const Surfel& b);
-		bool unoccluded( const Scene& scene );
-	public:
-		Surfel p0, p1;
-};
+// bool is_ambient( int flag ) {
+// 	return flag & (int) light_flag_e::ambient;
+// }
 
 class Light {
   public:
@@ -79,8 +81,8 @@ class SpotLight : public Light {
   	Point3f from;
 	Point3f to;
 	real_type cutoff;
-	real_type fallof;
-	SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type fallof);
+	real_type falloff;
+	SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type falloff);
 	~SpotLight() {};
     ColorXYZ sample_Li( const Surfel& hit     /*in*/,
 						Vector3f *wi          /*out*/,

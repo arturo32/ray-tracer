@@ -29,7 +29,7 @@ public:
         for (auto it = ilist.begin(); it != ilist.end(); ++it) {
             e[i] = *it;
             ++i;
-        } 
+        }
     }
     inline T x() const { return e[0]; }
     inline T y() const { return e[1]; }

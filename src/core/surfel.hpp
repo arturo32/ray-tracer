@@ -1,7 +1,6 @@
 #ifndef SURFEL_H
 #define SURFEL_H
 
-#include "rt3-base.hpp"
 #include "rt3.hpp"
 #include "../ext/vec2.hpp"
 #include "../ext/vec3.hpp"

@@ -122,6 +122,7 @@ class API {
   static void background(const ParamSet& ps);
   static void material(const ParamSet& ps);
   static void named_material(const ParamSet& ps);
+  static void light_source(const ParamSet& ps);
   static void world_begin(void);
   static void object(const ParamSet& ps);
   static void world_end(void);

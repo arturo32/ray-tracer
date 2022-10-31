@@ -150,6 +150,7 @@ void API::world_end(void) {
   }
   // [4] Basic clean up
   curr_state = APIState::SetupBlock;  // correct machine state.
+  std::cout << "n luzes: " << render_opt->curr_scene.lights.size() << std::endl;
   reset_engine();
 }
 
@@ -168,7 +169,7 @@ void API::object(const ParamSet &ps) {
   std::cout << ">>> Inside API::object()\n";
   VERIFY_WORLD_BLOCK("API::object");
   std::string type = retrieve(ps, "type", string{"unknown"});
-  render_opt->curr_scene.add(make_object(type, ps));
+  render_opt->curr_scene.add_object(make_object(type, ps));
 }
 
 void API::background(const ParamSet &ps) {
@@ -231,6 +232,33 @@ void API::named_material(const ParamSet &ps) {
     real_type g = retrieve(ps, "glossiness", real_type{0});
     render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,g);
   }
+}
+
+void API::light_source(const ParamSet &ps) {
+  std::cout << ">>> Inside API::light_source()\n";
+  VERIFY_WORLD_BLOCK("API::light_source");
+  // retrieve type from ps.
+  std::string type = retrieve(ps, "type", string{"unknown"});
+  Vector3f intensity = retrieve(ps, "L", Vector3f{1,1,1});
+  Vector3f scale = retrieve(ps, "scale", Vector3f{1,1,1});
+  std::shared_ptr<Light> light;
+  if (type == "ambient") {
+    light = std::make_shared<AmbientLight>(scale*intensity);
+  } else if (type == "directional") {
+    Point3f from = retrieve(ps, "from", Point3f{0,0,0});
+    Point3f to = retrieve(ps, "to", Point3f{0,0,0});
+    light = std::make_shared<DirectionalLight>(from, to, scale*intensity);
+  } else if (type == "point") {
+    Point3f from = retrieve(ps, "from", Point3f{0,0,0});
+    light = std::make_shared<PointLight>(from, scale*intensity);
+  } else if (type == "spot") {
+    Point3f from = retrieve(ps, "from", Point3f{0,0,0});
+    Point3f to = retrieve(ps, "to", Point3f{0,0,0});
+    real_type cutoff = retrieve(ps, "cutoff", real_type{0});
+    real_type falloff = retrieve(ps, "falloff", real_type{0});
+    light = std::make_shared<SpotLight>(from, to, scale*intensity, cutoff, falloff);
+  }
+  render_opt->curr_scene.add_light(light);
 }
 
 void API::film(const ParamSet &ps) {

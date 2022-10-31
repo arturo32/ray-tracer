@@ -4,6 +4,7 @@ namespace rt3 {
 	VisibilityTester::VisibilityTester( const Surfel& a, const Surfel& b):p0{a}, p1{b} {
 		// EMPTY
 	}
+
 	bool VisibilityTester::unoccluded( const Scene& scene ) {
 		// TODO
 	}
@@ -12,6 +13,8 @@ namespace rt3 {
 	 flags{t}, intensity{intensity} {
 		//EMPTY
 	}
+
+	Light::~Light() = default;
 
 	PointLight::PointLight(Point3f from, Vector3f intensity):
 	 Light(light_flag_e::point, intensity), from{from} {
@@ -49,8 +52,8 @@ namespace rt3 {
 		// TODO
 	}
 
-	SpotLight::SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type fallof):
-	 Light(light_flag_e::ambient, intensity), from{from}, to{to}, cutoff{cutoff}, fallof{fallof}{
+	SpotLight::SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type falloff):
+	 Light(light_flag_e::ambient, intensity), from{from}, to{to}, cutoff{cutoff}, falloff{falloff}{
 
 	 }
 
