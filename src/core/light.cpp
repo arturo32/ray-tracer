@@ -1,12 +1,14 @@
 #include "light.hpp"
 
 namespace rt3 {
-	VisibilityTester::VisibilityTester( const Surfel& a, const Surfel& b):p0{a}, p1{b} {
+	VisibilityTester::VisibilityTester( const Surfel& a, const Surfel& b, real_type value)
+	:p0{a}, p1{b}, value{value} {
 		// EMPTY
 	}
 
 	bool VisibilityTester::unoccluded( const Scene& scene ) {
 		// TODO
+		return false;
 	}
 
 	Light::Light(light_flag_e t, Vector3f intensity):
@@ -24,7 +26,7 @@ namespace rt3 {
 	ColorXYZ PointLight::sample_Li( const Surfel& hit     /*in*/,
 									Vector3f *wi          /*out*/,
 									VisibilityTester *vis /*out*/ ) {
-		Vector3f dir = -(hit.p - this->from);
+		Vector3f dir = (this->from - hit.p);
 		dir.make_unit_vector();
 		// TODO vis
 		wi->assign(dir);
@@ -32,15 +34,17 @@ namespace rt3 {
 	}
 
 	DirectionalLight::DirectionalLight(Point3f from, Point3f to, Vector3f intensity):
-	 Light(light_flag_e::directional, intensity), from{from}, to{to} {
-		// EMPTY
+	 Light(light_flag_e::directional, intensity) {
+		dir = (from-to);
+		dir.make_unit_vector();
 	}
 
 	ColorXYZ DirectionalLight::sample_Li( const Surfel& hit     /*in*/,
 									Vector3f *wi          /*out*/,
 									VisibilityTester *vis /*out*/ ) {
-
-		// TODO
+		// TODO vis
+		wi->assign(dir);
+		return ColorXYZ(0,0,0);
 	}
 
 	AmbientLight::AmbientLight(Vector3f intensity):
@@ -51,8 +55,8 @@ namespace rt3 {
 	ColorXYZ AmbientLight::sample_Li( const Surfel& hit     /*in*/,
 									Vector3f *wi          /*out*/,
 									VisibilityTester *vis /*out*/ ) {
-
-		// TODO
+		// EMPTY
+		return ColorXYZ(0,0,0);
 	}
 
 	SpotLight::SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type falloff):
@@ -63,8 +67,12 @@ namespace rt3 {
 	ColorXYZ SpotLight::sample_Li( const Surfel& hit     /*in*/,
 									Vector3f *wi          /*out*/,
 									VisibilityTester *vis /*out*/ ) {
-
-		// TODO
+		// TODO cutoff and faloff 
+		Vector3f dir = (this->from - hit.p);
+		dir.make_unit_vector();
+		// TODO vis
+		wi->assign(dir);
+		return ColorXYZ(0,0,0);
 	}
 
 }

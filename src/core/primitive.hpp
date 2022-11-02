@@ -14,7 +14,7 @@
 namespace rt3 {
 
 using Bounds3f = vec2<Point3f>;
-using ColorXYZ = vec3<float>;
+using ColorXYZ = vec3<real_type>;
 
 class Primitive {
 	public:

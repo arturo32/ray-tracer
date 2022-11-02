@@ -22,13 +22,13 @@ void SamplerIntegrator::render( Scene& scene) {
 
     for( int j = 0 ; j < h ; ++j ) {
         for( int i = 0 ; i < w ; ++i ) {
-			Point2f pixel = Point2f{float(i) / float(w), float(j) / float(h)};
+			Point2f pixel = Point2f{real_type(i) / real_type(w), real_type(j) / real_type(h)};
             
             // Get the background color in case we hit nothing.
             Spectrum background = scene.background->sampleXYZ( pixel );
             
             // Determine the ray for the current camera type.
-            Ray ray = camera->generate_ray( Point2f{float(i), float(j)} );
+            Ray ray = camera->generate_ray( Point2f{real_type(i), real_type(j)} );
             
             // Determine the incoming light.
             Spectrum L = Li( ray, scene, background );
@@ -81,8 +81,8 @@ void DepthIntegrator::preprocess(  Scene& scene ) {
     for( int j = 0 ; j < h ; ++j ) {
         for( int i = 0 ; i < w ; ++i ) {
             z_buffer[j][i] = INFINITY;
-            Ray ray = camera->generate_ray( Point2f{float(i), float(j)} );
-            Surfel isect;
+            Ray ray = camera->generate_ray( Point2f{real_type(i), real_type(j)} );
+            Surfel isect = Surfel();
             scene.intersect(ray, &isect);
             if (isect.hit) {
                 if(ray.t_max < cz_min) {
@@ -114,7 +114,7 @@ void DepthIntegrator::render( Scene& scene) {
             real_type z = z_buffer[j][i];
             ColorXYZ L(0,0,0);
             if (z == INFINITY) {
-                Point2f pixel = Point2f{float(i) / float(w), float(j) / float(h)};
+                Point2f pixel = Point2f{real_type(i) / real_type(w), real_type(j) / real_type(h)};
                 L = scene.background->sampleXYZ( pixel );
             } else {
                 real_type t = (z - cz_min) /(cz_max - cz_min);
@@ -138,7 +138,7 @@ void DepthIntegrator::render( Scene& scene) {
 ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color) 
 {
     ColorXYZ L(0,0,0);
-    Surfel isect;
+    Surfel isect = Surfel();
     scene.intersect(ray, &isect);
     if (!isect.hit) {
         L = bkg_color;
@@ -166,7 +166,7 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
 	// [7] ADD MIRROR REFLECTION CONTRIBUTION
 
     ColorXYZ L(0,0,0);
-    Surfel isect;
+    Surfel isect = Surfel();
     scene.intersect(ray, &isect);
     if (!isect.hit) {
         return bkg_color;
@@ -176,8 +176,14 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
         VisibilityTester vis;
         for (auto &&l : scene.lights) {
             l->sample_Li(isect, &wi, &vis);
-            ColorXYZ Ld = (fm->diffuse * l->intensity) * std::max(0.0f, dot(isect.n, wi));
-            L = L + Ld;
+            Ray sray = Ray(isect.p, wi);
+            Surfel sisect = Surfel();
+		    scene.intersect(sray, &sisect);
+            if(!sisect.hit) {
+                ColorXYZ Ld = (fm->diffuse * l->intensity) * std::max(real_type(0.0), dot(isect.n, wi));
+                L = L + Ld;
+                std::cout << "L: " << L << std::endl;
+            }
         }
         L = L + fm->ambient * scene.ambientLight->intensity;
     }

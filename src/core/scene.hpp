@@ -12,9 +12,9 @@
 
 namespace rt3 {
 
-using Point2f = vec2<float>;
-using Point3f = vec3<float>;
-using Vector3f = vec3<float>;
+using Point2f = vec2<real_type>;
+using Point3f = vec3<real_type>;
+using Vector3f = vec3<real_type>;
 
 class Scene {
     //=== Public data

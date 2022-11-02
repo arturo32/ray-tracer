@@ -7,7 +7,7 @@ namespace rt3 {
 
 class Surfel;
 class Ray;
-using Vector3f = vec3<float>;
+using Vector3f = vec3<real_type>;
 
 class Material {
 	public:

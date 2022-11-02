@@ -30,7 +30,7 @@ class Background {
   mapping_t mapping_type;  //!< sampling type we use to pick a color.
 
   /// Return the linearly interpolated color in [A;B], based on the parameter \f$0\leq t \leq 1.\f$
-  Spectrum lerp(const Spectrum &A, const Spectrum &B, float t) const;
+  Spectrum lerp(const Spectrum &A, const Spectrum &B, real_type t) const;
 
   /// Ctro receiving a single color for the entire background.
   Background(Spectrum color = Spectrum(0,0,0), mapping_t mt = mapping_t::screen)

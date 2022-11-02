@@ -9,7 +9,7 @@ namespace rt3 {
  * \return The interpolated color.
  */
 
-Spectrum Background::lerp(const Spectrum &A, const Spectrum &B, float t) const
+Spectrum Background::lerp(const Spectrum &A, const Spectrum &B, real_type t) const
 {
   Spectrum result{Lerp(t, A.x(), B.x()), Lerp(t, A.y(), B.y()), Lerp(t, A.z(), B.z())};
   return result;

@@ -9,17 +9,12 @@
     <world_begin/>
         <background type="colors" bl="153 204 255" tl="18 10 143" tr="18 10 143" br="153 204 255" />
         <light_source type="ambient" L="0.1 0.1 0.1" />
-        <!-- <light_source type="point" L="1 1 1" scale="1 1 1" from="0 5 -5" /> -->
-        <light_source type="point" L="1 1 1" scale="1 1 1" from="0 0 -1" />
+        <light_source type="directional" L="1 1 1" scale="1 1 1" from="5 5 0" to="0 0 0"/>
+        <light_source type="directional" L="1 1 1" scale="1 1 1" from="-5 -5 0" to="0 0 0"/>
+        <!-- <light_source type="point" L="1 1 1" scale="1 1 1" from="0 0 -1" /> -->
         <named_material name="white" type="blinn" ambient="1 1 1" diffuse="1 1 1" specular="1 1 1" glossiness="256"/>
         <named_material type="blinn" name="gold" ambient="0.2 0.2 0.2" diffuse="1 0.65 0.0" specular="0.8 0.6 0.2" glossiness="256"/>
-        <object type="sphere" radius="0.4" center="0 1 0" material="gold"/>
-        <object type="sphere" radius="0.4" center="1 0 0" material="gold"/>
         <object type="sphere" radius="0.4" center="1 1 0" material="gold"/>
-        <object type="sphere" radius="0.4" center="0 -1 0" material="gold"/>
-        <object type="sphere" radius="0.4" center="-1 0 0" material="gold"/>
-        <object type="sphere" radius="0.4" center="-1 -1 0" material="gold"/>
-        <object type="sphere" radius="0.4" center="-1 1 0" material="gold"/>
-        <object type="sphere" radius="0.4" center="1 -1 0" material="gold"/>
+        <object type="sphere" radius="0.4" center="2 2 0" material="gold"/>
     <world_end/>
 </RT3>

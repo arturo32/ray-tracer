@@ -13,8 +13,8 @@ namespace rt3 {
             Camera(Film* film, Point3f& look_from, Point3f& look_at, Vector3f& up, std::vector<real_type>& screen_space);
             virtual ~Camera() {};
             Point2f to_screen_coord(const Point2f& pixel_coord) const {
-                float u = left + (real_type)((right-left)*(pixel_coord.x() + 0.5))/(real_type) film->m_full_resolution.x();
-                float v = bottom + (real_type)((top-bottom)*(pixel_coord.y() + 0.5))/(real_type)film->m_full_resolution.y();
+                real_type u = left + (real_type)((right-left)*(pixel_coord.x() + 0.5))/(real_type) film->m_full_resolution.x();
+                real_type v = bottom + (real_type)((top-bottom)*(pixel_coord.y() + 0.5))/(real_type)film->m_full_resolution.y();
                 return Point2f{u, v};
             }
             Ray generate_ray(const Point2f& pixel_coord) const {
@@ -31,10 +31,10 @@ namespace rt3 {
             Point3f look_at;
             Vector3f up;
             //
-            float left;
-            float right;
-            float bottom;
-            float top;
+            real_type left;
+            real_type right;
+            real_type bottom;
+            real_type top;
             //
             Vector3f w;
             Vector3f u;

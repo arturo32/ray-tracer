@@ -28,23 +28,28 @@ using std::array;
 //#define Dictionary std::unordered_map
 #define Dictionary std::map
 
+//=== aliases
+typedef double real_type;
+typedef size_t size_type;
+typedef std::tuple<bool, std::string> result_type;
+
 //=== Aliases
 namespace rt3 {
 // Alias to a Point3f (simulation)
-using Point3f = vec3<float>;
-using Vector3f = vec3<float>;
-using Vector4f = vec4<float>;
-using ColorXYZ = vec3<float>;
-using Spectrum = vec3<float>;
-using Normal3f = vec3<float>;
+using Point3f = vec3<real_type>;
+using Vector3f = vec3<real_type>;
+using Vector4f = vec4<real_type>;
+using ColorXYZ = vec3<real_type>;
+using Spectrum = vec3<real_type>;
+using Normal3f = vec3<real_type>;
 
 // List of points
 using ListPoint3f = std::vector<Point3f>;
 
 using Vector3i = vec3<int>;
 using Point3i = vec3<int>;
-using Point2ui = vec2<int>;
-using Point2f = vec2<float>;
+using Point2ui = vec2<uint>;
+using Point2f = vec2<real_type>;
 
 template <typename T, size_t S>
 std::ostream& operator<<(std::ostream& os, const std::array<T, S>& v) {
@@ -58,11 +63,6 @@ std::ostream& operator<<(std::ostream& os, const std::array<T, S>& v) {
 class Film;
 class Background;
 class BackgroundColor;
-
-//=== aliases
-typedef float real_type;
-typedef size_t size_type;
-typedef std::tuple<bool, std::string> result_type;
 
 /// This struct holds information provided via command line arguments
 struct RunningOptions {
@@ -92,8 +92,8 @@ struct RunningOptions {
  * \return The interpolated value.
  */
 //
-inline float Lerp(float t, float v1, float v2) {
-  return (1.f - t) * v1 + t * v2;
+inline real_type Lerp(real_type t, real_type v1, real_type v2) {
+  return (real_type(1) - t) * v1 + t * v2;
 }
 
 /// Clamp T to [low,high].
@@ -108,10 +108,10 @@ inline T Clamp(T val, U low, V high) {
 }
 
 /// Degrees to radians.
-inline float Radians(float deg) { return ((float)M_PI / 180.f) * deg; }
+inline real_type Radians(real_type deg) { return ((real_type)M_PI / 180.f) * deg; }
 
 /// Radians to degreees.
-inline float Degrees(float rad) { return (180.f / (float)M_PI) * rad; }
+inline real_type Degrees(real_type rad) { return (180.f / (real_type)M_PI) * rad; }
 }  // namespace rt3
 
 #endif  // RT3_H

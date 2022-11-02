@@ -2,6 +2,7 @@
 #define SHAPE_H
 
 #include "rt3-base.hpp"
+#include "ray.hpp"
 
 
 namespace rt3 {

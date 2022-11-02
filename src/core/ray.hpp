@@ -1,14 +1,13 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "rt3-base.hpp"
 #include "rt3.hpp"
 
 #include "../ext/vec3.hpp"
 
 namespace rt3 {
-using Point3f = vec3<float>;
-using Vector3f = vec3<float>;
+using Point3f = vec3<real_type>;
+using Vector3f = vec3<real_type>;
     class Ray {
         public:
             Ray (const Point3f& o, const Vector3f& d ) : origin{o}, direction{d} {/*empty*/}
@@ -18,7 +17,7 @@ using Vector3f = vec3<float>;
             real_type t_min = 0;
             // O que precisa ser normalizado exatamente?
             // Point3f normalize() const { return ???; }
-            Point3f operator()(float t) const { return origin + direction * t; }
+            Point3f operator()(real_type t) const { return origin + direction * t; }
             
     };
 }

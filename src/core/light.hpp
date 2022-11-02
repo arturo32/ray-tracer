@@ -3,6 +3,7 @@
 
 #include "rt3.hpp"
 #include "surfel.hpp"
+#include "ray.hpp"
 
 namespace rt3 {
 
@@ -12,10 +13,11 @@ class VisibilityTester {
 	public:
 		VisibilityTester()=default;
 		~VisibilityTester()=default;
-		VisibilityTester( const Surfel& a, const Surfel& b);
+		VisibilityTester( const Surfel& a, const Surfel& b, real_type value);
 		bool unoccluded( const Scene& scene );
 	public:
 		Surfel p0, p1;
+		real_type value;
 };
 
 enum class light_flag_e : int {
@@ -59,8 +61,7 @@ class PointLight : public Light {
 
 class DirectionalLight : public Light {
   public:
-	Point3f from;
-	Point3f to;
+	Point3f dir;
 	DirectionalLight(Point3f from, Point3f to, Vector3f intensity);
 	~DirectionalLight() {};
     ColorXYZ sample_Li( const Surfel& hit     /*in*/,
