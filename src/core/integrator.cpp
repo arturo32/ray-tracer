@@ -1,4 +1,6 @@
 #include "integrator.hpp"
+#include <thread>
+#include <omp.h>
 
 namespace rt3 {
 
@@ -19,22 +21,27 @@ void SamplerIntegrator::render( Scene& scene) {
     // rymin = clamp (ceil ( yresolution*ymin ),  0, yresolution-1);
     // rymax = clamp (ceil ( yresolution*ymax -1 ), 0, yresolution-1);
 
-
-    for( int j = 0 ; j < h ; ++j ) {
-        for( int i = 0 ; i < w ; ++i ) {
-			Point2f pixel = Point2f{real_type(i) / real_type(w), real_type(j) / real_type(h)};
-            
-            // Get the background color in case we hit nothing.
-            Spectrum background = scene.background->sampleXYZ( pixel );
-            
-            // Determine the ray for the current camera type.
-            Ray ray = camera->generate_ray( Point2f{real_type(i), real_type(j)} );
-            
-            // Determine the incoming light.
-            Spectrum L = Li( ray, scene, background );
-            
-            // Add color (radiance) to the image.
-            camera->film->add_sample( Point2i( i, h-(j+1) ), L ); // Set color of pixel (x,y) to L.
+    const uint processor_count = std::thread::hardware_concurrency();
+    std::cout << "procs: " << processor_count << std::endl;
+    #pragma omp parallel num_threads(processor_count) default(none) shared(h, w, scene, camera)
+    {
+        #pragma omp for schedule(guided)
+        for( int j = 0 ; j < h ; ++j ) {
+            for( int i = 0 ; i < w ; ++i ) {
+                Point2f pixel = Point2f{real_type(i) / real_type(w), real_type(j) / real_type(h)};
+                
+                // Get the background color in case we hit nothing.
+                Spectrum background = scene.background->sampleXYZ( pixel );
+                
+                // Determine the ray for the current camera type.
+                Ray ray = camera->generate_ray( Point2f{real_type(i), real_type(j)} );
+                
+                // Determine the incoming light.
+                Spectrum L = Li( ray, scene, background );
+                
+                // Add color (radiance) to the image.
+                camera->film->add_sample( Point2i( i, h-(j+1) ), L ); // Set color of pixel (x,y) to L.
+            }
         }
     }
     // Send image color buffer to the output file.
@@ -180,17 +187,13 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
             Surfel sisect = Surfel();
 		    scene.intersect(sray, &sisect);
             if(!sisect.hit) {
-                ColorXYZ Ld = (fm->diffuse * l->intensity) * std::max(real_type(0.0), dot(isect.n, wi));
-                L = L + Ld;
-                std::cout << "L: " << L << std::endl;
+                L += fm->diffuse * l->intensity * std::max(real_type(0.0), dot(isect.n, wi));;
             }
         }
-        L = L + fm->ambient * scene.ambientLight->intensity;
+        L += fm->ambient * scene.ambientLight->intensity;
     }
-    if(L.x() <= 1.0 && L.y() <= 1.0 && L.z() <= 1.0) {
-        L *= 255.0;
-        L.clamp(0.0, 255.0);
-      }
+    L *= 255.0;
+    L.clamp(0.0, 255.0);
     return L;
 }
 

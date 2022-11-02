@@ -18,6 +18,7 @@ namespace rt3 {
                 sf->wo = -r.direction;
                 sf->p = r(t_hit);
                 sf->n = sf->p - this->center;
+                sf->n.make_unit_vector();
                 return true;    
             }
             return false;
@@ -52,11 +53,12 @@ namespace rt3 {
     //     }
     // }
 
-    bool Sphere::intersect_p( const Ray& r ) const {
-        Point3f oc = (r.origin - this->center);
-        real_type ocd2 = dot(oc, r.direction);
-        real_type delta = ocd2 * ocd2
-            - (dot(r.direction, r.direction) * dot(oc, oc) - this->radius * this->radius);
+    bool Sphere::intersect_p(const Ray& r) const {
+        Vector3f oc = (r.origin - this->center);
+        real_type A = dot(r.direction, r.direction);
+        real_type B = dot(oc, r.direction);
+        real_type C = dot(oc, oc) - (this->radius * this->radius);
+        real_type delta = B*B - A*C;
         return delta >= 0;
     }
 

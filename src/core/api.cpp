@@ -150,7 +150,6 @@ void API::world_end(void) {
   }
   // [4] Basic clean up
   curr_state = APIState::SetupBlock;  // correct machine state.
-  std::cout << "n luzes: " << render_opt->curr_scene.lights.size() << std::endl;
   reset_engine();
 }
 

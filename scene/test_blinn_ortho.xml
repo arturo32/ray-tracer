@@ -1,0 +1,36 @@
+<RT3>
+    <lookat look_from="0 12 1 " look_at="0 0 1" up="0 0 1" />
+    <camera type="orthographic" screen_window="-24 24 -18 18" />
+    <integrator type="blinn_phong"/>
+    <film type="image" x_res="800" y_res="600" filename="test_blinn_ortho.png" img_type="png" /> -->
+
+    <!-- The Scene -->
+    <world_begin/>
+        <!-- The Background -->
+        <background type="colors" bl="153 204 255" tl="18 10 143" tr="18 10 143" br="153 204 255" />
+        
+        <light_source type="ambient" L="0.1 0.1 0.1" />
+        <!-- <light_source type="directional" L="1 1 1" scale="1 1 1" from="0 1000 0" to="0 -1000 0"/> -->
+        <!-- <light_source type="directional" L="1 1 1" scale="1 1 1" from="-5 -5 0" to="0 0 0"/> -->
+        <light_source type="point" L="1 1 1" scale="1 1 1" from="100 100 1" />
+
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="1 1 0" specular="1 1 0" glossiness="256" /> <!-- Yellow -->
+        <object type="sphere" radius="0.5" center="0 1.25 1" />
+
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="1 0 0" specular="1 0 0" glossiness="256" /> <!-- Red -->
+        <object type="sphere" radius="1.8" center="4 5.5 5"  />
+
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="0.48 0.78 0.95" specular="0.48 0.78 0.95" glossiness="256" /> <!-- Bluish -->
+        <object type="sphere" radius="1.5" center="4 2.5 5"/>
+
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="0 0 1" specular="0 0 1" glossiness="256" /> <!-- Blue -->
+        <object type="sphere" radius="2.0" center="0 0 -14"/>
+
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="0.65 0.54 0.85" specular="0.65 0.54 0.85" glossiness="256" /> <!-- light purple -->
+        <object type="sphere" radius="1.5" center="-8 5 -4" />
+
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="0.05 0.9 0.05" specular="0.05 0.9 0.05" glossiness="256" /> <!-- bright Green -->
+        <object type="sphere" radius="1000." center="0 -1000 1" />
+
+    <world_end/>
+</RT3>
