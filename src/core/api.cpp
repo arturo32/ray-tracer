@@ -305,6 +305,8 @@ void API::integrator(const ParamSet &object_ps) {
     object = make_shared<DepthIntegrator>(zmin, zmax, near_color, far_color);
   } else if (type == "normal_map") {
     object = make_shared<NormalMapIntegrator>(); 
+  } else if (type == "blinn_phong") {
+    object = make_shared<BlinnPhongIntegrator>();
   } else {
     RT3_ERROR("Type of object not valid.");
   }

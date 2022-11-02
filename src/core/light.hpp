@@ -38,6 +38,7 @@ class Light {
   public:
     Light(light_flag_e t, Vector3f intensity);
     virtual ~Light() = 0;
+	// Retorna a intensidade da luz, direção e o teste oclusão.
     virtual ColorXYZ sample_Li( const Surfel& hit     /*in*/,
 								Vector3f *wi          /*out*/,
 								VisibilityTester *vis /*out*/ ) = 0;

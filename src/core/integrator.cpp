@@ -154,4 +154,39 @@ ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
     return L;
 }
 
+ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color) 
+{
+    // OK [0] FIRST STEP TO INITIATE `L` WITH THE COLOR VALUE TO BE RETURNED.
+	// OK [1] FIND CLOSEST RAY INTERSECTION OR RETURN BACKGROUND RADIANCE.
+	// [2] SPECIAL SITUATION: IF THE RAY HITS THE SURFACE FROM "BEHIND"(INSIDE), WE DO NOT COLOR.
+	// OK [3] GET THE MATERIAL ASSOCIATED WITH THE HIT SURFACE
+	// [4] INITIALIZE COMMON VARIABLES FOR BLINNPHONG INTEGRATOR (COEFFICIENTS AND VECTORS L, N, V, ETC.)
+	// [5] CALCULATE & ADD CONTRIBUTION FROM EACH LIGHT SOURCE
+	// [6] ADD AMBIENT CONTRIBUTION HERE (if there is any).
+	// [7] ADD MIRROR REFLECTION CONTRIBUTION
+
+    ColorXYZ L(0,0,0);
+    Surfel isect;
+    scene.intersect(ray, &isect);
+    if (!isect.hit) {
+        return bkg_color;
+    } else {
+        BlinnPhongMaterial *fm = dynamic_cast<BlinnPhongMaterial*>(isect.primitive->get_material().get());
+        Vector3f wi;
+        VisibilityTester vis;
+        for (auto &&l : scene.lights) {
+            l->sample_Li(isect, &wi, &vis);
+
+            //Vector3f Ld = (  ) * fm->diffuse * l->intensity;
+            //std::cout << "Ld: " << Ld << std::endl;
+        }
+    }
+    if(L.x() <= 1.0 && L.y() <= 1.0 && L.z() <= 1.0) {
+        L *= 255.0;
+        L.clamp(0.0, 255.0);
+        std::cout << "L: " << L << std::endl;
+      }
+    return L;
+}
+
 }

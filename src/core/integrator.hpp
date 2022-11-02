@@ -58,6 +58,15 @@ class NormalMapIntegrator : public SamplerIntegrator {
 		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color );
 };
 
+
+class BlinnPhongIntegrator : public SamplerIntegrator {
+	//=== Public interface
+	public:
+		~BlinnPhongIntegrator(){};
+		BlinnPhongIntegrator(){};
+		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color );
+};
+
 }
 
 #endif
