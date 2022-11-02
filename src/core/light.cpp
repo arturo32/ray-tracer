@@ -24,8 +24,11 @@ namespace rt3 {
 	ColorXYZ PointLight::sample_Li( const Surfel& hit     /*in*/,
 									Vector3f *wi          /*out*/,
 									VisibilityTester *vis /*out*/ ) {
-
-		// TODO
+		Vector3f dir = -(hit.p - this->from);
+		dir.make_unit_vector();
+		// TODO vis
+		wi->assign(dir);
+		return ColorXYZ(0,0,0);
 	}
 
 	DirectionalLight::DirectionalLight(Point3f from, Point3f to, Vector3f intensity):

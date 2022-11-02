@@ -243,7 +243,8 @@ void API::light_source(const ParamSet &ps) {
   Vector3f scale = retrieve(ps, "scale", Vector3f{1,1,1});
   std::shared_ptr<Light> light;
   if (type == "ambient") {
-    light = std::make_shared<AmbientLight>(scale*intensity);
+    render_opt->curr_scene.ambientLight = std::make_shared<AmbientLight>(scale*intensity);
+    return;
   } else if (type == "directional") {
     Point3f from = retrieve(ps, "from", Point3f{0,0,0});
     Point3f to = retrieve(ps, "to", Point3f{0,0,0});

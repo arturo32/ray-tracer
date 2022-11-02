@@ -176,15 +176,14 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
         VisibilityTester vis;
         for (auto &&l : scene.lights) {
             l->sample_Li(isect, &wi, &vis);
-
-            //Vector3f Ld = (  ) * fm->diffuse * l->intensity;
-            //std::cout << "Ld: " << Ld << std::endl;
+            ColorXYZ Ld = (fm->diffuse * l->intensity) * std::max(0.0f, dot(isect.n, wi));
+            L = L + Ld;
         }
+        L = L + fm->ambient * scene.ambientLight->intensity;
     }
     if(L.x() <= 1.0 && L.y() <= 1.0 && L.z() <= 1.0) {
         L *= 255.0;
         L.clamp(0.0, 255.0);
-        std::cout << "L: " << L << std::endl;
       }
     return L;
 }

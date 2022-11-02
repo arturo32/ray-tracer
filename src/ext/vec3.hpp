@@ -38,6 +38,8 @@ public:
     inline T g() const { return e[1]; }
     inline T b() const { return e[2]; }
     
+    inline void assign(vec3 &v);
+
     inline const vec3& operator+() const { return *this; }
     inline vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
     inline T operator[](int i) const { return e[i]; }
@@ -83,6 +85,14 @@ template <typename T>
 inline void vec3<T>::make_unit_vector() {
     T k = 1.0 / length();
     e[0] *= k; e[1] *= k; e[2] *= k;
+}
+
+
+template <typename T>
+inline void vec3<T>::assign(vec3<T> &v) {
+    e[0] = v.e[0];
+    e[1] = v.e[1];
+    e[2] = v.e[2];
 }
 
 template <typename T>

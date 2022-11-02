@@ -20,6 +20,7 @@ class Scene {
     //=== Public data
     public:
         std::vector<shared_ptr<Light>> lights; // list of lights
+        shared_ptr<AmbientLight> ambientLight;
         std::shared_ptr<Background> background; // The background object.
         std::shared_ptr<AggregatePrimitive> agg; // The scene graph of objects, acceleration structure.
 
