@@ -6,7 +6,7 @@
  * @file parser.cpp
  */
 
-#include <tinyxml2.h>
+#include <tinyxml2.hpp>
 #include <iostream>
 using std::endl;
 using std::clog;

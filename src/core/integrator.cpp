@@ -183,11 +183,16 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
         VisibilityTester vis;
         for (auto &&l : scene.lights) {
             l->sample_Li(isect, &wi, &vis);
+            // Ray from intersect point to the light source
             Ray sray = Ray(isect.p, wi);
             Surfel sisect = Surfel();
 		    scene.intersect(sray, &sisect);
             if(!sisect.hit) {
-                L += fm->diffuse * l->intensity * std::max(real_type(0.0), dot(isect.n, wi));;
+                Vector3f vecFromPointToCamera = -ray.direction;
+                vecFromPointToCamera.make_unit_vector();
+                Vector3f h = (vecFromPointToCamera + wi) / (vecFromPointToCamera + wi).length();  
+                L += fm->diffuse * l->intensity * std::max(real_type(0.0), dot(isect.n, wi));
+                L += fm->specular * l->intensity * pow( std::max(real_type(0.0), dot(isect.n, h)), fm->glossiness );
             }
         }
         L += fm->ambient * scene.ambientLight->intensity;
