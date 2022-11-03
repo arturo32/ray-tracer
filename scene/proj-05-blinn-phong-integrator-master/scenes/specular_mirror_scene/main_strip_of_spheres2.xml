@@ -1,0 +1,15 @@
+<RT3>
+    <lookat look_from="0 0 -2" look_at="0 0 1" up="0 1 0" />
+    <camera type="orthographic"  screen_window="-5.5 4.5 -1.5 1.5" /> 
+    <integrator type="blinn_phong" depth="2" />
+
+    <film type="image" x_res="5000" y_res="1500" filename="row_of_spheres_01" img_type="png" gamma_corrected="no" />
+    
+    <!-- Scene #1 -->
+    <include filename="../scenes/projects_references/proj_05_blinn_phong/specular_mirror_scene/strip_scene_1_geometry.xml" />
+
+    <!-- image aspect 10:3 -->
+    <film type="image" x_res="5000" y_res="1500" filename="row_of_spheres_02.png" img_type="png" gamma_corrected="no" />
+    <!-- Scene #2 -->
+    <include filename="../scenes/projects_references/proj_05_blinn_phong/specular_mirror_scene/strip_scene_2_geometry.xml" />
+</RT3>

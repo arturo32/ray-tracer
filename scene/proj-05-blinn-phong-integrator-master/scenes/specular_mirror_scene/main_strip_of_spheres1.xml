@@ -1,0 +1,109 @@
+<RT3>
+    <lookat look_from="0 0 -2" look_at="0 0 1" up="0 1 0" />
+    <camera type="orthographic"  screen_window="-5.5 4.5 -1.5 1.5" /> 
+    <integrator type="blinn_phong" depth="2" />
+
+    <film type="image" x_res="5000" y_res="1500" filename="row_of_spheres_01" img_type="png" gamma_corrected="no" />
+     <world_begin/>
+        <background type="colors" color="0 0 0"/>
+        <light_source type="directional" L="0.9 0.9 0.9" scale="1 1 1" from="0.5 0.5 -1" to="0 0 0" />
+        <!-- Materials -->
+        <!-- diffuse r="0.9 0.2 0.1" -->
+        <!-- Top row spheres: specular variation -->
+        <named_material type="blinn" name="spec_0"   ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="0"/>
+        <named_material type="blinn" name="spec_2"   ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="2"/>
+        <named_material type="blinn" name="spec_4"   ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="4"/>
+        <named_material type="blinn" name="spec_8"   ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="8"/>
+        <named_material type="blinn" name="spec_16"  ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="16"/>
+        <named_material type="blinn" name="spec_32"  ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="32"/>
+        <named_material type="blinn" name="spec_64"  ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="64"/>
+        <named_material type="blinn" name="spec_128" ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="128"/>
+        <named_material type="blinn" name="spec_256" ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="256"/>
+        <named_material type="blinn" name="spec_512" ambient="0.2 0.2 0.2" diffuse ="0.5 0.5 0.5"   specular ="0.85 0.62 0.21" mirror ="0.0 0.0 0.0" glossiness ="512"/>
+
+        <!-- Middle row spheres: mirror variation -->
+        <named_material type="blinn" name="mirror_0"   ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.1 0.1 0.1" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_2"   ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.2 0.2 0.2" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_4"   ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.3 0.3 0.3" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_8"   ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.4 0.4 0.4" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_16"  ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.5 0.5 0.5" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_32"  ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.6 0.6 0.6" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_64"  ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.7 0.7 0.7" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_128" ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.8 0.8 0.8" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_256" ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0.9 0.9 0.9" glossiness ="0"/>
+        <named_material type="blinn" name="mirror_512" ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="1.0 1.0 1.0" glossiness ="0"/>
+
+        <!-- Bottom row spheres: combining mirror/specular variation -->
+        <named_material type="blinn" name="mix_0"   ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.1 0.1 0.1" glossiness ="0"/>
+        <named_material type="blinn" name="mix_2"   ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.2 0.2 0.2" glossiness ="2"/>
+        <named_material type="blinn" name="mix_4"   ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.3 0.3 0.3" glossiness ="4"/>
+        <named_material type="blinn" name="mix_8"   ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.4 0.4 0.4" glossiness ="8"/>
+        <named_material type="blinn" name="mix_16"  ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.5 0.5 0.5" glossiness ="16"/>
+        <named_material type="blinn" name="mix_32"  ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.6 0.6 0.6" glossiness ="32"/>
+        <named_material type="blinn" name="mix_64"  ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.7 0.7 0.7" glossiness ="64"/>
+        <named_material type="blinn" name="mix_128" ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.8 0.8 0.8" glossiness ="128"/>
+        <named_material type="blinn" name="mix_256" ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="0.9 0.9 0.9" glossiness ="256"/>
+        <named_material type="blinn" name="mix_512" ambient="0.2 0.2 0.2" diffuse ="255 40   0"   specular ="0.85 0.62 0.21" mirror ="1.0 1.0 1.0" glossiness ="512"/>
+
+        <!-- Top Row Objects -->
+        <object type="sphere" radius="0.4" center="-5 1 1" material="spec_0"/>
+
+        <object type="sphere" radius="0.4" center="-4 1 1" material="spec_2"/>
+
+        <object type="sphere" radius="0.4" center="-3 1 1" material="spec_4"/>
+
+        <object type="sphere" radius="0.4" center="-2 1 1" material="spec_8"/>
+
+        <object type="sphere" radius="0.4" center="-1 1 1" material="spec_16"/>
+
+        <object type="sphere" radius="0.4" center="0 1 1" material="spec_32"/>
+
+        <object type="sphere" radius="0.4" center="1 1 1" material="spec_64"/>
+
+        <object type="sphere" radius="0.4" center="2 1 1" material="spec_128"/>
+
+        <object type="sphere" radius="0.4" center="3 1 1" material="spec_256"/>
+
+        <object type="sphere" radius="0.4" center="4 1 1" material="spec_512"/>
+
+        <object type="sphere" radius="0.4" center="-5 0 1" material="mirror_0"/>
+
+        <object type="sphere" radius="0.4" center="-4 0 1" material="mirror_2"/>
+
+        <object type="sphere" radius="0.4" center="-3 0 1" material="mirror_4"/>
+
+        <object type="sphere" radius="0.4" center="-2 0 1" material="mirror_8"/>
+
+        <object type="sphere" radius="0.4" center="-1 0 1" material="mirror_16"/>
+
+        <object type="sphere" radius="0.4" center="0 0 1" material="mirror_32"/>
+
+        <object type="sphere" radius="0.4" center="1 0 1" material="mirror_64"/>
+
+        <object type="sphere" radius="0.4" center="2 0 1" material="mirror_128"/>
+
+        <object type="sphere" radius="0.4" center="3 0 1" material="mirror_256"/>
+
+        <object type="sphere" radius="0.4" center="4 0 1" material="mirror_512"/>
+
+        <object type="sphere" radius="0.4" center="-5 -1 1" material="mix_0"/>
+
+        <object type="sphere" radius="0.4" center="-4 -1 1" material="mix_2"/>
+
+        <object type="sphere" radius="0.4" center="-3 -1 1" material="mix_4"/>
+
+        <object type="sphere" radius="0.4" center="-2 -1 1" material="mix_8"/>
+
+        <object type="sphere" radius="0.4" center="-1 -1 1" material="mix_16"/>
+
+        <object type="sphere" radius="0.4" center="0 -1 1" material="mix_32"/>
+
+        <object type="sphere" radius="0.4" center="1 -1 1" material="mix_64"/>
+
+        <object type="sphere" radius="0.4" center="2 -1 1" material="mix_128"/>
+
+        <object type="sphere" radius="0.4" center="3 -1 1" material="mix_256"/>
+
+        <object type="sphere" radius="0.4" center="4 -1 1" material="mix_512"/>
+    <world_end/>
+</RT3>

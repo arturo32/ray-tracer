@@ -258,7 +258,7 @@ void API::light_source(const ParamSet &ps) {
     Point3f to = retrieve(ps, "to", Point3f{0,0,0});
     real_type cutoff = retrieve(ps, "cutoff", real_type{0});
     real_type falloff = retrieve(ps, "falloff", real_type{0});
-    light = std::make_shared<SpotLight>(from, to, scale*intensity, cutoff, falloff);
+    light = std::make_shared<SpotLight>(from, to, scale*intensity, Radians(cutoff), Radians(falloff));
   }
   render_opt->curr_scene.add_light(light);
 }

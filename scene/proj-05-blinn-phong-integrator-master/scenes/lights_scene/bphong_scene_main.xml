@@ -1,0 +1,33 @@
+<RT3>
+    <lookat look_from="-3 5.5 -10" look_at="0 2 1" up="0 1 0" />
+    <camera type="perspective" fovy="45" />
+    <integrator type="blinn_phong" depth="2" />
+
+    <film type="image" x_res="800" y_res="600" filename="directional.png" img_type="png" gamma_corrected="no" />
+    <include filename="../scenes/projects_references/proj_05_blinn_phong/lights_scene/geometry_directional.xml" />
+
+    <film type="image" x_res="800" y_res="600" filename="point.png" img_type="png" gamma_corrected="no" />
+    <include filename="../scenes/projects_references/proj_05_blinn_phong/lights_scene/geometry_point.xml" />
+
+    <film type="image" x_res="800" y_res="600" filename="spot.png" img_type="png" gamma_corrected="no" />
+    <include filename="../scenes/projects_references/proj_05_blinn_phong/lights_scene/geometry_spot.xml" />
+
+    <film type="image" x_res="800" y_res="600" filename="ambient.png" img_type="png" gamma_corrected="no" />
+    <include filename="../scenes/projects_references/proj_05_blinn_phong/lights_scene/geometry_ambient.xml" />
+
+    <film type="image" x_res="800" y_res="600" filename="combined.png" img_type="png" gamma_corrected="no" />
+    <include filename="../scenes/projects_references/proj_05_blinn_phong/lights_scene/geometry_light_combination.xml" />
+
+
+    <!-- <lookat look_from="0 1 -10" look_at="0 1 1" up="0 1 0" /> -->
+    <!-- <camera type="orthographic" screen_window="-6 6 -4.5 4.5" /> -->
+    <!-- <integrator type="blinn_phong" depth="2" /> -->
+
+    <!-- <film type="image" x_res="800" y_res="600" filename="spot_ortho.png" img_type="png" gamma_corrected="no" /> -->
+    <!-- <include filename="../scenes/projects_references/proj_05_blinn_phong/lights_scene/geometry_spot.xml" /> -->
+
+    <!-- <film type="image" x_res="800" y_res="600" filename="directional_ortho.png" img_type="png" gamma_corrected="no" /> -->
+    <!-- <include filename="../scenes/projects_references/proj_05_blinn_phong/lights_scene/geometry_directional.xml" /> -->
+
+
+</RT3>

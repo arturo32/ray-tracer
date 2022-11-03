@@ -1,0 +1,12 @@
+<RT3>
+    <lookat look_from="0 6.5 -15" look_at="0 0 1" up="0 1 0" />
+    <camera type="perspective" fovy="45" /> 
+    <integrator type="blinn_phong" depth="0" />
+    <film type="image" x_res="800" y_res="600" filename="directional_ref.png" img_type="png" />
+
+    <!-- Objects storage -->
+    <accelerator type="list"/>
+
+    <!-- The Scene -->
+    <include filename="4spheres_geometry.xml" />
+</RT3>

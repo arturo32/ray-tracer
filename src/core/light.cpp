@@ -30,7 +30,7 @@ namespace rt3 {
 		dir.make_unit_vector();
 		// TODO vis
 		wi->assign(dir);
-		return ColorXYZ(0,0,0);
+		return intensity;
 	}
 
 	DirectionalLight::DirectionalLight(Point3f from, Point3f to, Vector3f intensity):
@@ -44,7 +44,7 @@ namespace rt3 {
 									VisibilityTester *vis /*out*/ ) {
 		// TODO vis
 		wi->assign(dir);
-		return ColorXYZ(0,0,0);
+		return intensity;
 	}
 
 	AmbientLight::AmbientLight(Vector3f intensity):
@@ -56,7 +56,7 @@ namespace rt3 {
 									Vector3f *wi          /*out*/,
 									VisibilityTester *vis /*out*/ ) {
 		// EMPTY
-		return ColorXYZ(0,0,0);
+		return intensity;
 	}
 
 	SpotLight::SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type falloff):
@@ -69,9 +69,20 @@ namespace rt3 {
 									VisibilityTester *vis /*out*/ ) {
 		// TODO cutoff and faloff 
 		Vector3f dir = (this->from - hit.p);
-		dir.make_unit_vector();
-		// TODO vis
+		Vector3f spot_dir = (this->from - this->to);
 		wi->assign(dir);
+		dir.make_unit_vector();
+		spot_dir.make_unit_vector();
+		real_type theta = dot(dir, spot_dir);
+		real_type epsilon = cutoff - falloff;
+		real_type l = Clamp((theta - falloff) / epsilon, 0.0, 1.0);
+		if(theta > cutoff) {
+			return intensity;
+		} else if(theta > falloff) {
+			// std::cout << "l: " << l << std::endl;
+			return intensity * l;
+		}
+		// TODO vis
 		return ColorXYZ(0,0,0);
 	}
 

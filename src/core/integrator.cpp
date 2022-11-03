@@ -165,6 +165,7 @@ ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, ui
 
 ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth) 
 {
+    ColorXYZ BLACK(0,0,0);
     ColorXYZ L(0,0,0);
     Surfel isect = Surfel();
     scene.intersect(ray, &isect);
@@ -175,17 +176,18 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, u
         Vector3f wi;
         VisibilityTester vis;
         for (auto &&l : scene.lights) {
-            l->sample_Li(isect, &wi, &vis);
-            // Ray from intersect point to the light source
-            Ray sray = Ray(isect.p, wi);
-            Surfel sisect = Surfel();
-		    scene.intersect(sray, &sisect);
-            if(!sisect.hit) {
-                Vector3f vecFromPointToCamera = -ray.direction;
-                vecFromPointToCamera.make_unit_vector();
-                Vector3f h = (vecFromPointToCamera + wi) / (vecFromPointToCamera + wi).length();  
-                L += fm->diffuse * l->intensity * std::max(real_type(0.0), dot(isect.n, wi));
-                L += fm->specular * l->intensity * pow( std::max(real_type(0.0), dot(isect.n, h)), fm->glossiness );
+            ColorXYZ intensity = l->sample_Li(isect, &wi, &vis);
+            if(!(intensity == BLACK)){
+                // Ray from intersect point to the light source
+                Ray shadow_ray = Ray(isect.p, wi);
+                Surfel sisect = Surfel();
+                scene.intersect(shadow_ray, &sisect);
+                if(!sisect.hit) {
+                    Vector3f h = -ray.direction + wi;
+                    h.make_unit_vector();
+                    L += fm->diffuse * intensity * std::max(real_type(0.0), dot(isect.n, wi));
+                    L += fm->specular * intensity * pow( std::max(real_type(0.0), dot(isect.n, h)), fm->glossiness );
+                }
             }
         }
         if(scene.ambientLight != nullptr) {
