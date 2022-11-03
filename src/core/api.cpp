@@ -201,8 +201,9 @@ void API::material(const ParamSet &ps) {
       Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
       Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
       Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+      Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
       real_type g = retrieve(ps, "glossiness", real_type{0});
-      render_opt->curr_material = std::make_shared<BlinnPhongMaterial>(a,d,s,g);
+      render_opt->curr_material = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
   }
 
 }
@@ -228,8 +229,9 @@ void API::named_material(const ParamSet &ps) {
     Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
     Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
     Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+    Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
     real_type g = retrieve(ps, "glossiness", real_type{0});
-    render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,g);
+    render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
   }
 }
 
@@ -306,7 +308,8 @@ void API::integrator(const ParamSet &object_ps) {
   } else if (type == "normal_map") {
     object = make_shared<NormalMapIntegrator>(); 
   } else if (type == "blinn_phong") {
-    object = make_shared<BlinnPhongIntegrator>();
+    uint max_depth = retrieve(object_ps, "max_depth", uint{1});
+    object = make_shared<BlinnPhongIntegrator>(max_depth);
   } else {
     RT3_ERROR("Type of object not valid.");
   }

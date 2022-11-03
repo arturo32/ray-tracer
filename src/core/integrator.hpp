@@ -17,7 +17,7 @@ class SamplerIntegrator : public Integrator {
 	//=== Public interface
 	public:
 		virtual ~SamplerIntegrator(){};
-		virtual ColorXYZ Li( Ray& ray,  Scene& scene, Spectrum bkg_color ) = 0;
+		virtual ColorXYZ Li( Ray& ray,  Scene& scene, Spectrum bkg_color, uint depth ) = 0;
 		virtual void render( Scene& scene );
 		virtual void preprocess(  Scene& scene ) {};
 };
@@ -27,7 +27,7 @@ class FlatIntegrator : public SamplerIntegrator {
 	public:
 		~FlatIntegrator(){};
 		FlatIntegrator(){};
-		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color );
+		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth );
 		virtual void preprocess(  Scene& scene ) override {};
 };
 
@@ -55,16 +55,17 @@ class NormalMapIntegrator : public SamplerIntegrator {
 	public:
 		~NormalMapIntegrator(){};
 		NormalMapIntegrator(){};
-		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color );
+		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth );
 };
 
 
 class BlinnPhongIntegrator : public SamplerIntegrator {
 	//=== Public interface
 	public:
+		BlinnPhongIntegrator(uint max_depth):max_depth{max_depth}{};
 		~BlinnPhongIntegrator(){};
-		BlinnPhongIntegrator(){};
-		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color );
+		uint max_depth = 1;
+		ColorXYZ Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth );
 };
 
 }

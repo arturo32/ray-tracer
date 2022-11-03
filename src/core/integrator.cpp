@@ -37,7 +37,9 @@ void SamplerIntegrator::render( Scene& scene) {
                 Ray ray = camera->generate_ray( Point2f{real_type(i), real_type(j)} );
                 
                 // Determine the incoming light.
-                Spectrum L = Li( ray, scene, background );
+                Spectrum L = Li( ray, scene, background, 1);
+                L *= 255.0;
+                L.clamp(0.0, 255.0);
                 
                 // Add color (radiance) to the image.
                 camera->film->add_sample( Point2i( i, h-(j+1) ), L ); // Set color of pixel (x,y) to L.
@@ -50,7 +52,7 @@ void SamplerIntegrator::render( Scene& scene) {
 
 // This method must be overridden by all classes derived from SamplerIntegrator.
 /// Determines a color for the incoming ray.
-ColorXYZ FlatIntegrator::Li( Ray& ray,  Scene& scene, Spectrum bkg_color) 
+ColorXYZ FlatIntegrator::Li( Ray& ray,  Scene& scene, Spectrum bkg_color, uint depth) 
 {
     ColorXYZ L(0,0,0); // The radiance
     // Find closest ray intersection or return background radiance.
@@ -142,7 +144,7 @@ void DepthIntegrator::render( Scene& scene) {
     free(z_buffer);
 }
 
-ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color) 
+ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth) 
 {
     ColorXYZ L(0,0,0);
     Surfel isect = Surfel();
@@ -161,17 +163,8 @@ ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
     return L;
 }
 
-ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color) 
+ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth) 
 {
-    // OK [0] FIRST STEP TO INITIATE `L` WITH THE COLOR VALUE TO BE RETURNED.
-	// OK [1] FIND CLOSEST RAY INTERSECTION OR RETURN BACKGROUND RADIANCE.
-	// [2] SPECIAL SITUATION: IF THE RAY HITS THE SURFACE FROM "BEHIND"(INSIDE), WE DO NOT COLOR.
-	// OK [3] GET THE MATERIAL ASSOCIATED WITH THE HIT SURFACE
-	// [4] INITIALIZE COMMON VARIABLES FOR BLINNPHONG INTEGRATOR (COEFFICIENTS AND VECTORS L, N, V, ETC.)
-	// [5] CALCULATE & ADD CONTRIBUTION FROM EACH LIGHT SOURCE
-	// [6] ADD AMBIENT CONTRIBUTION HERE (if there is any).
-	// [7] ADD MIRROR REFLECTION CONTRIBUTION
-
     ColorXYZ L(0,0,0);
     Surfel isect = Surfel();
     scene.intersect(ray, &isect);
@@ -195,10 +188,14 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color)
                 L += fm->specular * l->intensity * pow( std::max(real_type(0.0), dot(isect.n, h)), fm->glossiness );
             }
         }
-        L += fm->ambient * scene.ambientLight->intensity;
+        if(scene.ambientLight != nullptr) {
+            L += fm->ambient * scene.ambientLight->intensity;
+        }
+        if (depth < max_depth) {
+            Ray reflected_ray = Ray(isect.p, ray.direction - 2*(dot(ray.direction,isect.n))*isect.n);
+            L += + fm->mirror * Li(reflected_ray, scene, bkg_color, depth+1);
+        }
     }
-    L *= 255.0;
-    L.clamp(0.0, 255.0);
     return L;
 }
 
