@@ -36,9 +36,13 @@ class Light {
   public:
     light_flag_e flags;
 	Vector3f intensity;
-
+	real_type kc;
+  	real_type kl;
+  	real_type kq;
+	bool a = false;
   public:
-    Light(light_flag_e t, Vector3f intensity);
+    Light(light_flag_e t, Vector3f intensity,
+	 real_type kc, real_type kl, real_type kq, bool attenuate);
     virtual ~Light() = 0;
 	// Retorna a intensidade da luz, direção e o teste oclusão.
     virtual ColorXYZ sample_Li( const Surfel& hit     /*in*/,
@@ -46,12 +50,15 @@ class Light {
 								VisibilityTester *vis /*out*/ ) = 0;
     virtual void preprocess( const Scene & ) {};
 
+	real_type attenuate(real_type d);
+
 };
 
 class PointLight : public Light {
   public:
 	Point3f from;
-	PointLight(Point3f from, Vector3f intensity);
+	PointLight(Point3f from, Vector3f intensity,
+	 real_type kc, real_type kl, real_type kq, bool attenuate);
 	~PointLight() {};
     ColorXYZ sample_Li( const Surfel& hit     /*in*/,
 						Vector3f *wi          /*out*/,
@@ -62,7 +69,8 @@ class PointLight : public Light {
 class DirectionalLight : public Light {
   public:
 	Point3f dir;
-	DirectionalLight(Point3f from, Point3f to, Vector3f intensity);
+	DirectionalLight(Point3f from, Point3f to, Vector3f intensity,
+	 real_type kc, real_type kl, real_type kq, bool attenuate);
 	~DirectionalLight() {};
     ColorXYZ sample_Li( const Surfel& hit     /*in*/,
 						Vector3f *wi          /*out*/,
@@ -71,7 +79,7 @@ class DirectionalLight : public Light {
 
 class AmbientLight : public Light {
   public:
-  	AmbientLight(Vector3f intensity);
+  	AmbientLight(Vector3f intensity, real_type kc, real_type kl, real_type kq, bool attenuate);
 	~AmbientLight() {};
     ColorXYZ sample_Li( const Surfel& hit     /*in*/,
 						Vector3f *wi          /*out*/,
@@ -84,7 +92,9 @@ class SpotLight : public Light {
 	Point3f to;
 	real_type cutoff;
 	real_type falloff;
-	SpotLight(Point3f from, Point3f to, Vector3f intensity, real_type cutoff, real_type falloff);
+	SpotLight(Point3f from, Point3f to, Vector3f intensity,
+	 real_type cutoff, real_type falloff,
+	 real_type kc, real_type kl, real_type kq, bool attenuate);
 	~SpotLight() {};
     ColorXYZ sample_Li( const Surfel& hit     /*in*/,
 						Vector3f *wi          /*out*/,

@@ -267,23 +267,29 @@ void API::light_source(const ParamSet &ps) {
   std::string type = retrieve(ps, "type", string{"unknown"});
   Vector3f intensity = retrieve(ps, "L", Vector3f{1,1,1});
   Vector3f scale = retrieve(ps, "scale", Vector3f{1,1,1});
+
+  bool attenuate = retrieve(ps, "attenuate", bool{false});
+  real_type kc = retrieve(ps, "kc", real_type{1});
+  real_type kl = retrieve(ps, "kl", real_type{1});
+  real_type kq = retrieve(ps, "kq", real_type{1});
+
   std::shared_ptr<Light> light;
   if (type == "ambient") {
-    render_opt->curr_scene.ambientLight = std::make_shared<AmbientLight>(scale*intensity);
+    render_opt->curr_scene.ambientLight = std::make_shared<AmbientLight>(scale*intensity, kc, kl, kq, attenuate);
     return;
   } else if (type == "directional") {
     Point3f from = retrieve(ps, "from", Point3f{0,0,0});
     Point3f to = retrieve(ps, "to", Point3f{0,0,0});
-    light = std::make_shared<DirectionalLight>(from, to, scale*intensity);
+    light = std::make_shared<DirectionalLight>(from, to, scale*intensity, kc, kl, kq, attenuate);
   } else if (type == "point") {
     Point3f from = retrieve(ps, "from", Point3f{0,0,0});
-    light = std::make_shared<PointLight>(from, scale*intensity);
+    light = std::make_shared<PointLight>(from, scale*intensity, kc, kl, kq, attenuate);
   } else if (type == "spot") {
     Point3f from = retrieve(ps, "from", Point3f{0,0,0});
     Point3f to = retrieve(ps, "to", Point3f{0,0,0});
     real_type cutoff = retrieve(ps, "cutoff", real_type{0});
     real_type falloff = retrieve(ps, "falloff", real_type{0});
-    light = std::make_shared<SpotLight>(from, to, scale*intensity, Radians(cutoff), Radians(falloff));
+    light = std::make_shared<SpotLight>(from, to, scale*intensity, Radians(cutoff), Radians(falloff), kc, kl, kq, attenuate);
   }
   render_opt->curr_scene.add_light(light);
 }
