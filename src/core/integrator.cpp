@@ -177,26 +177,30 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, u
         VisibilityTester vis;
         for (auto &&l : scene.lights) {
             ColorXYZ intensity = l->sample_Li(isect, &wi, &vis);
-            if(!(intensity == BLACK)){
+            if(!(intensity == BLACK)) {
                 // Ray from intersect point to the light source
-                Ray shadow_ray = Ray(isect.p, wi);
+                Ray shadow_ray = Ray(isect.p, wi*1.01);
                 Surfel sisect = Surfel();
                 scene.intersect(shadow_ray, &sisect);
                 if(!sisect.hit) {
                     Vector3f h = -ray.direction + wi;
                     h.make_unit_vector();
                     L += fm->diffuse * intensity * std::max(real_type(0.0), dot(isect.n, wi));
-                    L += fm->specular * intensity * pow( std::max(real_type(0.0), dot(isect.n, h)), fm->glossiness );
+                    if(fm->glossiness > 1) {
+                        L += fm->specular * intensity * pow( std::max(real_type(0.0), dot(isect.n, h)), fm->glossiness );
+                    }
                 }
             }
         }
         if(scene.ambientLight != nullptr) {
             L += fm->ambient * scene.ambientLight->intensity;
         }
+        // std::cout << "before mirror: " << L << std::endl;
         if (depth < max_depth) {
             Ray reflected_ray = Ray(isect.p, ray.direction - 2*(dot(ray.direction,isect.n))*isect.n);
-            L += + fm->mirror * Li(reflected_ray, scene, bkg_color, depth+1);
+            L += fm->mirror * Li(reflected_ray, scene, bkg_color, depth+1);
         }
+        // std::cout << "after mirror: " << L << std::endl;
     }
     return L;
 }

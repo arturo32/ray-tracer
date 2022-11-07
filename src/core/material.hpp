@@ -41,7 +41,7 @@ class BlinnPhongMaterial : public Material {
 		Vector3f diffuse;  // [0,1]
 		Vector3f specular; // [0,1]
 		Vector3f mirror; // [0,1]
-		real_type glossiness; 
+		real_type glossiness = 0; 
 };
 
 }

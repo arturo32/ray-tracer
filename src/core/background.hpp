@@ -34,7 +34,7 @@ class Background {
 
   /// Ctro receiving a single color for the entire background.
   Background(Spectrum color = Spectrum(0,0,0), mapping_t mt = mapping_t::screen)
-      : color{color}, mapping_type{mt} { /* empty */
+      : color{color / 255.0}, mapping_type{mt} { /* empty */
   }
 
   //virtual ~Background(){/* empty */};

@@ -9,6 +9,13 @@
 
 namespace rt3 {
 
+void normalize_spectrum(Vector3f& a){
+  if(a.x() > 1.0 || a.y() > 1.0 || a.z() > 1.0) {
+    a /= 255.0;
+    a.clamp(0.0, 1.0);
+  }
+} 
+
 //=== API's static members declaration and initialization.
 API::APIState API::curr_state = APIState::Uninitialized;
 RunningOptions API::curr_run_opt;
@@ -199,14 +206,22 @@ void API::material(const ParamSet &ps) {
       render_opt->curr_material = std::make_shared<FlatMaterial>(c);
   } else if (type == "blinn") {
       Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
+      std::cout << "before: " << a << std::endl;
+      normalize_spectrum(a);
+      std::cout << "after: " << a << std::endl;
       Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
+      normalize_spectrum(d);
       Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+      normalize_spectrum(s);
       Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
+      normalize_spectrum(m);
       real_type g = retrieve(ps, "glossiness", real_type{0});
       render_opt->curr_material = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
   }
 
 }
+
+
 
 void API::named_material(const ParamSet &ps) {
   std::cout << ">>> Inside API::named_material()\n";
@@ -227,9 +242,19 @@ void API::named_material(const ParamSet &ps) {
   } else if (type == "blinn") {
     // check interval of values and convert if needed?
     Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
+    std::cout << "before: " << a << std::endl;
+    normalize_spectrum(a);
+    std::cout << "after: " << a << std::endl;
     Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
+    std::cout << "before: " << d << std::endl;
+    normalize_spectrum(d);
+    std::cout << "after: " << d << std::endl;
     Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+    std::cout << "after: " << s << std::endl;
+    normalize_spectrum(s);
+    std::cout << "after: " << s << std::endl;
     Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
+    normalize_spectrum(m);
     real_type g = retrieve(ps, "glossiness", real_type{0});
     render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
   }
@@ -308,7 +333,7 @@ void API::integrator(const ParamSet &object_ps) {
   } else if (type == "normal_map") {
     object = make_shared<NormalMapIntegrator>(); 
   } else if (type == "blinn_phong") {
-    uint max_depth = retrieve(object_ps, "max_depth", uint{1});
+    uint max_depth = retrieve(object_ps, "depth", uint{1});
     object = make_shared<BlinnPhongIntegrator>(max_depth);
   } else {
     RT3_ERROR("Type of object not valid.");

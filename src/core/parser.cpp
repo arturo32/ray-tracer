@@ -199,7 +199,7 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level)
       ParamSet ps;
       vector<std::pair<param_type_e, string>> param_list{ 
         { param_type_e::STRING, "type" },
-        { param_type_e::UINT, "max_depth" },
+        { param_type_e::UINT, "depth" },
         { param_type_e::REAL, "zmin" },
         { param_type_e::REAL, "zmax" },
         { param_type_e::COLOR, "near_color" },
