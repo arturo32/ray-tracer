@@ -1,6 +1,8 @@
 #include "integrator.hpp"
 #include <thread>
 #include <omp.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "../ext/stb_image.hpp"
 
 namespace rt3 {
 
@@ -165,6 +167,17 @@ ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, ui
 
 ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth) 
 {
+
+    // TODO REMOVE TEST
+    int* x = new int;
+    int* y = new int;
+    int* comp = new int;
+    unsigned char *teste = stbi_load("../teste.png", x, y, comp, 0);
+    std::cout << *x << " " << *y << " " << *comp << std::endl;
+
+
+
+
     ColorXYZ BLACK(0,0,0);
     ColorXYZ L(0,0,0);
     Surfel isect = Surfel();
