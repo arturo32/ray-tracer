@@ -169,11 +169,11 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, u
 {
 
     // TODO REMOVE TEST
-    int* x = new int;
-    int* y = new int;
-    int* comp = new int;
-    unsigned char *teste = stbi_load("../teste.png", x, y, comp, 0);
-    std::cout << *x << " " << *y << " " << *comp << std::endl;
+    // int* x = new int;
+    // int* y = new int;
+    // int* comp = new int;
+    // unsigned char *teste = stbi_load("../teste.png", x, y, comp, 0);
+    // std::cout << *x << " " << *y << " " << *comp << std::endl;
 
 
 
