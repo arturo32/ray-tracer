@@ -1,4 +1,6 @@
 #include "background.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "../ext/stb_image.hpp"
 
 namespace rt3 {
 /*!
@@ -66,4 +68,22 @@ std::unique_ptr<Background> create_color_background(const ParamSet &ps) {
     return make_unique<Background>(color);
   }
 }
+
+SphericBackground::SphericBackground(const char* path) { 
+  int* x = nullptr;
+  int* y = nullptr;
+  int* comp = new int;
+  this->image = stbi_load(path, x, y, comp, 0);
+  this->resolution = Point2i(*x, *y);
+
+  std::cout << *x << " " << *y << " " << *comp << std::endl;
+}
+
+
+Spectrum SphericBackground::sampleXYZ(const Point2f &pixel_ndc){
+  return Spectrum(); 
+}
+
+
+
 }  // namespace rt3

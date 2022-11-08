@@ -1,8 +1,7 @@
 #include "integrator.hpp"
 #include <thread>
 #include <omp.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "../ext/stb_image.hpp"
+
 
 namespace rt3 {
 
@@ -30,16 +29,12 @@ void SamplerIntegrator::render( Scene& scene) {
         #pragma omp for schedule(guided)
         for( int j = 0 ; j < h ; ++j ) {
             for( int i = 0 ; i < w ; ++i ) {
-                Point2f pixel = Point2f{real_type(i) / real_type(w), real_type(j) / real_type(h)};
-                
-                // Get the background color in case we hit nothing.
-                Spectrum background = scene.background->sampleXYZ( pixel );
-                
                 // Determine the ray for the current camera type.
                 Ray ray = camera->generate_ray( Point2f{real_type(i), real_type(j)} );
                 
                 // Determine the incoming light.
-                Spectrum L = Li( ray, scene, background, 1);
+                Point2f pixel = Point2f{real_type(i) / real_type(w), real_type(j) / real_type(h)};
+                Spectrum L = Li( ray, scene, pixel, 1);
                 L *= 255.0;
                 L.clamp(0.0, 255.0);
                 
@@ -54,7 +49,7 @@ void SamplerIntegrator::render( Scene& scene) {
 
 // This method must be overridden by all classes derived from SamplerIntegrator.
 /// Determines a color for the incoming ray.
-ColorXYZ FlatIntegrator::Li( Ray& ray,  Scene& scene, Spectrum bkg_color, uint depth) 
+ColorXYZ FlatIntegrator::Li( Ray& ray,  Scene& scene, Point2f pixel, uint depth) 
 {
     ColorXYZ L(0,0,0); // The radiance
     // Find closest ray intersection or return background radiance.
@@ -62,7 +57,7 @@ ColorXYZ FlatIntegrator::Li( Ray& ray,  Scene& scene, Spectrum bkg_color, uint d
     scene.intersect(ray, &isect);
     if (!isect.hit) {
         // This might be just:
-        L = bkg_color;
+        L = scene.background->sampleXYZ(pixel);
     }
     else {
         // Some form of determining the incoming radiance at the ray's origin.
@@ -146,13 +141,13 @@ void DepthIntegrator::render( Scene& scene) {
     free(z_buffer);
 }
 
-ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth) 
+ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint depth) 
 {
     ColorXYZ L(0,0,0);
     Surfel isect = Surfel();
     scene.intersect(ray, &isect);
     if (!isect.hit) {
-        L = bkg_color;
+        L = scene.background->sampleXYZ(pixel);
     } else {
         Point3f normal = isect.n;
         normal.make_unit_vector();
@@ -165,25 +160,14 @@ ColorXYZ NormalMapIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, ui
     return L;
 }
 
-ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, uint depth) 
+ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint depth) 
 {
-
-    // TODO REMOVE TEST
-    // int* x = new int;
-    // int* y = new int;
-    // int* comp = new int;
-    // unsigned char *teste = stbi_load("../teste.png", x, y, comp, 0);
-    // std::cout << *x << " " << *y << " " << *comp << std::endl;
-
-
-
-
     ColorXYZ BLACK(0,0,0);
     ColorXYZ L(0,0,0);
     Surfel isect = Surfel();
     scene.intersect(ray, &isect);
     if (!isect.hit) {
-        return bkg_color;
+        return scene.background->sampleXYZ(pixel);
     } else {
         BlinnPhongMaterial *fm = dynamic_cast<BlinnPhongMaterial*>(isect.primitive->get_material().get());
         Vector3f wi;
@@ -211,7 +195,7 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Spectrum bkg_color, u
         // std::cout << "before mirror: " << L << std::endl;
         if (depth < max_depth) {
             Ray reflected_ray = Ray(isect.p, ray.direction - 2*(dot(ray.direction,isect.n))*isect.n);
-            L += fm->mirror * Li(reflected_ray, scene, bkg_color, depth+1);
+            L += fm->mirror * Li(reflected_ray, scene, pixel, depth+1);
         }
         // std::cout << "after mirror: " << L << std::endl;
     }

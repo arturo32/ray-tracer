@@ -69,14 +69,19 @@ class BackgroundColor : public Background {
 };
 
 
-// class SphericBackground : public Background {
-//  public:
-//   SphericBackground(String path) { }
+class SphericBackground : public Background {
+  private:
+    unsigned char* image;
+    Point2i resolution;
 
-//   //virtual ~BackgroundColor(){};
-//   ~SphericBackground() = default;
-//   Spectrum sampleXYZ(const Point2f &pixel_ndc) override;
-// };
+ 
+  public:
+    SphericBackground(const char* path);
+
+    ~SphericBackground() = default;
+    //~SphericBackground() = default;
+    Spectrum sampleXYZ(const Point2f &pixel_ndc) override;
+};
 
 
 // factory pattern functions.
