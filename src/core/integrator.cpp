@@ -197,5 +197,4 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
     }
     return L;
 }
-
 }
