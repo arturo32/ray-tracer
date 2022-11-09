@@ -26,7 +26,7 @@ namespace rt3 {
 	PointLight::PointLight(Point3f from, Vector3f intensity,
 	 real_type kc, real_type kl, real_type kq, bool attenuate):
 	 Light(light_flag_e::point, intensity, kc, kl, kq, attenuate), from{from} {
-		std::cout << std::endl << "attenuate? " <<  a << std::endl << std::endl << std::endl;
+		//EMPTY
 	}
 
 	ColorXYZ PointLight::sample_Li( const Surfel& hit     /*in*/,
@@ -34,7 +34,7 @@ namespace rt3 {
 									VisibilityTester *vis /*out*/ ) {
 		Vector3f dir = (this->from - hit.p);
 		real_type mod = a ? attenuate(dir.length()) : 1;
-		dir.make_unit_vector();
+		// dir.make_unit_vector();
 		// TODO vis
 		wi->assign(dir);
 		return mod * intensity;
@@ -44,7 +44,7 @@ namespace rt3 {
 	 real_type kc, real_type kl, real_type kq, bool attenuate):
 	 Light(light_flag_e::directional, intensity, kc, kl, kq, attenuate) {
 		dir = (from-to);
-		dir.make_unit_vector();
+		// dir.make_unit_vector();
 	}
 
 	ColorXYZ DirectionalLight::sample_Li( const Surfel& hit     /*in*/,
@@ -82,8 +82,8 @@ namespace rt3 {
 		Vector3f dir = (this->from - hit.p);
 		real_type mod = a ? attenuate(dir.length()) : 1;
 		Vector3f spot_dir = (this->from - this->to);
-		dir.make_unit_vector();
 		wi->assign(dir);
+		dir.make_unit_vector();
 		spot_dir.make_unit_vector();
 		real_type theta = dot(dir, spot_dir);
 		real_type epsilon = cutoff - falloff;
