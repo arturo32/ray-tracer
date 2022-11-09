@@ -190,7 +190,7 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level)
         { param_type_e::VEC3F, "to" },
         { param_type_e::REAL, "cutoff" },
         { param_type_e::REAL, "falloff" },
-        { param_type_e::REAL, "attenuate" },
+        { param_type_e::STRING, "attenuate" },
         { param_type_e::REAL, "kc" },
         { param_type_e::REAL, "kl" },
         { param_type_e::REAL, "kq" },

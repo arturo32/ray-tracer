@@ -206,9 +206,7 @@ void API::material(const ParamSet &ps) {
       render_opt->curr_material = std::make_shared<FlatMaterial>(c);
   } else if (type == "blinn") {
       Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
-      std::cout << "before: " << a << std::endl;
       normalize_spectrum(a);
-      std::cout << "after: " << a << std::endl;
       Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
       normalize_spectrum(d);
       Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
@@ -242,17 +240,11 @@ void API::named_material(const ParamSet &ps) {
   } else if (type == "blinn") {
     // check interval of values and convert if needed?
     Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
-    std::cout << "before: " << a << std::endl;
     normalize_spectrum(a);
-    std::cout << "after: " << a << std::endl;
     Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
-    std::cout << "before: " << d << std::endl;
     normalize_spectrum(d);
-    std::cout << "after: " << d << std::endl;
     Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
-    std::cout << "after: " << s << std::endl;
     normalize_spectrum(s);
-    std::cout << "after: " << s << std::endl;
     Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
     normalize_spectrum(m);
     real_type g = retrieve(ps, "glossiness", real_type{0});
@@ -268,7 +260,9 @@ void API::light_source(const ParamSet &ps) {
   Vector3f intensity = retrieve(ps, "L", Vector3f{1,1,1});
   Vector3f scale = retrieve(ps, "scale", Vector3f{1,1,1});
 
-  bool attenuate = retrieve(ps, "attenuate", bool{false});
+  string attenuate_s = retrieve(ps, "attenuate", string{"false"});
+  bool attenuate = (attenuate_s == "true");
+  
   real_type kc = retrieve(ps, "kc", real_type{1});
   real_type kl = retrieve(ps, "kl", real_type{1});
   real_type kq = retrieve(ps, "kq", real_type{1});

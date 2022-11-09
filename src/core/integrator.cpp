@@ -176,10 +176,8 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
             ColorXYZ intensity = l->sample_Li(isect, &wi, &vis);
             if(!(intensity == BLACK)) {
                 // Ray from intersect point to the light source
-                Ray shadow_ray = Ray(isect.p, wi*1.01);
-                Surfel sisect = Surfel();
-                scene.intersect(shadow_ray, &sisect);
-                if(!sisect.hit) {
+                Ray shadow_ray = Ray(isect.p, wi);
+                if(!scene.intersect_p(shadow_ray)){
                     Vector3f h = -ray.direction + wi;
                     h.make_unit_vector();
                     L += fm->diffuse * intensity * std::max(real_type(0.0), dot(isect.n, wi));
@@ -192,12 +190,10 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
         if(scene.ambientLight != nullptr) {
             L += fm->ambient * scene.ambientLight->intensity;
         }
-        // std::cout << "before mirror: " << L << std::endl;
         if (depth < max_depth) {
             Ray reflected_ray = Ray(isect.p, ray.direction - 2*(dot(ray.direction,isect.n))*isect.n);
             L += fm->mirror * Li(reflected_ray, scene, pixel, depth+1);
         }
-        // std::cout << "after mirror: " << L << std::endl;
     }
     return L;
 }
