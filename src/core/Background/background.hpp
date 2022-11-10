@@ -1,8 +1,8 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include "rt3-base.hpp"
-#include "rt3.hpp"
+#include "../rt3-base.hpp"
+#include "../rt3.hpp"
 
 namespace rt3 {
 // Create a virtual class Background and derive BackgroundColor,
@@ -34,8 +34,7 @@ class Background {
 
   /// Ctro receiving a single color for the entire background.
   Background(Spectrum color = Spectrum(0,0,0), mapping_t mt = mapping_t::screen)
-      : color{color / 255.0}, mapping_type{mt} { /* empty */
-  }
+      : color{color / 255.0}, mapping_type{mt} { /* empty */}
 
   //virtual ~Background(){/* empty */};
   virtual ~Background() = default;
@@ -57,11 +56,7 @@ class BackgroundColor : public Background {
 
  public:
   /// Ctro receives a list of four colors, for each corner.
-  BackgroundColor(Spectrum values[]) {
-    for (size_t i = 0; i < 4; ++i) {
-      corners[i] = values[i];
-    }
-  }
+  BackgroundColor(Spectrum values[]);
 
   //virtual ~BackgroundColor(){};
   ~BackgroundColor() = default;

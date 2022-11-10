@@ -1,15 +1,8 @@
 #include "background.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "../ext/stb_image.hpp"
+
 
 namespace rt3 {
-/*!
- * Samples a color base on spherical interpolation of an image ou colored
- * background.
- *
- * @param pixel_ndc Pixel position in NDC space,  in \f$[0:1]\f$.
- * \return The interpolated color.
- */
+
 
 Spectrum Background::lerp(const Spectrum &A, const Spectrum &B, real_type t) const
 {
@@ -17,20 +10,16 @@ Spectrum Background::lerp(const Spectrum &A, const Spectrum &B, real_type t) con
   return result;
 }
 
+/*!
+ * Samples a color base on spherical interpolation of an image ou colored
+ * background.
+ *
+ * @param pixel_ndc Pixel position in NDC space,  in \f$[0:1]\f$.
+ * \return The interpolated color.
+ */
 Spectrum Background::sampleXYZ(const Point2f &pixel_ndc) {
   return color;
 }
-
-Spectrum BackgroundColor::sampleXYZ(const Point2f &pixel_ndc) {
-  Spectrum Xb = this->lerp(corners[bl], corners[br], pixel_ndc.x());
-  Spectrum Xt = this->lerp(corners[tl], corners[tr], pixel_ndc.x());
-  Spectrum result = this->lerp(Xb, Xt, pixel_ndc.y());
-  result /= 255.0;
-  result.clamp(0.0, 1.0);
-  return result;
-}
-
-
 
 std::unique_ptr<Background> create_color_background(const ParamSet &ps) {
   std::string type = retrieve(ps, "type", std::string("colors"));
@@ -68,22 +57,5 @@ std::unique_ptr<Background> create_color_background(const ParamSet &ps) {
     return make_unique<Background>(color);
   }
 }
-
-SphericBackground::SphericBackground(const char* path) { 
-  int* x = nullptr;
-  int* y = nullptr;
-  int* comp = new int;
-  this->image = stbi_load(path, x, y, comp, 0);
-  this->resolution = Point2i(*x, *y);
-
-  std::cout << *x << " " << *y << " " << *comp << std::endl;
-}
-
-
-Spectrum SphericBackground::sampleXYZ(const Point2f &pixel_ndc){
-  return Spectrum(); 
-}
-
-
 
 }  // namespace rt3

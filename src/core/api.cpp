@@ -1,5 +1,5 @@
 #include "api.hpp"
-#include "background.hpp"
+#include "Background/background.hpp"
 #include "camera.hpp"
 #include "sphere.hpp"
 #include "scene.hpp"

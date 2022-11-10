@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "primitive.hpp"
-#include "background.hpp"
+#include "Background/background.hpp"
 #include "rt3-base.hpp"
 #include "rt3.hpp"
 #include "light.hpp"
