@@ -2,6 +2,7 @@
 #include "Background/background.hpp"
 #include "camera.hpp"
 #include "sphere.hpp"
+#include "triangule.hpp"
 #include "scene.hpp"
 
 #include <chrono>
@@ -64,7 +65,17 @@ std::shared_ptr<Primitive> API::make_object(const std::string &type, const Param
   std::shared_ptr<Primitive> object{nullptr};
   if(type == "sphere") {
     object = create_sphere(object_ps, render_opt);
-  } else {
+  }
+  else if(type == "triangule") {
+    Point3f a{-4, 0, 4};
+    Point3f b{4, 0, 4};
+    Point3f c{4, 0, -4};
+    vector<Point3f> p{a, b, c};
+
+    std::shared_ptr<Triangule> tri = make_shared<Triangule>(false, p);
+    object = make_shared<GeometricPrimitive>(render_opt->curr_material, tri) ;
+  }
+   else {
     RT3_ERROR("Type of object not valid.");
   }
   return object;
@@ -357,5 +368,6 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
         return make_shared<GeometricPrimitive>(opt->named_materials[name], sphere);
     }
 }
+
 
 }

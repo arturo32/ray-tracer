@@ -47,6 +47,7 @@ add_executable(basic_rt3 ${RT3_SOURCE_DIR}/core/api.cpp
                          ${RT3_SOURCE_DIR}/core/camera.cpp
                          ${RT3_SOURCE_DIR}/core/integrator.cpp
                          ${RT3_SOURCE_DIR}/core/sphere.cpp
+			 ${RT3_SOURCE_DIR}/core/triangule.cpp
                          ${RT3_SOURCE_DIR}/core/light.cpp
                          ${RT3_SOURCE_DIR}/core/tinyxml2.cpp
                          ${RT3_SOURCE_DIR}/ext/lodepng.cpp
