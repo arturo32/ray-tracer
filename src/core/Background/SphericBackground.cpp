@@ -11,28 +11,36 @@ SphericBackground::SphericBackground(const char* path) {
   
   int* y = new int;
   int* comp = new int;
-  
-  
   this->image = stbi_load(path, x, y, comp, 0);
   this->resolution = Point2i(*x, *y);
 
-  std::cout << *x << " " << *y << " " << *comp << std::endl;
+  std::cout << "RESOLUÇÃO IMAGEM: " << *x << " " << *y << " " << *comp << "------------------------------------------" << std::endl;
 }
 
 
-Spectrum SphericBackground::sampleXYZ(const Ray& ray){
-  real_type x = ray.direction.x();
-  real_type y = ray.direction.y();
-  real_type z = ray.direction.z();
-  real_type theta = atan(z/x);
-  real_type phi = atan(sqrt(x*x + z*z)/y);
-
-  real_type xCoordenate = (this->resolution.x() * theta) / 2 * (real_type) M_PI;
-  real_type yCoordenate = (this->resolution.y() * phi) / (real_type) M_PI;
-
-
-  uint pos = 3*8*((yCoordenate * this->resolution.x()) + xCoordenate);
+Spectrum SphericBackground::sampleXYZ(const Ray& r){
+  real_type pi = (real_type)M_PI;
   
+  Vector3f ray{r.direction.x(), r.direction.y(), r.direction.z()};
+  ray.make_unit_vector();
+  real_type x = ray.x();
+  real_type y = ray.y();
+  real_type z = ray.z();
+  
+  real_type theta = atan2(x, z);  
+  real_type phi = atan2(sqrt(x*x + z*z), y);
+
+  int xCoordenate =  floor(((theta+pi)/(2*pi)) * this->resolution.x());;
+  // std::cout << theta << std::endl;
+  // std::cout << "teste " << this->resolution.x() << std::endl;
+  
+  int yCoordenate = floor(((phi+pi)/(2*pi)) * this->resolution.y());;
+
+  // std::cout << theta <<  ", " << phi <<std::endl;
+  // std::cout << "coodernadas: " << xCoordenate <<  ", " << yCoordenate <<std::endl;
+
+
+  uint pos = 3*((yCoordenate * this->resolution.x()) + xCoordenate);
   return Spectrum(this->image[pos], this->image[pos + 1], this->image[pos + 2]); 
 }
 
