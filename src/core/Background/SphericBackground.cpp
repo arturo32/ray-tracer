@@ -15,17 +15,18 @@ SphericBackground::SphericBackground(const char* path) {
   this->resolution = Point2i(*x, *y);
 
 
-  
-  unsigned char data_teste[1600*774];
-  for(int i = 0; i < resolution.x(); ++i) {
-    for(int j = 0; j < resolution.y(); ++j){
-      uint pos = 3*((j * this->resolution.x()) + i);
-      data_teste[pos] = this->image[pos];
-      data_teste[pos+1] = this->image[pos+1];
-      data_teste[pos+2] = this->image[pos+2];
-    }
-  }
-  save_png(data_teste, resolution.x(), resolution.y(), 3, "testandoooo.png");
+
+  // Testa se o erro é na l  
+  // unsigned char* data_teste = new unsigned char[resolution.x()*resolution.y()*3];
+  // for(int j = 0; j < resolution.y(); ++j) {
+  //   for(int i = 0; i < resolution.x(); ++i){
+  //     uint pos = 3*(  (j * this->resolution.x())   + i);
+  //     data_teste[pos] = this->image[pos];
+  //     data_teste[pos+1] = this->image[pos+1];
+  //     data_teste[pos+2] = this->image[pos+2];
+  //   }
+  // }
+  // save_png(data_teste, resolution.x(), resolution.y(), 3, "testandoooo.png");
 
   std::cout << "RESOLUÇÃO IMAGEM: " << *x << " " << *y << " " << *comp << "------------------------------------------" << std::endl;
 }
