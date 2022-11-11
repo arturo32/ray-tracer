@@ -5,9 +5,6 @@
 namespace rt3 {
 
     bool Triangule::intersect( const Ray& r, real_type& t_hit, Surfel *sf ) const {
-        // ?std::cout << "testeeeeeeee" << std::endl;
-        real_type inv_det;
-
         Vector3f edge1 = this->points[1] - this->points[0];
         Vector3f edge2 = this->points[2] - this->points[0];
         Vector3f pvec = cross(edge2, r.direction);
@@ -17,7 +14,7 @@ namespace rt3 {
             return false;
         }
         
-        inv_det = 1.0 / det;
+        real_type inv_det = 1.0 / det;
 
         Vector3f tvec = r.origin - this->points[0];
         sf->uv[0] = dot(tvec, pvec) * inv_det;
@@ -27,7 +24,7 @@ namespace rt3 {
 
         Vector3f qvec = cross(edge1, tvec);
         sf->uv[1] = dot(r.direction, qvec) * inv_det;
-        if(sf->uv[1] < 0.0  || sf->uv[1] > 1.0) {
+        if(sf->uv[1] < 0.0  || (sf->uv[0] + sf->uv[1]) > 1.0) {
             return false;
         }
 
@@ -40,8 +37,6 @@ namespace rt3 {
     }
 
     bool Triangule::intersect_p(const Ray& r) const {
-        real_type inv_det;
-
         Vector3f edge1 = this->points[1] - this->points[0];
         Vector3f edge2 = this->points[2] - this->points[0];
         Vector3f pvec = cross(edge2, r.direction);
@@ -51,7 +46,7 @@ namespace rt3 {
             return false;
         }
         
-        inv_det = 1.0 / det;
+        real_type inv_det = 1.0 / det;
 
         Vector3f tvec = r.origin - this->points[0];
         real_type u = dot(tvec, pvec) * inv_det;
@@ -61,7 +56,7 @@ namespace rt3 {
 
         Vector3f qvec = cross(edge1, tvec);
         real_type v = dot(r.direction, qvec) * inv_det;
-        if(v < 0.0  || v > 1.0) {
+        if(v < 0.0  || (u + v) > 1.0) {
             return false;
         }
         return true;
@@ -69,6 +64,6 @@ namespace rt3 {
 
     Bounds3f Triangule::world_bounds() const {
         std::cout << "vish" << std::endl;
-        return Bounds3f{Point3f{}, Point3f{}};
+        return Bounds3f{Point3f{0, 0, 0}, Point3f{0, 0, 0}};
     }
 }

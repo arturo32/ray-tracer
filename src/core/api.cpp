@@ -67,15 +67,9 @@ std::shared_ptr<Primitive> API::make_object(const std::string &type, const Param
     object = create_sphere(object_ps, render_opt);
   }
   else if(type == "triangule") {
-    Point3f a{-4, 0, 4};
-    Point3f b{4, 0, 4};
-    Point3f c{4, 0, -4};
-    vector<Point3f> p{a, b, c};
-
-    std::shared_ptr<Triangule> tri = make_shared<Triangule>(false, p);
-    object = make_shared<GeometricPrimitive>(render_opt->curr_material, tri) ;
+    object = create_triangule(object_ps, render_opt);
   }
-   else {
+  else {
     RT3_ERROR("Type of object not valid.");
   }
   return object;
@@ -367,6 +361,24 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
         }
         return make_shared<GeometricPrimitive>(opt->named_materials[name], sphere);
     }
+}
+
+std::shared_ptr<GeometricPrimitive> API::create_triangule(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt) {
+  
+  vector<Point3f> vertices = retrieve(object_ps, "vertices", vector<Point3f>{Point3f{0, 0, 0}, Point3f{0, 0, 0}, Point3f{0, 0, 0}});
+  std::shared_ptr<Triangule> triangule = make_shared<Triangule>(false, vertices);
+
+  std::string name = retrieve(object_ps, "material", std::string{""});
+
+  if (name == "") {
+      return make_shared<GeometricPrimitive>(opt->curr_material, triangule);
+  } else {
+      if (opt->named_materials.find(name) == opt->named_materials.end()){
+          RT3_ERROR("Material of name '" + name + "' not found!");
+      }
+      return make_shared<GeometricPrimitive>(opt->named_materials[name], triangule);
+  }
+
 }
 
 

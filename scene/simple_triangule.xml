@@ -1,17 +1,20 @@
 <RT3>
-    <lookat look_from="0 10 -15" look_at="0 0 1" up="0 1 0" />
+    <lookat look_from="0 10 -10" look_at="0 0 1" up="0 1 0" />
     <camera type="perspective" fovy="65" /> 
-    <integrator type="blinn_phong" depth="1" />
+    <integrator type="blinn_phong" />
 
-    <film type="image" x_res="600" y_res="400" filename="simple_sphere" img_type="png" gamma_corrected="no" />
+    <film type="image" x_res="600" y_res="400" filename="simple_sphere" img_type="png"/>
      <world_begin/>
-        <background type="colors" color="0 100 200"/>
-        <light_source type="directional" L="0.9 0.9 0.9" scale="1 1 1" from="0 10 -20" to="0 0 0" />
+        <background type="colors" bl="153 204 255" tl="18 10 143" tr="18 10 143" br="153 204 255" />
+        <light_source type="ambient" L="0.1 0.1 0.1" />
+        <light_source type="point" L="1 1 1" scale="1 1 1" from="1 10 0" />
 
-        <named_material type="blinn" name="mirror_512" ambient="0.2 0.2 0.2" diffuse ="119 60 187"   specular ="0.85 0.62 0.21" mirror ="0 0 0" glossiness ="1"/>
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="1 0 0" specular="1 0 0" glossiness="256" /> 
+        <!-- <material type="flat" color="200 0 0" /> -->
 
-        <object type="sphere" radius=".4" center="0 4 0" material="mirror_512"/>
-        <object type="triangule" />
+        <object type="sphere" radius=".4" center="0 4 0"/>
+        <object type="triangule" vertices="-4 0 4  4 0 4  4 0 -4"/>
+        <object type="sphere" radius="100" center="0 -102 0"/>
 
     <world_end/>
 </RT3>

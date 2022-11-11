@@ -128,6 +128,7 @@ class API {
   static void world_end(void);
 
   static std::shared_ptr<GeometricPrimitive> create_sphere(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
+  static std::shared_ptr<GeometricPrimitive> create_triangule(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
 };
 }  // namespace rt3
 
