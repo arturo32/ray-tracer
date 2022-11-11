@@ -175,10 +175,10 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
         for (auto &&l : scene.lights) {
             ColorXYZ intensity = l->sample_Li(isect, &wi, &vis);
             if(!(intensity == BLACK)) {
-                Vector3f wi_n = wi;
+                Vector3f wi_n{wi.x(), wi.y(), wi.z()};
                 wi_n.make_unit_vector();
                 // Ray from intersect point to the light source
-                Ray shadow_ray = Ray(isect.p+(wi_n*0.01), wi_n);
+                Ray shadow_ray = Ray(isect.p, wi_n);
                 shadow_ray.t_min = 0.001;
                 shadow_ray.t_max = wi.length();
                 if(!scene.intersect_p(shadow_ray)){

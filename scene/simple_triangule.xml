@@ -7,14 +7,15 @@
      <world_begin/>
         <background type="colors" bl="153 204 255" tl="18 10 143" tr="18 10 143" br="153 204 255" />
         <light_source type="ambient" L="0.1 0.1 0.1" />
-        <light_source type="point" L="1 1 1" scale="1 1 1" from="1 10 0" />
+        <light_source type="point" L="1 1 1" scale="1 1 1" from="-3 10 0" />
 
-        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="1 0 0" specular="1 0 0" glossiness="256" /> 
-        <!-- <material type="flat" color="200 0 0" /> -->
-
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="1 0 0" specular="1 0 0" glossiness="256" /> <!-- Red -->
         <object type="sphere" radius=".4" center="0 4 0"/>
-        <object type="triangule" vertices="-4 0 4  4 0 4  4 0 -4"/>
         <object type="sphere" radius="100" center="0 -102 0"/>
+
+        <material type="blinn" ambient="0.2 0.2 0.2" diffuse="1 1 0" specular="1 1 0" glossiness="256" /> <!-- Yellow -->
+        <object type="triangule" vertices="-4 0 4  4 0 4  4 0 -4"/>
+        
 
     <world_end/>
 </RT3>

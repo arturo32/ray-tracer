@@ -29,11 +29,16 @@ namespace rt3 {
         }
 
         t_hit = dot(edge2, qvec) * inv_det;
-        sf->wo = -r.direction;
-        sf->p = r(t_hit);
-        sf->n = cross(edge1, edge2);
-        sf->n.make_unit_vector();
-        return true;
+        if (t_hit < r.t_max && t_hit > r.t_min) {
+            sf->wo = -r.direction;
+            sf->p = r(t_hit);
+            sf->n = cross(edge1, edge2);
+            sf->n.make_unit_vector();
+            return true;
+        }
+        return false;
+        
+        
     }
 
     bool Triangule::intersect_p(const Ray& r) const {
@@ -59,7 +64,11 @@ namespace rt3 {
         if(v < 0.0  || (u + v) > 1.0) {
             return false;
         }
-        return true;
+        real_type t_hit = dot(edge2, qvec) * inv_det;
+        if(t_hit < r.t_max && t_hit > r.t_min) {
+            return true;
+        }
+        return false;
     }
 
     Bounds3f Triangule::world_bounds() const {
