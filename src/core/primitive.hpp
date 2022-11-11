@@ -8,7 +8,7 @@
 #include "ray.hpp"
 #include "../ext/vec3.hpp"
 #include "surfel.hpp"
-#include "shape.hpp"
+#include "Shape/shape.hpp"
 #include "material.hpp"
 
 namespace rt3 {

@@ -5,7 +5,7 @@
 
 #include "rt3-base.hpp"
 #include "scene.hpp"
-#include "integrator.hpp"
+#include "Integrator/integrator.hpp"
 #include "material.hpp"
 
 //=== API Macro definitions

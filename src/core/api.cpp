@@ -1,8 +1,8 @@
 #include "api.hpp"
 #include "Background/background.hpp"
 #include "camera.hpp"
-#include "sphere.hpp"
-#include "triangule.hpp"
+#include "Shape/Sphere.hpp"
+#include "Shape/Triangule.hpp"
 #include "scene.hpp"
 
 #include <chrono>
@@ -38,7 +38,14 @@ Film *API::make_film(const std::string &type, const ParamSet &ps) {
 std::unique_ptr<Background> make_background(const std::string &type, const ParamSet &ps) {
   std::cout << ">>> Inside API::background()\n";
   std::unique_ptr<Background> bkg{nullptr};
-  bkg = create_color_background(ps);
+  if(type == "colors") {
+    bkg = create_color_background(ps);
+  } else if(type == "spheric") {  
+    bkg = make_unique<SphericBackground>("../teste.png");
+  } else {
+    bkg = create_color_background(ps);
+  }
+  
 
   // Return the newly created background.
   return bkg;
@@ -188,7 +195,9 @@ void API::background(const ParamSet &ps) {
   VERIFY_WORLD_BLOCK("API::background");
 
   // retrieve type from ps.
+  std::cout << "teste22222222222222222222222222222222222222222222222222222222222222" << std::endl;
   std::string type = retrieve(ps, "type", string{"unknown"});
+  std::cout << "testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" << std::endl;
   render_opt->bkg_type = type;
   // Store current background object.
   render_opt->bkg_ps = ps;

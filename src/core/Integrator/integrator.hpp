@@ -1,8 +1,8 @@
 #ifndef INTEGRATOR_H
 #define INTEGRATOR_H
 
-#include "scene.hpp"
-#include "camera.hpp"
+#include "../scene.hpp"
+#include "../camera.hpp"
 
 namespace rt3 {
 

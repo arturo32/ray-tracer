@@ -7,9 +7,12 @@ namespace rt3{
 
 
 SphericBackground::SphericBackground(const char* path) { 
-  int* x = nullptr;
-  int* y = nullptr;
-  int* comp = nullptr;
+  int* x = new int;
+  
+  int* y = new int;
+  int* comp = new int;
+  
+  
   this->image = stbi_load(path, x, y, comp, 0);
   this->resolution = Point2i(*x, *y);
 
@@ -17,20 +20,20 @@ SphericBackground::SphericBackground(const char* path) {
 }
 
 
-Spectrum SphericBackground::sampleXYZ(const Point2f &pixel_ndc){
+Spectrum SphericBackground::sampleXYZ(const Ray& ray){
+  real_type x = ray.direction.x();
+  real_type y = ray.direction.y();
+  real_type z = ray.direction.z();
+  real_type theta = atan(z/x);
+  real_type phi = atan(sqrt(x*x + z*z)/y);
+
+  real_type xCoordenate = (this->resolution.x() * theta) / 2 * (real_type) M_PI;
+  real_type yCoordenate = (this->resolution.y() * phi) / (real_type) M_PI;
+
+
+  uint pos = 3*8*((yCoordenate * this->resolution.x()) + xCoordenate);
   
-  
-  // int x = pixel_ndc.x() * this->resolution.x();
-  // int y = pixel_ndc.y() * this->resolution.y();
-
-  // real_type theta = tan(
-  // real_type phi = 
-
-  // uint pos = 3*((pixel_ndc.y() * this->resolution.x()) + pixel_ndc.x());
-
-  // int x = pixel_ndc.x() * ;
-  // this->image[]
-  return Spectrum(); 
+  return Spectrum(this->image[pos], this->image[pos + 1], this->image[pos + 2]); 
 }
 
 

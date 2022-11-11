@@ -1,7 +1,7 @@
 #ifndef TRIANGULE_H
 #define TRIANGULE_H
 
-#include "rt3-base.hpp"
+#include "../rt3-base.hpp"
 #include "shape.hpp"
 
 namespace rt3 {

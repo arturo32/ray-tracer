@@ -6,7 +6,7 @@
 #include "Background/background.hpp"
 #include "rt3-base.hpp"
 #include "rt3.hpp"
-#include "light.hpp"
+#include "Light/light.hpp"
 #include "../ext/vec2.hpp"
 #include "../ext/vec3.hpp"
 

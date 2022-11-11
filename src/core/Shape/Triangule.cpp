@@ -1,4 +1,4 @@
-#include "triangule.hpp"
+#include "Triangule.hpp"
 
 #define EPSILON 0.000001
 

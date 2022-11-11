@@ -1,9 +1,9 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include "rt3.hpp"
-#include "surfel.hpp"
-#include "ray.hpp"
+#include "../rt3.hpp"
+#include "../surfel.hpp"
+#include "../ray.hpp"
 
 namespace rt3 {
 

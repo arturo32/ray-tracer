@@ -38,7 +38,8 @@ class Background {
 
   //virtual ~Background(){/* empty */};
   virtual ~Background() = default;
-  virtual Spectrum sampleXYZ(const Point2f &pixel_ndc);
+  virtual Spectrum sampleXYZ(const Point2f& pixel_ndc);
+  Spectrum sampleXYZ(const Ray& ray){return Spectrum{};}
 };
 
 class BackgroundColor : public Background {
@@ -75,7 +76,7 @@ class SphericBackground : public Background {
 
     ~SphericBackground() = default;
     //~SphericBackground() = default;
-    Spectrum sampleXYZ(const Point2f &pixel_ndc) override;
+    Spectrum sampleXYZ(const Ray& ray);
 };
 
 
