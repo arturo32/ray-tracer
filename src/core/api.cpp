@@ -40,8 +40,8 @@ std::unique_ptr<Background> make_background(const std::string &type, const Param
   std::unique_ptr<Background> bkg{nullptr};
   if(type == "colors") {
     bkg = create_color_background(ps);
-  } else if(type == "spheric") {  
-    bkg = make_unique<SphericBackground>("../teste.png");
+  } else if(type == "texture") {  
+    bkg = create_texture_background(ps);
   } else {
     bkg = create_color_background(ps);
   }
@@ -195,9 +195,7 @@ void API::background(const ParamSet &ps) {
   VERIFY_WORLD_BLOCK("API::background");
 
   // retrieve type from ps.
-  std::cout << "teste22222222222222222222222222222222222222222222222222222222222222" << std::endl;
   std::string type = retrieve(ps, "type", string{"unknown"});
-  std::cout << "testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" << std::endl;
   render_opt->bkg_type = type;
   // Store current background object.
   render_opt->bkg_ps = ps;

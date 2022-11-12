@@ -37,7 +37,7 @@ set( RT3_SOURCE_DIR "src" )
 add_executable(basic_rt3 ${RT3_SOURCE_DIR}/core/api.cpp
                          ${RT3_SOURCE_DIR}/core/Background/background.cpp
 			 ${RT3_SOURCE_DIR}/core/Background/BackgroundColor.cpp
-			 ${RT3_SOURCE_DIR}/core/Background/SphericBackground.cpp
+			 ${RT3_SOURCE_DIR}/core/Background/BackgroundTexture.cpp
                          ${RT3_SOURCE_DIR}/core/material.cpp
                          ${RT3_SOURCE_DIR}/core/camera.cpp
                          ${RT3_SOURCE_DIR}/core/error.cpp

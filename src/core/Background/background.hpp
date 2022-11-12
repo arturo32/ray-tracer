@@ -39,7 +39,7 @@ class Background {
   //virtual ~Background(){/* empty */};
   virtual ~Background() = default;
   virtual Spectrum sampleXYZ(const Point2f& pixel_ndc);
-  virtual Spectrum sampleXYZ(const Ray& ray){return Spectrum{};}
+  virtual Spectrum sampleXYZ(const Ray& ray){return Spectrum{};};
 };
 
 class BackgroundColor : public Background {
@@ -59,28 +59,29 @@ class BackgroundColor : public Background {
   /// Ctro receives a list of four colors, for each corner.
   BackgroundColor(Spectrum values[]);
 
-  //virtual ~BackgroundColor(){};
   ~BackgroundColor() = default;
   Spectrum sampleXYZ(const Point2f &pixel_ndc) override;
 };
 
 
-class SphericBackground : public Background {
+class BackgroundTexture : public Background {
   private:
     unsigned char* image;
     Point2i resolution;
 
  
   public:
-    SphericBackground(const char* path);
+    /// @brief Loads a file relative to the executable of this program
+    /// @param path Path of the image that will be used as a spheric texture in the background
+    BackgroundTexture(string path, string mapping);
 
-    ~SphericBackground() = default;
-    //~SphericBackground() = default;
+    ~BackgroundTexture() = default;
     Spectrum sampleXYZ(const Ray& ray) override;
 };
 
 
 // factory pattern functions.
 std::unique_ptr<Background> create_color_background(const ParamSet &ps);
+std::unique_ptr<Background> create_texture_background(const ParamSet &ps);
 }  // namespace rt3
 #endif

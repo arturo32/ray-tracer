@@ -58,4 +58,9 @@ std::unique_ptr<Background> create_color_background(const ParamSet &ps) {
   }
 }
 
+std::unique_ptr<Background> create_texture_background(const ParamSet &ps) {
+  string filename = retrieve(ps, "filename", string{"teste.png"});
+  string mapping = retrieve(ps, "mapping", string{"screen"});
+  return make_unique<BackgroundTexture>(filename, mapping);
+}
 }  // namespace rt3

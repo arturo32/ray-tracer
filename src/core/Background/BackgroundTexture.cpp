@@ -6,16 +6,23 @@
 namespace rt3{
 
 
-SphericBackground::SphericBackground(const char* path) { 
+BackgroundTexture::BackgroundTexture(string path, string mapping) { 
   int* x = new int;
   int* y = new int;
   int* comp = new int;
-  this->image = stbi_load(path, x, y, comp, 0);
+  this->image = stbi_load(path.begin().base(), x, y, comp, 0);
   this->resolution = Point2i(*x, *y);
+  
+  if(mapping == "screen") {
+    this->mapping_type = Background::mapping_t::screen;
+  }
+  else {
+    this->mapping_type = Background::mapping_t::spherical;
+  }
 }
 
 
-Spectrum SphericBackground::sampleXYZ(const Ray& r) {
+Spectrum BackgroundTexture::sampleXYZ(const Ray& r) {
   real_type pi = (real_type)M_PI;
   real_type pi_2 = (real_type)M_PI_2;
   

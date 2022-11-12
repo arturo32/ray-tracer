@@ -167,7 +167,14 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
     Surfel isect = Surfel();
     scene.intersect(ray, &isect);
     if (!isect.hit) {
-        return scene.background->sampleXYZ(ray);
+        if(scene.background->mapping_type == Background::mapping_t::screen) {
+            return scene.background->sampleXYZ(pixel);
+
+        }
+        else {
+            return scene.background->sampleXYZ(ray);
+        }
+        
     } else {
         BlinnPhongMaterial *fm = dynamic_cast<BlinnPhongMaterial*>(isect.primitive->get_material().get());
         Vector3f wi;

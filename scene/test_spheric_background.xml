@@ -5,7 +5,7 @@
 
     <film type="image" x_res="2400" y_res="1600" filename="simple_sphere" img_type="png"/>
      <world_begin/>
-        <background type="spheric"/>
+        <background type="texture" filename="../teste.png" mapping="spherical"/>
         <light_source type="ambient" L="0.1 0.1 0.1" />
         <light_source type="point" L="1 1 1" scale="1 1 1" from="400 500 300" />
 
