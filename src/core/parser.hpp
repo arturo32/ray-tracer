@@ -95,7 +95,7 @@ namespace rt3 {
     };
     // === parsing functions.
     void parse( const char* );
-    void parse_tags(  tinyxml2::XMLElement *, int );
+    void parse_tags(  tinyxml2::XMLElement *, int, std::string curr_filename);
     void parse_parameters( tinyxml2::XMLElement *p_element, const vector<std::pair<param_type_e, string>>param_list, ParamSet *ps_out );
 
     //-------------------------------------------------------------------------------

@@ -42,11 +42,11 @@ void parse(const char *scene_file_name)
   if (p_child == nullptr)
     RT3_ERROR("No \"children\" tags found inside the \"RT3\" tag. Empty scene file?");
 
-  parse_tags(p_child, /* initial level */ 0);
+  parse_tags(p_child, /* initial level */ 0, scene_file_name);
 }
 
 /// Main loop that handles each possible tag we may find in a RT3 scene file.
-void parse_tags(tinyxml2::XMLElement *p_element, int level)
+void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_filename)
 {
   /// Lambda expression that returns a lowercase version of the input string.
   auto CSTR_LOWERCASE = [](const char *t) -> std::string {
@@ -151,8 +151,16 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level)
       vector<std::pair<param_type_e, string>> param_list{
         { param_type_e::STRING, "filename" }
       };
+
       parse_parameters(p_element, param_list, /* out */ &ps);
       string filename = retrieve(ps, "filename", string{"unknown"});
+
+      // Search included file relative to the directory of the current file
+      std::size_t last_index_before_file = curr_filename.find_last_of("/");
+      if(last_index_before_file != string::npos) {
+        filename = curr_filename.substr(0, last_index_before_file) + "/" + filename;
+      }
+      
       parse(filename.begin().base());
     } 
     else if (tag_name == "world_end") {
