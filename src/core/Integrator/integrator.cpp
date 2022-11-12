@@ -169,12 +169,10 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
     if (!isect.hit) {
         if(scene.background->mapping_type == Background::mapping_t::screen) {
             return scene.background->sampleXYZ(pixel);
-
         }
         else {
             return scene.background->sampleXYZ(ray);
         }
-        
     } else {
         BlinnPhongMaterial *fm = dynamic_cast<BlinnPhongMaterial*>(isect.primitive->get_material().get());
         Vector3f wi;
@@ -201,7 +199,7 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
         if(scene.ambientLight != nullptr) {
             L += fm->ambient * scene.ambientLight->intensity;
         }
-        if (depth < max_depth) {
+        if (depth < this->max_depth) {
             Ray reflected_ray = Ray(isect.p, ray.direction - 2*(dot(ray.direction,isect.n))*isect.n);
             L += fm->mirror * Li(reflected_ray, scene, pixel, depth+1);
         }
