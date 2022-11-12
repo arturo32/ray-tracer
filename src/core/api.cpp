@@ -239,29 +239,33 @@ void API::named_material(const ParamSet &ps) {
   // retrieve type from ps.
   std::string type = retrieve(ps, "type", string{"unknown"});
   std::string name = retrieve(ps, "name", string{"unknown"});
-  if (type == "flat") {
-    // retrieve color from ps.
-    ColorXYZ c = retrieve(ps, "color", ColorXYZ{0,0,0});
-    // check interval of values and convert if needed
-    if(c.x() <= 1.0 && c.y() <= 1.0 && c.z() <= 1.0) {
-      c *= 255.0;
-      c.clamp(0.0, 255.0);
+  if(render_opt->named_materials[name].get() == nullptr) {
+    if (type == "flat") {
+      // retrieve color from ps.
+      ColorXYZ c = retrieve(ps, "color", ColorXYZ{0,0,0});
+      // check interval of values and convert if needed
+      if(c.x() <= 1.0 && c.y() <= 1.0 && c.z() <= 1.0) {
+        c *= 255.0;
+        c.clamp(0.0, 255.0);
+      }
+      std::cout << "color: " << c << std::endl;
+      render_opt->named_materials[name] = std::make_shared<FlatMaterial>(c);
+    } else if (type == "blinn") {
+      // check interval of values and convert if needed?
+      Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
+      normalize_spectrum(a);
+      Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
+      normalize_spectrum(d);
+      Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+      normalize_spectrum(s);
+      Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
+      normalize_spectrum(m);
+      real_type g = retrieve(ps, "glossiness", real_type{0});
+      render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
     }
-    std::cout << "color: " << c << std::endl;
-    render_opt->named_materials[name] = std::make_shared<FlatMaterial>(c);
-  } else if (type == "blinn") {
-    // check interval of values and convert if needed?
-    Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
-    normalize_spectrum(a);
-    Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
-    normalize_spectrum(d);
-    Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
-    normalize_spectrum(s);
-    Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
-    normalize_spectrum(m);
-    real_type g = retrieve(ps, "glossiness", real_type{0});
-    render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
   }
+  
+  render_opt->curr_material = render_opt->named_materials[name];
 }
 
 void API::light_source(const ParamSet &ps) {

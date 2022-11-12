@@ -146,7 +146,16 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level)
       parse_parameters(p_element, param_list, /* out */ &ps);
       API::object(ps);
 
-    } else if (tag_name == "world_end") {
+    } else if (tag_name == "include") {
+      ParamSet ps;
+      vector<std::pair<param_type_e, string>> param_list{
+        { param_type_e::STRING, "filename" }
+      };
+      parse_parameters(p_element, param_list, /* out */ &ps);
+      string filename = retrieve(ps, "filename", string{"unknown"});
+      parse(filename.begin().base());
+    } 
+    else if (tag_name == "world_end") {
       API::world_end();
       // std::clog << ">>> Leaving WorldBegin, at level " << level+1 << std::endl;
     } else if (tag_name == "material") {
