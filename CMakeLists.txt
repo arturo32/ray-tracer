@@ -47,7 +47,7 @@ add_executable(basic_rt3 ${RT3_SOURCE_DIR}/core/api.cpp
                          ${RT3_SOURCE_DIR}/core/camera.cpp
                          ${RT3_SOURCE_DIR}/core/Integrator/integrator.cpp
                          ${RT3_SOURCE_DIR}/core/Shape/Sphere.cpp
-			 ${RT3_SOURCE_DIR}/core/Shape/Triangule.cpp
+			 ${RT3_SOURCE_DIR}/core/Shape/Triangle.cpp
                          ${RT3_SOURCE_DIR}/core/Light/light.cpp
 			 ${RT3_SOURCE_DIR}/core/Light/AmbientLight.cpp
 			 ${RT3_SOURCE_DIR}/core/Light/DirectionalLight.cpp
