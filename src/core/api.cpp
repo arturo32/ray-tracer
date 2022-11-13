@@ -377,41 +377,31 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
 std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt) {
 
   std::shared_ptr<TriangleMesh> mesh = make_shared<TriangleMesh>();
-  mesh->points = retrieve(object_ps, "vertices", vector<Point3f>{Point3f{0, 0, 0}, Point3f{0, 0, 0}, Point3f{0, 0, 0}});
-  mesh->normals = retrieve(object_ps, "normals", std::vector<Normal3f>{Normal3f{0, 0, 0}, Normal3f{0, 0, 0}, Normal3f{0, 0, 0}});
-  mesh->uvs = retrieve(object_ps, "uv", std::vector<Point2f>{Point2f{0, 0}, Point2f{0, 0}});
+  mesh->points = retrieve(object_ps, "vertices", vector<Point3f>{});
+  mesh->normals = retrieve(object_ps, "normals", std::vector<Normal3f>{});
+  mesh->uvs = retrieve(object_ps, "uv", std::vector<Point2f>{});
   
-
   std::vector<Point3i> indices = retrieve(object_ps, "indices", std::vector<Point3i>{});
   
-  vector<shared_ptr<Shape>> triangles;
-  for(Point3i indice : indices) {
-    shared_ptr<Shape> triangle = make_shared<Triangle>(false, indice, mesh);
-    triangles.push_back(triangle);
-  }
-
   std::string name = retrieve(object_ps, "material", std::string{""});
-
-  vector<shared_ptr<Primitive>> primitives;
-  if (name == "") {    
-      for(Point3i indice : indices) {
-        shared_ptr<Triangle> triangle = make_shared<Triangle>(false, indice, mesh);
-        primitives.push_back(make_shared<GeometricPrimitive>(opt->curr_material, triangle));
-      }
-
-      return make_shared<PrimList>(primitives);
-  } else {
-      if (opt->named_materials.find(name) == opt->named_materials.end()){
-          RT3_ERROR("Material of name '" + name + "' not found!");
-      }
-      
-      for(Point3i indice : indices) {
-        shared_ptr<Triangle> triangle = make_shared<Triangle>(false, indice, mesh);
-        primitives.push_back(make_shared<GeometricPrimitive>(opt->named_materials[name], triangle));
-      }
-      return make_shared<PrimList>(primitives);
+  
+  std::shared_ptr<Material> materialMesh;
+  if (name == "") {
+    materialMesh = opt->curr_material;
   }
-
+  else {
+    if (opt->named_materials.find(name) == opt->named_materials.end()){
+      RT3_ERROR("Material of name '" + name + "' not found!");
+    }
+    materialMesh = opt->named_materials[name];
+  }
+  
+  vector<shared_ptr<Primitive>> primitives;
+  for(Point3i indice : indices) {
+    shared_ptr<Triangle> triangle = make_shared<Triangle>(false, indice, mesh);
+    primitives.push_back(make_shared<GeometricPrimitive>(materialMesh, triangle));
+  }  
+  return make_shared<PrimList>(primitives);
 }
 
 
