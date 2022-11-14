@@ -7,6 +7,7 @@
 #include "scene.hpp"
 #include "Integrator/integrator.hpp"
 #include "material.hpp"
+#include "Shape/Triangle.hpp"
 
 //=== API Macro definitions
 
@@ -106,6 +107,15 @@ class API {
   ///
   static Film* make_film(const string& name, const ParamSet& ps);
   static std::shared_ptr<Primitive> make_object(const std::string &type, const ParamSet &object_ps);
+
+  /// @brief Read .obj file and puts its values in a TriangleMesh
+  /// @param filename Name of the .obj file relative to the .xml file that imported it
+  /// @param mesh Shared pointer to a TriagleMesh
+  static std::shared_ptr<PrimList> read_obj_file(std::string filename, std::shared_ptr<TriangleMesh> mesh);
+
+  static std::shared_ptr<GeometricPrimitive> create_sphere(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
+  static std::shared_ptr<Primitive> create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
+
   
 
  public:
@@ -129,14 +139,15 @@ class API {
   // /// @brief Add translation to all objects of the current scene
   // /// @param ps parameters
   // static void translate(const ParamSet& ps);
+
+  
   
   static void light_source(const ParamSet& ps);
   static void world_begin(void);
   static void object(const ParamSet& ps);
   static void world_end(void);
 
-  static std::shared_ptr<GeometricPrimitive> create_sphere(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
-  static std::shared_ptr<Primitive> create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
+  
 };
 }  // namespace rt3
 

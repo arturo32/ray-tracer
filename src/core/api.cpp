@@ -2,8 +2,10 @@
 #include "Background/background.hpp"
 #include "camera.hpp"
 #include "Shape/Sphere.hpp"
-#include "Shape/Triangle.hpp"
 #include "scene.hpp"
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "../ext/tiny_obj_loader.h"
 
 #include <chrono>
 #include <memory>
@@ -80,6 +82,126 @@ std::shared_ptr<Primitive> API::make_object(const std::string &type, const Param
     RT3_ERROR("Type of object not valid.");
   }
   return object;
+}
+
+std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps, std::unique_ptr<RenderOptions> &opt) {
+    real_type radius = retrieve(object_ps, "radius", real_type{0});
+    Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
+    
+    std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
+
+    std::string name = retrieve(object_ps, "material", std::string{""});
+
+    std::shared_ptr<Material> materialSphere;
+    if (name == "") {
+      materialSphere = opt->curr_material;
+      
+    } else {
+        if (opt->named_materials.find(name) == opt->named_materials.end()){
+            RT3_ERROR("Material of name '" + name + "' not found!");
+        }
+        materialSphere = opt->named_materials[name];
+    }
+
+    
+    return make_shared<GeometricPrimitive>(materialSphere, sphere);
+}
+
+std::shared_ptr<PrimList> API::read_obj_file(std::string filename, std::shared_ptr<TriangleMesh> mesh) {
+  tinyobj::ObjReaderConfig reader_config;
+
+  tinyobj::ObjReader reader;
+
+  if (!reader.ParseFromFile(filename, reader_config)) {
+    if (!reader.Error().empty()) {
+        std::cerr << "TinyObjReader: " << reader.Error();
+    }
+    exit(1);
+  }
+
+  if (!reader.Warning().empty()) {
+    std::cout << "TinyObjReader: " << reader.Warning();
+  }
+
+  auto& attrib = reader.GetAttrib();
+  auto& shapes = reader.GetShapes();
+
+  // Loop over shapes
+  for (size_t s = 0; s < shapes.size(); s++) {
+    // Loop over faces(polygon)
+    size_t index_offset = 0;
+    for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+      size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+
+      // Loop over vertices in the face.
+      for (size_t v = 0; v < fv; v++) {
+        // access to vertex
+        tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+        tinyobj::real_t vx = attrib.vertices[3*size_t(idx.vertex_index)+0];
+        tinyobj::real_t vy = attrib.vertices[3*size_t(idx.vertex_index)+1];
+        tinyobj::real_t vz = attrib.vertices[3*size_t(idx.vertex_index)+2];
+
+        // Check if `normal_index` is zero or positive. negative = no normal data
+        if (idx.normal_index >= 0) {
+          tinyobj::real_t nx = attrib.normals[3*size_t(idx.normal_index)+0];
+          tinyobj::real_t ny = attrib.normals[3*size_t(idx.normal_index)+1];
+          tinyobj::real_t nz = attrib.normals[3*size_t(idx.normal_index)+2];
+        }
+
+        // Check if `texcoord_index` is zero or positive. negative = no texcoord data
+        if (idx.texcoord_index >= 0) {
+          tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
+          tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
+        }
+
+        // Optional: vertex colors
+        // tinyobj::real_t red   = attrib.colors[3*size_t(idx.vertex_index)+0];
+        // tinyobj::real_t green = attrib.colors[3*size_t(idx.vertex_index)+1];
+        // tinyobj::real_t blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
+      }
+      index_offset += fv;
+
+      // per-face material
+      shapes[s].mesh.material_ids[f];
+    }
+  }
+  return make_shared<PrimList>();
+}
+
+std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt) {
+  
+  std::string name = retrieve(object_ps, "material", std::string{""});
+  std::shared_ptr<Material> materialMesh;
+  if (name == "") {
+    materialMesh = opt->curr_material;
+  }
+  else {
+    if (opt->named_materials.find(name) == opt->named_materials.end()){
+      RT3_ERROR("Material of name '" + name + "' not found!");
+    }
+    materialMesh = opt->named_materials[name];
+  }
+  
+  std::shared_ptr<TriangleMesh> mesh = make_shared<TriangleMesh>();
+  std::string filename = retrieve(object_ps, "filename", std::string{""});
+  
+  if(filename != "") {
+    return read_obj_file(filename, mesh);
+  }
+  else {
+    mesh->points = retrieve(object_ps, "vertices", vector<Point3f>{});
+    mesh->normals = retrieve(object_ps, "normals", std::vector<Normal3f>{});
+    mesh->uvs = retrieve(object_ps, "uv", std::vector<Point2f>{});
+    
+    std::vector<Point3i> indices = retrieve(object_ps, "indices", std::vector<Point3i>{});
+    
+    vector<shared_ptr<Primitive>> primitives;
+    for(Point3i indice : indices) {
+      shared_ptr<Triangle> triangle = make_shared<Triangle>(false, indice, indice, indice, mesh);
+      primitives.push_back(make_shared<GeometricPrimitive>(materialMesh, triangle));
+    }  
+    return make_shared<PrimList>(primitives);  
+  }
 }
 
 // ˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆ
@@ -364,57 +486,7 @@ void API::integrator(const ParamSet &object_ps) {
   render_opt->integrator = object;
 }
 
-std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps, std::unique_ptr<RenderOptions> &opt) {
-    real_type radius = retrieve(object_ps, "radius", real_type{0});
-    Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
-    
-    std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
 
-    std::string name = retrieve(object_ps, "material", std::string{""});
-
-    std::shared_ptr<Material> materialSphere;
-    if (name == "") {
-      materialSphere = opt->curr_material;
-      
-    } else {
-        if (opt->named_materials.find(name) == opt->named_materials.end()){
-            RT3_ERROR("Material of name '" + name + "' not found!");
-        }
-        materialSphere = opt->named_materials[name];
-    }
-
-    
-    return make_shared<GeometricPrimitive>(materialSphere, sphere);
-}
-
-std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt) {
-
-  std::shared_ptr<TriangleMesh> mesh = make_shared<TriangleMesh>();
-  mesh->points = retrieve(object_ps, "vertices", vector<Point3f>{});
-  mesh->normals = retrieve(object_ps, "normals", std::vector<Normal3f>{});
-  mesh->uvs = retrieve(object_ps, "uv", std::vector<Point2f>{});
-  
-  std::vector<Point3i> indices = retrieve(object_ps, "indices", std::vector<Point3i>{});
-  
-  std::string name = retrieve(object_ps, "material", std::string{""});
-  std::shared_ptr<Material> materialMesh;
-  if (name == "") {
-    materialMesh = opt->curr_material;
-  }
-  else {
-    if (opt->named_materials.find(name) == opt->named_materials.end()){
-      RT3_ERROR("Material of name '" + name + "' not found!");
-    }
-    materialMesh = opt->named_materials[name];
-  }
-  
-  vector<shared_ptr<Primitive>> primitives;
-  for(Point3i indice : indices) {
-    shared_ptr<Triangle> triangle = make_shared<Triangle>(false, indice, mesh);
-    primitives.push_back(make_shared<GeometricPrimitive>(materialMesh, triangle));
-  }  
-  return make_shared<PrimList>(primitives);
-}
 
 
 }
