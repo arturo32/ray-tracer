@@ -11,13 +11,13 @@ class Scene;
 
 class VisibilityTester {
 	public:
-		VisibilityTester()=default;
-		~VisibilityTester()=default;
-		VisibilityTester( const Surfel& a, const Surfel& b, real_type value);
-		bool unoccluded( const Scene& scene );
+		VisibilityTester() = default;
+		~VisibilityTester() = default;
+		VisibilityTester(const Surfel& a, const Surfel& b, real_type light_distance);
+		bool unoccluded(const Scene& scene);
 	public:
 		Surfel p0, p1;
-		real_type value;
+		real_type light_distance;
 };
 
 enum class light_flag_e : int {

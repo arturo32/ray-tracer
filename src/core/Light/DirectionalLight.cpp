@@ -5,7 +5,7 @@ namespace rt3 {
 	 real_type kc, real_type kl, real_type kq, bool attenuate):
 	 Light(light_flag_e::directional, intensity, kc, kl, kq, attenuate) {
 		dir = (from-to);
-		// dir.make_unit_vector();
+		dir.make_unit_vector();
 	}
 
 	ColorXYZ DirectionalLight::sample_Li( const Surfel& hit     /*in*/,
@@ -13,6 +13,7 @@ namespace rt3 {
 									VisibilityTester *vis /*out*/ ) {
 		// pode ser atenuada?
 		// TODO vis
+		vis->light_distance = INFINITY;
 		wi->assign(dir);
 		return intensity;
 	}

@@ -12,7 +12,8 @@ namespace rt3 {
 									VisibilityTester *vis /*out*/ ) {
 		Vector3f dir = (this->from - hit.p);
 		real_type mod = this->a ? attenuate(dir.length()) : 1;
-		// dir.make_unit_vector();
+		vis->light_distance = dir.length();
+		dir.make_unit_vector();
 		// TODO vis
 		wi->assign(dir);
 		return mod * intensity;

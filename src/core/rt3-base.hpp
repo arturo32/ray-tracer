@@ -1,5 +1,6 @@
 #ifndef RT3_BASE_H
 #define RT3_BASE_H 1
+#define EPSILON 0.000001
 
 #include "../ext/lodepng.hpp"
 #include "error.hpp"

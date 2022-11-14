@@ -2,7 +2,7 @@
 
 namespace rt3 {
 	VisibilityTester::VisibilityTester( const Surfel& a, const Surfel& b, real_type value)
-	:p0{a}, p1{b}, value{value} {
+	:p0{a}, p1{b}, light_distance{value} {
 		// EMPTY
 	}
 

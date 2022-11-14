@@ -1,7 +1,5 @@
 #include "Triangle.hpp"
 
-#define EPSILON 0.000001
-
 namespace rt3 {
 
     bool Triangle::intersect( const Ray& r, real_type& t_hit, Surfel *sf ) const {

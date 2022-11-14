@@ -24,16 +24,14 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
         for (auto &&l : scene.lights) {
             ColorXYZ intensity = l->sample_Li(isect, &wi, &vis);
             if(!(intensity == BLACK)) {
-                Vector3f wi_n{wi.x(), wi.y(), wi.z()};
-                wi_n.make_unit_vector();
                 // Ray from intersect point to the light source
-                Ray shadow_ray = Ray(isect.p, wi_n);
-                shadow_ray.t_min = 0.001;
-                shadow_ray.t_max = wi.length();
-                if(!scene.intersect_p(shadow_ray)){
-                    Vector3f h = -ray.direction + wi_n;
+                Ray shadow_ray = Ray(isect.p, wi);
+                shadow_ray.t_min = EPSILON;
+                shadow_ray.t_max = vis.light_distance;
+                if(!scene.intersect_p(shadow_ray)) {
+                    Vector3f h = -ray.direction + wi;
                     h.make_unit_vector();
-                    L += fm->diffuse * intensity * std::max(real_type(0.0), dot(isect.n, wi_n));
+                    L += fm->diffuse * intensity * std::max(real_type(0.0), dot(isect.n, wi));
                     if(fm->glossiness > 1) {
                         L += fm->specular * intensity * pow( std::max(real_type(0.0), dot(isect.n, h)), fm->glossiness );
                     }
@@ -44,7 +42,9 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
             L += fm->ambient * scene.ambientLight->intensity;
         }
         if (depth < this->max_depth) {
-            Ray reflected_ray = Ray(isect.p, ray.direction - 2*(dot(ray.direction,isect.n))*isect.n);
+            Vector3f dir = ray.direction - 2 * (dot(ray.direction, isect.n)) * isect.n;
+            dir.make_unit_vector();
+            Ray reflected_ray = Ray(isect.p+(dir*EPSILON), dir);
             L += fm->mirror * Li(reflected_ray, scene, pixel, depth+1);
         }
     }
