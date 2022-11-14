@@ -45,7 +45,11 @@ add_executable(basic_rt3 ${RT3_SOURCE_DIR}/core/api.cpp
                          ${RT3_SOURCE_DIR}/core/image_io.cpp
                          ${RT3_SOURCE_DIR}/core/parser.cpp
                          ${RT3_SOURCE_DIR}/core/camera.cpp
-                         ${RT3_SOURCE_DIR}/core/Integrator/integrator.cpp
+                         ${RT3_SOURCE_DIR}/core/Integrator/SamplerIntegrator.cpp
+			 ${RT3_SOURCE_DIR}/core/Integrator/BlinnPhongIntegrator.cpp
+			 ${RT3_SOURCE_DIR}/core/Integrator/DepthIntegrator.cpp
+			 ${RT3_SOURCE_DIR}/core/Integrator/FlatIntegrator.cpp
+			 ${RT3_SOURCE_DIR}/core/Integrator/NormalMapIntegrator.cpp
                          ${RT3_SOURCE_DIR}/core/Shape/Sphere.cpp
 			 ${RT3_SOURCE_DIR}/core/Shape/Triangle.cpp
                          ${RT3_SOURCE_DIR}/core/Light/light.cpp

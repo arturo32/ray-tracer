@@ -149,7 +149,18 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
       parse_parameters(p_element, param_list, /* out */ &ps);
       API::object(ps);
 
-    } else if (tag_name == "include") {
+    }
+    //  else if(tag_name == "translate") {
+    //   ParamSet ps;
+    //   vector<std::pair<param_type_e, string>> param_list{ 
+    //     { param_type_e::POINT3F, "value"}
+    //   };
+    //   parse_parameters(p_element, param_list, /* out */ &ps);
+
+    //   API::translate(ps);
+    // }
+    
+    else if (tag_name == "include") {
       ParamSet ps;
       vector<std::pair<param_type_e, string>> param_list{
         { param_type_e::STRING, "filename" }

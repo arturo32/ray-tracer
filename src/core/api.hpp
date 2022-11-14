@@ -125,6 +125,10 @@ class API {
   /// @brief Create and store named material if not present. Set it as the current material. 
   /// @param ps parameters
   static void named_material(const ParamSet& ps);
+
+  // /// @brief Add translation to all objects of the current scene
+  // /// @param ps parameters
+  // static void translate(const ParamSet& ps);
   
   static void light_source(const ParamSet& ps);
   static void world_begin(void);

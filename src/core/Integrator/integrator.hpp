@@ -17,7 +17,11 @@ class SamplerIntegrator : public Integrator {
 	//=== Public interface
 	public:
 		virtual ~SamplerIntegrator(){};
+		
+		// This method must be overridden by all classes derived from SamplerIntegrator.
+		/// Determines a color for the incoming ray.
 		virtual ColorXYZ Li( Ray& ray,  Scene& scene, Point2f pixel, uint depth ) = 0;
+		
 		virtual void render( Scene& scene );
 		virtual void preprocess(  Scene& scene ) {};
 };

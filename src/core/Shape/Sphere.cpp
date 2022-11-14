@@ -56,4 +56,5 @@ namespace rt3 {
 
         return Bounds3f{nearest_point, furthest_point};
     }
-}
+
+} // rt3 namespace

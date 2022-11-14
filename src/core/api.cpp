@@ -190,6 +190,13 @@ void API::object(const ParamSet &ps) {
   render_opt->curr_scene.add_object(make_object(type, ps));
 }
 
+// void API::translate(const ParamSet& ps) {
+//   std::cout << ">>> Inside API::translate()\n";
+//   VERIFY_WORLD_BLOCK("API::translate");
+//   Point3f translation = retrieve(ps, "value", Point3f{0, 0, 0});
+//   render_opt->curr_scene.translation = translation;
+// }
+
 void API::background(const ParamSet &ps) {
   std::cout << ">>> Inside API::background()\n";
   VERIFY_WORLD_BLOCK("API::background");
@@ -360,18 +367,24 @@ void API::integrator(const ParamSet &object_ps) {
 std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps, std::unique_ptr<RenderOptions> &opt) {
     real_type radius = retrieve(object_ps, "radius", real_type{0});
     Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
+    
     std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
 
     std::string name = retrieve(object_ps, "material", std::string{""});
 
+    std::shared_ptr<Material> materialSphere;
     if (name == "") {
-        return make_shared<GeometricPrimitive>(opt->curr_material, sphere);
+      materialSphere = opt->curr_material;
+      
     } else {
         if (opt->named_materials.find(name) == opt->named_materials.end()){
             RT3_ERROR("Material of name '" + name + "' not found!");
         }
-        return make_shared<GeometricPrimitive>(opt->named_materials[name], sphere);
+        materialSphere = opt->named_materials[name];
     }
+
+    
+    return make_shared<GeometricPrimitive>(materialSphere, sphere);
 }
 
 std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt) {
@@ -384,7 +397,6 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
   std::vector<Point3i> indices = retrieve(object_ps, "indices", std::vector<Point3i>{});
   
   std::string name = retrieve(object_ps, "material", std::string{""});
-  
   std::shared_ptr<Material> materialMesh;
   if (name == "") {
     materialMesh = opt->curr_material;
