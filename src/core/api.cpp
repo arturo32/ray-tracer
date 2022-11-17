@@ -107,7 +107,8 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
     return make_shared<GeometricPrimitive>(materialSphere, sphere);
 }
 
-std::shared_ptr<PrimList> API::read_obj_file(std::string filename, std::shared_ptr<TriangleMesh> mesh) {
+std::shared_ptr<PrimList> API::read_obj_file(std::string filename, std::shared_ptr<TriangleMesh> mesh,
+                                              bool rvo, bool cn, bool fn) {
   tinyobj::ObjReaderConfig reader_config;
 
   tinyobj::ObjReader reader;
@@ -126,45 +127,53 @@ std::shared_ptr<PrimList> API::read_obj_file(std::string filename, std::shared_p
   auto& attrib = reader.GetAttrib();
   auto& shapes = reader.GetShapes();
 
+  extract_obj_data(attrib, shapes, rvo, cn, fn, mesh);
+
   // Loop over shapes
-  for (size_t s = 0; s < shapes.size(); s++) {
-    // Loop over faces(polygon)
-    size_t index_offset = 0;
-    for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-      size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+  // for (size_t s = 0; s < shapes.size(); s++) {
+  //   // Loop over faces(polygon)
+  //   size_t index_offset = 0;
+  //   for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+  //     size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
 
-      // Loop over vertices in the face.
-      for (size_t v = 0; v < fv; v++) {
-        // access to vertex
-        tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-        tinyobj::real_t vx = attrib.vertices[3*size_t(idx.vertex_index)+0];
-        tinyobj::real_t vy = attrib.vertices[3*size_t(idx.vertex_index)+1];
-        tinyobj::real_t vz = attrib.vertices[3*size_t(idx.vertex_index)+2];
+  //     // Loop over vertices in the face.
+  //     for (size_t v = 0; v < fv; v++) {
+  //       // access to vertex
+  //       tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+  //       tinyobj::real_t vx = attrib.vertices[3*size_t(idx.vertex_index)+0];
+  //       tinyobj::real_t vy = attrib.vertices[3*size_t(idx.vertex_index)+1];
+  //       tinyobj::real_t vz = attrib.vertices[3*size_t(idx.vertex_index)+2];
 
-        // Check if `normal_index` is zero or positive. negative = no normal data
-        if (idx.normal_index >= 0) {
-          tinyobj::real_t nx = attrib.normals[3*size_t(idx.normal_index)+0];
-          tinyobj::real_t ny = attrib.normals[3*size_t(idx.normal_index)+1];
-          tinyobj::real_t nz = attrib.normals[3*size_t(idx.normal_index)+2];
-        }
+  //       // Check if `normal_index` is zero or positive. negative = no normal data
+  //       if (idx.normal_index >= 0) {
+  //         tinyobj::real_t nx = attrib.normals[3*size_t(idx.normal_index)+0];
+  //         tinyobj::real_t ny = attrib.normals[3*size_t(idx.normal_index)+1];
+  //         tinyobj::real_t nz = attrib.normals[3*size_t(idx.normal_index)+2];
+  //       }
 
-        // Check if `texcoord_index` is zero or positive. negative = no texcoord data
-        if (idx.texcoord_index >= 0) {
-          tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
-          tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
-        }
+  //       // Check if `texcoord_index` is zero or positive. negative = no texcoord data
+  //       if (idx.texcoord_index >= 0) {
+  //         tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
+  //         tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
+  //       }
 
-        // Optional: vertex colors
-        // tinyobj::real_t red   = attrib.colors[3*size_t(idx.vertex_index)+0];
-        // tinyobj::real_t green = attrib.colors[3*size_t(idx.vertex_index)+1];
-        // tinyobj::real_t blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
-      }
-      index_offset += fv;
+  //       // Optional: vertex colors
+  //       // tinyobj::real_t red   = attrib.colors[3*size_t(idx.vertex_index)+0];
+  //       // tinyobj::real_t green = attrib.colors[3*size_t(idx.vertex_index)+1];
+  //       // tinyobj::real_t blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
+  //     }
+  //     index_offset += fv;
 
-      // per-face material
-      shapes[s].mesh.material_ids[f];
-    }
-  }
+  //     // per-face material
+  //     shapes[s].mesh.material_ids[f];
+  //   }
+  // }
+  vector<shared_ptr<Primitive>> primitives;
+    for(Point3i indice : mesh->vertex_indices) {
+      shared_ptr<Triangle> triangle = make_shared<Triangle>(false, indice, indice, indice, mesh);
+      primitives.push_back(make_shared<GeometricPrimitive>(mesh, triangle));
+    }  
+    return make_shared<PrimList>(primitives); 
   return make_shared<PrimList>();
 }
 
@@ -184,9 +193,19 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
   
   std::shared_ptr<TriangleMesh> mesh = make_shared<TriangleMesh>();
   std::string filename = retrieve(object_ps, "filename", std::string{""});
+
+  std::string backface_cull = retrieve(object_ps, "backface_cull", std::string{"false"});
+  std::string reverse_vertex_order = retrieve(object_ps, "reverse_vertex_order", std::string{"false"});
+  std::string compute_normals = retrieve(object_ps, "compute_normals", std::string{"false"});
   
+  
+  
+  
+
+
   if(filename != "") {
-    return read_obj_file(filename, mesh);
+    return read_obj_file(filename, mesh, reverse_vertex_order == "true",
+                         compute_normals == "true", backface_cull == "true");
   }
   else {
     mesh->points = retrieve(object_ps, "vertices", vector<Point3f>{});
