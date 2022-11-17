@@ -47,6 +47,9 @@
         "atomic": "cpp",
         "semaphore": "cpp",
         "stop_token": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "cstddef": "cpp",
+        "set": "cpp",
+        "fstream": "cpp"
     }
 }

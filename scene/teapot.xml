@@ -1,0 +1,19 @@
+<RT3>
+    <lookat look_from="0 7 -7" look_at="0 0 1" up="0 1 0" />
+    <camera type="perspective" fovy="65" /> 
+    <integrator type="blinn_phong" depth="2"/>
+
+    <film type="image" x_res="600" y_res="400" filename="simple_scene" img_type="png"/>
+     <world_begin/>
+        <background type="colors" color="0 100 200"/>
+
+        <light_source type="ambient" L="0.1 0.1 0.1" />
+        <light_source type="point" L="1 1 1" scale="1 1 1" from="-3 10 0" />
+
+        <object type="trianglemesh" 
+            filename="teapot-low.obj"
+            reverse_vertex_order="false"
+            compute_normals="false"
+            backface_cull ="off"/>
+    <world_end/>
+</RT3>

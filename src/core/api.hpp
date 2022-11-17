@@ -9,6 +9,7 @@
 #include "material.hpp"
 #include "Shape/Triangle.hpp"
 
+
 //=== API Macro definitions
 
 /// Check whether the current state has been intialized.
@@ -111,12 +112,9 @@ class API {
   /// @brief Read .obj file and puts its values in a TriangleMesh
   /// @param filename Name of the .obj file relative to the .xml file that imported it
   /// @param mesh Shared pointer to a TriagleMesh
-  static std::shared_ptr<PrimList> read_obj_file(std::string filename, std::shared_ptr<TriangleMesh> mesh, bool rvo, bool cn, bool fn);
-
+  static std::shared_ptr<PrimList> read_obj_file(std::string filename, std::shared_ptr<TriangleMesh> mesh, std::shared_ptr<Material> material, bool rvo, bool cn, bool fn);
   static std::shared_ptr<GeometricPrimitive> create_sphere(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
   static std::shared_ptr<Primitive> create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt);
-
-  
 
  public:
   //=== API function begins here.

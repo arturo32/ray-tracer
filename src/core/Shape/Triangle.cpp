@@ -3,18 +3,23 @@
 namespace rt3 {
 
     bool Triangle::intersect( const Ray& r, real_type& t_hit, Surfel *sf ) const {
-        const Point3f& p0 = this->mesh->points[this->indices[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
-        const Point3f& p1 = this->mesh->points[this->indices[1]]; // Same for the 1-vertex.
-        const Point3f& p2 = this->mesh->points[this->indices[2]]; // Same for the 2-vertex.
+        const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
+        const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
+        const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
         
-        const Normal3f& n0 = this->mesh->normals[this->indices[0]]; // Retrieve the normal at vertex 0.
-        const Normal3f& n1 = this->mesh->normals[this->indices[1]]; // Retrieve the normal at vertex 1.
-        const Normal3f& n2 = this->mesh->normals[this->indices[2]]; // Retrieve the normal at vertex 2.
-        
-        const Point2f& uv0 = this->mesh->uvs[this->indices[0]]; // Retrieve the uv coord at vertex 0.
-        const Point2f& uv1 = this->mesh->uvs[this->indices[1]]; // Retrieve the uv coord at vertex 1.
-        const Point2f& uv2 = this->mesh->uvs[this->indices[2]]; // Retrieve the uv coord at vertex 2.
+        std::cout << "olá mundo vertices" << std::endl;
 
+        const Normal3f& n0 = this->mesh->normals[this->n[0]]; // Retrieve the normal at vertex 0.
+        const Normal3f& n1 = this->mesh->normals[this->n[1]]; // Retrieve the normal at vertex 1.
+        const Normal3f& n2 = this->mesh->normals[this->n[2]]; // Retrieve the normal at vertex 2.
+        
+        std::cout << "olá mundo normals" << std::endl;
+
+        const Point2f& uv0 = this->mesh->uvcoords[this->uv[0]]; // Retrieve the uv coord at vertex 0.
+        const Point2f& uv1 = this->mesh->uvcoords[this->uv[1]]; // Retrieve the uv coord at vertex 1.
+        const Point2f& uv2 = this->mesh->uvcoords[this->uv[2]]; // Retrieve the uv coord at vertex 2.
+        
+        std::cout << "olá mundo uvcoords" << std::endl;
         
         Vector3f edge1 = p1 - p0;
         Vector3f edge2 = p2 - p0;
@@ -25,6 +30,8 @@ namespace rt3 {
             return false;
         }
         
+        std::cout << "olá mundo uvcoords" << std::endl;
+
         real_type inv_det = 1.0 / det;
 
         Vector3f tvec = r.origin - p0;
@@ -48,23 +55,21 @@ namespace rt3 {
             return true;
         }
         return false;
-        
-        
     }
 
     bool Triangle::intersect_p(const Ray& r) const {
-        const Point3f& p0 = this->mesh->points[this->indices[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
-        const Point3f& p1 = this->mesh->points[this->indices[1]]; // Same for the 1-vertex.
-        const Point3f& p2 = this->mesh->points[this->indices[2]]; // Same for the 2-vertex.
+        const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
+        const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
+        const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
         
-        const Normal3f& n0 = this->mesh->normals[this->indices[0]]; // Retrieve the normal at vertex 0.
-        const Normal3f& n1 = this->mesh->normals[this->indices[1]]; // Retrieve the normal at vertex 1.
-        const Normal3f& n2 = this->mesh->normals[this->indices[2]]; // Retrieve the normal at vertex 2.
+        const Normal3f& n0 = this->mesh->normals[this->n[0]]; // Retrieve the normal at vertex 0.
+        const Normal3f& n1 = this->mesh->normals[this->n[1]]; // Retrieve the normal at vertex 1.
+        const Normal3f& n2 = this->mesh->normals[this->n[2]]; // Retrieve the normal at vertex 2.
         
-        const Point2f& uv0 = this->mesh->uvs[this->indices[0]]; // Retrieve the uv coord at vertex 0.
-        const Point2f& uv1 = this->mesh->uvs[this->indices[1]]; // Retrieve the uv coord at vertex 1.
-        const Point2f& uv2 = this->mesh->uvs[this->indices[2]]; // Retrieve the uv coord at vertex 2.
-        
+        const Point2f& uv0 = this->mesh->uvcoords[this->uv[0]]; // Retrieve the uv coord at vertex 0.
+        const Point2f& uv1 = this->mesh->uvcoords[this->uv[1]]; // Retrieve the uv coord at vertex 1.
+        const Point2f& uv2 = this->mesh->uvcoords[this->uv[2]]; // Retrieve the uv coord at vertex 2.
+
         Vector3f edge1 = p1 - p0;
         Vector3f edge2 = p2 - p0;
         Vector3f pvec = cross(edge2, r.direction);
