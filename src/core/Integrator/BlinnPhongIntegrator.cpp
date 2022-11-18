@@ -18,7 +18,8 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
             return scene.background->sampleXYZ(ray);
         }
     } else {
-        BlinnPhongMaterial *fm = dynamic_cast<BlinnPhongMaterial*>(isect.primitive->get_material().get());
+        // BlinnPhongMaterial *fm = dynamic_cast<BlinnPhongMaterial*>(isect.primitive->get_material().get());
+        BlinnPhongMaterial *fm = (BlinnPhongMaterial*)(isect.primitive->get_material().get());
         Vector3f wi;
         VisibilityTester vis;
         for (auto &&l : scene.lights) {

@@ -1,2 +1,5 @@
 /build/*
 /images/*
+teapot.obj
+teapot-low.obj
+plane.obj

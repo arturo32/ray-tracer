@@ -18,7 +18,8 @@ ColorXYZ FlatIntegrator::Li( Ray& ray,  Scene& scene, Point2f pixel, uint depth)
         // Some form of determining the incoming radiance at the ray's origin.
         // For this integrator, it might just be:
         // Polymorphism in action.
-        FlatMaterial *fm = dynamic_cast< FlatMaterial *>( isect.primitive->get_material().get() );
+        // FlatMaterial *fm = dynamic_cast< FlatMaterial *>( isect.primitive->get_material().get() );
+        FlatMaterial *fm = (FlatMaterial*)(isect.primitive->get_material().get());
         // // Assign diffuse color to L.
         L = fm->kd(); // Call a method present only in FlatMaterial.
     }

@@ -63,20 +63,20 @@ T retrieve(const ParamSet& ps, std::string key, const T& default_value = T{}) {
   if (result != ps.end()) {
     const auto& [key, sptr] = *result;
     // Alternative ways of converting generic pointer into the desired one.
-    auto rval = dynamic_cast<Value<T>&>(*sptr).value();
-    /* auto rval2 = dynamic_cast<Value<T>&>(*sptr);
-    auto rval3 = dynamic_cast<Value<T>*>(sptr.get());
-    Value<T>* rval4 = (Value<T>*)(sptr.get()); */
+    // auto rval = dynamic_cast<Value<T>&>(*sptr).value();
+    // auto rval2 = dynamic_cast<Value<T>&>(*sptr);
+    // auto rval3 = dynamic_cast<Value<T>*>(sptr.get());
+    Value<T>* rval = (Value<T>*)(sptr.get());
 
     std::cout << "--> ParamSet: Found [\"" << key << "\"] with value = ";
-    std::cout << rval           << ".\n";
+    // std::cout << rval           << ".\n";
     // std::cout << ".\n";
-    /* std::cout << rval2.value()  << ".\n";
-    std::cout << rval3->value() << ".\n";
-    std::cout << rval4->value() << ".\n"; */
+    // std::cout << rval2.value()  << ".\n";
+    // std::cout << rval3->value() << ".\n";
+    std::cout << rval->value() << ".\n";
 
     // Returns the stored value.
-    return rval;
+    return rval->value();
   } else {
     std::cout << "--> ParamSet: Key [\"" << key << "\"] not present.\n";
     // Assign a default value in case type is not in the ParamSet object.
