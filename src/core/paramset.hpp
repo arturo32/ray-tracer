@@ -76,6 +76,7 @@ T retrieve(const ParamSet& ps, std::string key, const T& default_value = T{}) {
     std::cout << rval->value() << ".\n";
 
     // Returns the stored value.
+    // return rval;
     return rval->value();
   } else {
     std::cout << "--> ParamSet: Key [\"" << key << "\"] not present.\n";
