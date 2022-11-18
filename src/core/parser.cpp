@@ -142,9 +142,12 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
         { param_type_e::STRING, "material" },
         { param_type_e::STRING, "filename" },
         { param_type_e::ARR_POINT3F, "vertices" },
-        { param_type_e::ARR_VEC3I, "indices" },
+        { param_type_e::ARR_INT, "indices" },
         { param_type_e::ARR_POINT3F, "normals" },
-        { param_type_e::ARR_POINT3F, "uvs" }
+        { param_type_e::ARR_POINT3F, "uvs" },
+        { param_type_e::INT, "ntriangles" }
+        
+
       };
 
       parse_parameters(p_element, param_list, /* out */ &ps);
@@ -197,7 +200,7 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
       parse_parameters(p_element, param_list, /* out */ &ps);
 
       API::material(ps);
-    } else if (tag_name == "named_material") {
+    } else if (tag_name == "make_named_material") {
       ParamSet ps;
       vector<std::pair<param_type_e, string>> param_list{
         { param_type_e::STRING, "type" },
@@ -212,7 +215,17 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 
       parse_parameters(p_element, param_list, /* out */ &ps);
 
+      API::make_named_material(ps);
+
+    } else if(tag_name == "named_material") {
+      ParamSet ps;
+      vector<std::pair<param_type_e, string>> param_list{
+        { param_type_e::STRING, "name" }
+      };
+      parse_parameters(p_element, param_list, /* out */ &ps);
+
       API::named_material(ps);
+
     } else if (tag_name == "light_source") {
       ParamSet ps;
       vector<std::pair<param_type_e, string>> param_list{

@@ -29,6 +29,17 @@ class Triangle : public Shape {
 			v  = &mesh->vertex_indices[ 3 * tri_id ];
 			n  = &mesh->normal_indices[ 3 * tri_id ];
 			uv = &mesh->uvcoord_indices[ 3 * tri_id ];
+			// std::cout << "n[0]=" << n[0] << " " << mesh->normals[n[0]] <<  std::endl;
+			// std::cout << "n[1]=" << n[1] << " " << mesh->normals[n[1]]<< std::endl;
+			// std::cout << "n[2]=" << n[2] << " " << mesh->normals[n[2]]<< std::endl;
+
+			// std::cout << "v[0]=" << v[0] << " " << mesh->vertices[v[0]] <<  std::endl;
+			// std::cout << "v[1]=" << v[1] << " " << mesh->vertices[v[1]] << std::endl;
+			// std::cout << "v[2]=" << v[2] << " " << mesh->vertices[v[2]] << std::endl;
+
+			// std::cout << "uv[0]=" << uv[0] << " " << mesh->uvcoords[uv[0]] <<  std::endl;
+			// std::cout << "uv[1]=" << uv[1] << " " << mesh->uvcoords[uv[1]] << std::endl;
+			// std::cout << "uv[2]=" << uv[2] << " " << mesh->uvcoords[uv[2]] << std::endl;
 		}
 		/// Return the triangle's bounding box.
 		// Bounds3f object_bound() const;

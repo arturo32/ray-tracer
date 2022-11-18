@@ -132,6 +132,10 @@ class API {
 
   /// @brief Create and store named material if not present. Set it as the current material. 
   /// @param ps parameters
+  static void make_named_material(const ParamSet& ps);
+
+  /// @brief Set cited named_material as the current material
+  /// @param ps parameters
   static void named_material(const ParamSet& ps);
 
   // /// @brief Add translation to all objects of the current scene

@@ -323,6 +323,7 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
   std::shared_ptr<Material> materialMesh;
   if (name == "") {
     materialMesh = opt->curr_material;
+    std::cout << opt->curr_material << "=====================================================================" <<std::endl;
   }
   else {
     if (opt->named_materials.find(name) == opt->named_materials.end()){
@@ -343,9 +344,11 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
                          compute_normals == "true", backface_cull == "true");
   }
   else {
+    mesh->n_triangles = retrieve(object_ps, "ntriangles", int{});
     mesh->vertices = retrieve(object_ps, "vertices", vector<Point3f>{});
     mesh->normals = retrieve(object_ps, "normals", std::vector<Normal3f>{});
     mesh->uvcoords = retrieve(object_ps, "uv", std::vector<Point2f>{});
+    
     
     std::vector<int> indices = retrieve(object_ps, "indices", std::vector<int>{});
     
@@ -520,38 +523,48 @@ void API::material(const ParamSet &ps) {
 
 
 
-void API::named_material(const ParamSet &ps) {
-  std::cout << ">>> Inside API::named_material()\n";
-  VERIFY_WORLD_BLOCK("API::named_material");
+void API::make_named_material(const ParamSet &ps) {
+  std::cout << ">>> Inside API::make_named_material()\n";
+  VERIFY_WORLD_BLOCK("API::make_named_material");
   // retrieve type from ps.
   std::string type = retrieve(ps, "type", string{"unknown"});
   std::string name = retrieve(ps, "name", string{"unknown"});
-  if(render_opt->named_materials[name].get() == nullptr) {
-    if (type == "flat") {
-      // retrieve color from ps.
-      ColorXYZ c = retrieve(ps, "color", ColorXYZ{0,0,0});
-      // check interval of values and convert if needed
-      if(c.x() <= 1.0 && c.y() <= 1.0 && c.z() <= 1.0) {
-        c *= 255.0;
-        c.clamp(0.0, 255.0);
-      }
-      std::cout << "color: " << c << std::endl;
-      render_opt->named_materials[name] = std::make_shared<FlatMaterial>(c);
-    } else if (type == "blinn") {
-      // check interval of values and convert if needed?
-      Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
-      normalize_spectrum(a);
-      Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
-      normalize_spectrum(d);
-      Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
-      normalize_spectrum(s);
-      Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
-      normalize_spectrum(m);
-      real_type g = retrieve(ps, "glossiness", real_type{0});
-      render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
+  
+  if (type == "flat") {
+    // retrieve color from ps.
+    ColorXYZ c = retrieve(ps, "color", ColorXYZ{0,0,0});
+    // check interval of values and convert if needed
+    if(c.x() <= 1.0 && c.y() <= 1.0 && c.z() <= 1.0) {
+      c *= 255.0;
+      c.clamp(0.0, 255.0);
     }
+    std::cout << "color: " << c << std::endl;
+    render_opt->named_materials[name] = std::make_shared<FlatMaterial>(c);
+  } else if (type == "blinn") {
+    // check interval of values and convert if needed?
+    Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
+    normalize_spectrum(a);
+    Vector3f d = retrieve(ps, "diffuse", Vector3f{0,0,0});
+    normalize_spectrum(d);
+    Vector3f s = retrieve(ps, "specular", Vector3f{0,0,0});
+    normalize_spectrum(s);
+    Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
+    normalize_spectrum(m);
+    real_type g = retrieve(ps, "glossiness", real_type{0});
+    render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
   }
   
+}
+
+void API::named_material(const ParamSet &ps) {
+  std::cout << ">>> Inside API::named_material()\n";
+  VERIFY_WORLD_BLOCK("API::named_material");
+
+  std::string name = retrieve(ps, "name", string{"unknown"});
+  if(render_opt->named_materials.find(name) == render_opt->named_materials.end()) { 
+    RT3_ERROR("Material of name '" + name + "' not found!");
+  }
+
   render_opt->curr_material = render_opt->named_materials[name];
 }
 

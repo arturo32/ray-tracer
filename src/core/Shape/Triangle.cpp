@@ -6,20 +6,14 @@ namespace rt3 {
         const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
         const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
         const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
-        
-        std::cout << "olá mundo vertices" << std::endl;
 
         const Normal3f& n0 = this->mesh->normals[this->n[0]]; // Retrieve the normal at vertex 0.
         const Normal3f& n1 = this->mesh->normals[this->n[1]]; // Retrieve the normal at vertex 1.
         const Normal3f& n2 = this->mesh->normals[this->n[2]]; // Retrieve the normal at vertex 2.
-        
-        std::cout << "olá mundo normals" << std::endl;
 
-        const Point2f& uv0 = this->mesh->uvcoords[this->uv[0]]; // Retrieve the uv coord at vertex 0.
-        const Point2f& uv1 = this->mesh->uvcoords[this->uv[1]]; // Retrieve the uv coord at vertex 1.
-        const Point2f& uv2 = this->mesh->uvcoords[this->uv[2]]; // Retrieve the uv coord at vertex 2.
-        
-        std::cout << "olá mundo uvcoords" << std::endl;
+        //const Point2f& uv0 = this->mesh->uvcoords[this->uv[0]]; // Retrieve the uv coord at vertex 0.
+        //const Point2f& uv1 = this->mesh->uvcoords[this->uv[1]]; // Retrieve the uv coord at vertex 1.
+        //const Point2f& uv2 = this->mesh->uvcoords[this->uv[2]]; // Retrieve the uv coord at vertex 2.
         
         Vector3f edge1 = p1 - p0;
         Vector3f edge2 = p2 - p0;
@@ -30,8 +24,6 @@ namespace rt3 {
             return false;
         }
         
-        std::cout << "olá mundo uvcoords" << std::endl;
-
         real_type inv_det = 1.0 / det;
 
         Vector3f tvec = r.origin - p0;
@@ -50,7 +42,7 @@ namespace rt3 {
         if (t_hit < r.t_max && t_hit > r.t_min) {
             sf->wo = -r.direction;
             sf->p = r(t_hit);
-            sf->n = cross(edge1, edge2);
+            sf->n = sf->uv[0] * n0 + sf->uv[1] * n1 + (1- sf->uv[0] - sf->uv[1])*n2; // cross(edge1, edge2);
             sf->n.make_unit_vector();
             return true;
         }
@@ -61,14 +53,6 @@ namespace rt3 {
         const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
         const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
         const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
-        
-        const Normal3f& n0 = this->mesh->normals[this->n[0]]; // Retrieve the normal at vertex 0.
-        const Normal3f& n1 = this->mesh->normals[this->n[1]]; // Retrieve the normal at vertex 1.
-        const Normal3f& n2 = this->mesh->normals[this->n[2]]; // Retrieve the normal at vertex 2.
-        
-        const Point2f& uv0 = this->mesh->uvcoords[this->uv[0]]; // Retrieve the uv coord at vertex 0.
-        const Point2f& uv1 = this->mesh->uvcoords[this->uv[1]]; // Retrieve the uv coord at vertex 1.
-        const Point2f& uv2 = this->mesh->uvcoords[this->uv[2]]; // Retrieve the uv coord at vertex 2.
 
         Vector3f edge1 = p1 - p0;
         Vector3f edge2 = p2 - p0;
