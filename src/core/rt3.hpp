@@ -53,10 +53,10 @@ using Point2f = vec2<real_type>;
 
 template <typename T, size_t S>
 std::ostream& operator<<(std::ostream& os, const std::array<T, S>& v) {
-  os << "[ ";
-  for (const auto& e : v) os << e << " ";
-  os << "]";
-  return os;
+	os << "[ ";
+	for (const auto& e : v) os << e << " ";
+	os << "]";
+	return os;
 }
 
 // Global Forward Declarations
@@ -66,20 +66,20 @@ class BackgroundColor;
 
 /// This struct holds information provided via command line arguments
 struct RunningOptions {
-  RunningOptions() : filename{""}, outfile{""}, quick_render{false} {
-    crop_window[0][0] = 0;  //!< x0
-    crop_window[0][1] = 1;  //!< x1,
-    crop_window[1][0] = 0;  //!< y0
-    crop_window[1][1] = 1;  //!< y1
-  }
-  // [row=0] -> X; [row=1] -> Y
-  // x0, x1, y0, y1
-  real_type crop_window[2][2];  //!< Crop window to render. 1 = 100% of the full
-                                //!< resolition.
-  std::string filename;         //!< input scene file name.
-  std::string outfile;          //!< output image file name.
-  bool quick_render;  //!< when set, render image with 1/4 of the requested
-                      //!< resolition.
+	RunningOptions() : filename{""}, outfile{""}, quick_render{false} {
+		crop_window[0][0] = 0;  //!< x0
+		crop_window[0][1] = 1;  //!< x1,
+		crop_window[1][0] = 0;  //!< y0
+		crop_window[1][1] = 1;  //!< y1
+	}
+	// [row=0] -> X; [row=1] -> Y
+	// x0, x1, y0, y1
+	real_type crop_window[2][2];  //!< Crop window to render. 1 = 100% of the full
+																//!< resolition.
+	std::string filename;         //!< input scene file name.
+	std::string outfile;          //!< output image file name.
+	bool quick_render;  //!< when set, render image with 1/4 of the requested
+											//!< resolition.
 };
 
 
@@ -93,18 +93,18 @@ struct RunningOptions {
  */
 //
 inline real_type Lerp(real_type t, real_type v1, real_type v2) {
-  return (real_type(1) - t) * v1 + t * v2;
+	return (real_type(1) - t) * v1 + t * v2;
 }
 
 /// Clamp T to [low,high].
 template <typename T, typename U, typename V>
 inline T Clamp(T val, U low, V high) {
-  if (val < low)
-    return low;
-  else if (val > high)
-    return high;
-  else
-    return val;
+	if (val < low)
+		return low;
+	else if (val > high)
+		return high;
+	else
+		return val;
 }
 
 /// Degrees to radians.

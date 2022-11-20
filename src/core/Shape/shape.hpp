@@ -12,13 +12,13 @@ using Bounds3f = vec2<Point3f>;
 class Surfel;
 
 class Shape {
-    protected:
-        bool flip_normals;
-    public:
-        Shape(bool flip) : flip_normals{flip}{}
-        ~Shape() = default;
-        virtual Bounds3f world_bounds() const = 0;
-        virtual bool intersect( const Ray& r, real_type& t_hit, Surfel *sf ) const = 0;
+	protected:
+		bool flip_normals;
+	public:
+		Shape(bool flip) : flip_normals{flip}{}
+		~Shape() = default;
+		virtual Bounds3f world_bounds() const = 0;
+		virtual bool intersect( const Ray& r, real_type& t_hit, Surfel *sf ) const = 0;
 		virtual bool intersect_p( const Ray& r ) const = 0;
 };
 

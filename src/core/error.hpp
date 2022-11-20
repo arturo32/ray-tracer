@@ -17,13 +17,13 @@ namespace rt3 {
 // Holds context information for a warning or error while pre-processing scene
 // file or executing the renderer. Use macro SC to create one
 struct SourceContext {
-  const char* file;
-  int line;
-  SourceContext(const char* file = "n/a", int line = 0)
-      : file(file), line(line) {}
-  SourceContext& operator=(const SourceContext&) = default;
-  SourceContext(const SourceContext& clone) = default;
-  ~SourceContext() = default;
+	const char* file;
+	int line;
+	SourceContext(const char* file = "n/a", int line = 0)
+			: file(file), line(line) {}
+	SourceContext& operator=(const SourceContext&) = default;
+	SourceContext(const SourceContext& clone) = default;
+	~SourceContext() = default;
 };
 
 /// Prints out the error message and exits the program.

@@ -43,12 +43,12 @@ class Triangle : public Shape {
 		}
 		/// Return the triangle's bounding box.
 		// Bounds3f object_bound() const;
-        /// The regular intersection methods, as defined in the Shape parent class.
+		/// The regular intersection methods, as defined in the Shape parent class.
 		bool intersect(const Ray &ray, real_type &thit, Surfel *isect ) const;
 		bool intersect_p( const Ray &ray ) const;
 
-        /// This friend function helps us debug the triangles, if we want to.
-        friend std::ostream& operator<<( std::ostream& os, const Triangle & t );
+		/// This friend function helps us debug the triangles, if we want to.
+		friend std::ostream& operator<<( std::ostream& os, const Triangle & t );
 		Bounds3f world_bounds() const;
 };
 

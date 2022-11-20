@@ -7,7 +7,7 @@
 namespace rt3 {
 
 class Sphere : public Shape {
-    public:
+	public:
 		Sphere(bool flip, const Point3f& c, const real_type& r) : Shape(flip), center{c}, radius{r} {/*empty*/}
 		~Sphere() = default;		
 		const Point3f center;
