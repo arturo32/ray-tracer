@@ -42,7 +42,7 @@ namespace rt3 {
         if (t_hit < r.t_max && t_hit > r.t_min) {
             sf->wo = -r.direction;
             sf->p = r(t_hit);
-            sf->n = sf->uv[0] * n0 + sf->uv[1] * n1 + (1- sf->uv[0] - sf->uv[1])*n2; // cross(edge1, edge2);
+            sf->n = sf->uv[0] * n1 + sf->uv[1] * n2 + (1- sf->uv[0] - sf->uv[1])*n0; // cross(edge1, edge2);
             sf->n.make_unit_vector();
             return true;
         }
