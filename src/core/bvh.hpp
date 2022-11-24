@@ -14,7 +14,7 @@ namespace rt3 {
 
         // methods
 
-        BVH(std::vector<shared_ptr<Primitive>>& objs, size_t start, size_t end);
+        BVH(std::vector<shared_ptr<Primitive>>& objs, size_t start, size_t end, std::string method, size_t leaf_size);
 		
         Bounds3f world_bounds() {
             return bounds;

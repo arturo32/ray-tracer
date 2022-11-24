@@ -48,8 +48,6 @@ std::unique_ptr<Background> make_background(const std::string &type, const Param
 	} else {
 		bkg = create_color_background(ps);
 	}
-	
-
 	// Return the newly created background.
 	return bkg;
 }
@@ -86,39 +84,33 @@ std::shared_ptr<Primitive> API::make_object(const std::string &type, const Param
 }
 
 std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps, std::unique_ptr<RenderOptions> &opt) {
-		real_type radius = retrieve(object_ps, "radius", real_type{0});
-		Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
-		
-		std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
+	real_type radius = retrieve(object_ps, "radius", real_type{0});
+	Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
+	std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
 
-		std::string name = retrieve(object_ps, "material", std::string{""});
+	std::string name = retrieve(object_ps, "material", std::string{""});
 
-		std::shared_ptr<Material> materialSphere;
-		if (name == "") {
-			materialSphere = opt->curr_material;
-			
-		} else {
-				if (opt->named_materials.find(name) == opt->named_materials.end()){
-						RT3_ERROR("Material of name '" + name + "' not found!");
-				}
-				materialSphere = opt->named_materials[name];
+	std::shared_ptr<Material> materialSphere;
+	if (name == "") {
+		materialSphere = opt->curr_material;
+	} else {
+		if (opt->named_materials.find(name) == opt->named_materials.end()){
+			RT3_ERROR("Material of name '" + name + "' not found!");
 		}
-
-		
-		return make_shared<GeometricPrimitive>(materialSphere, sphere);
+		materialSphere = opt->named_materials[name];
+	}
+	return make_shared<GeometricPrimitive>(materialSphere, sphere);
 }
 
-std::shared_ptr<PrimList> API::read_obj_file(std::string filename, 
-																							std::shared_ptr<TriangleMesh> mesh,
-																							std::shared_ptr<Material> material,
-																							bool rvo, bool cn, bool fn) {
+std::shared_ptr<Primitive> API::read_obj_file(std::string filename, 
+											 std::shared_ptr<TriangleMesh> mesh,
+											 std::shared_ptr<Material> material,
+											 bool rvo, bool cn, bool fn) {
 	tinyobj::ObjReaderConfig reader_config;
-
 	tinyobj::ObjReader reader;
-
 	if (!reader.ParseFromFile(filename, reader_config)) {
 		if (!reader.Error().empty()) {
-				std::cerr << "TinyObjReader: " << reader.Error();
+			std::cerr << "TinyObjReader: " << reader.Error();
 		}
 		exit(1);
 	}
@@ -139,58 +131,47 @@ std::shared_ptr<PrimList> API::read_obj_file(std::string filename,
 
 	// Retrieve the complete list of vertices.
 	auto n_vertices{ attrib.vertices.size() / 3 };
-	for ( auto idx_v{0u} ; idx_v < n_vertices; idx_v++)
-	{
-			// cout << "   v[" << static_cast<long>(idx_v) << "] = ( "
-			//      << static_cast<double>(attrib.vertices[3 * idx_v + 0]) << ", "
-			//      << static_cast<double>(attrib.vertices[3 * idx_v + 1]) << ", "
-			//      << static_cast<double>(attrib.vertices[3 * idx_v + 2]) << " )\n";
-
-			// Store the vertex in the mesh data structure.
-			mesh->vertices.push_back( Point3f{ attrib.vertices[ 3 * idx_v + 0 ],
-																			attrib.vertices[ 3 * idx_v + 1 ],
-																			attrib.vertices[ 3 * idx_v + 2 ] } );
+	for ( auto idx_v{0u} ; idx_v < n_vertices; idx_v++)	{
+			mesh->vertices.push_back(Point3f{
+											attrib.vertices[ 3 * idx_v + 0 ],
+											attrib.vertices[ 3 * idx_v + 1 ],
+											attrib.vertices[ 3 * idx_v + 2 ]
+											}
+									);
 	}
-
-
 	// Read the normals
 	// TODO: flip normals if requested.
 	real_type flip = ( fn ) ? -1 : 1 ;
 	auto n_normals{ attrib.normals.size()/3 };
 
 	// Do we need to compute the normals? Yes only if the user requeste or there are no normals in the file.
-	// if ( cn == true or n_normals == 0)
-	// {
-	//    // TODO: COmpute normals here.
-	//    // compute_normals();
-	// }
-	//else {// Read normals from file. This corresponds to the entire 'for' below.
-
-	// Traverse the normals read from the OBJ file.
-	for ( auto idx_n{0u} ; idx_n < n_normals; idx_n++)
+	if ( cn == true or n_normals == 0)
 	{
-			// cout << "   n[" << static_cast<long>(idx_n) << "] = ( "
-			//      << static_cast<double>(attrib.normals[3 * idx_n + 0]) << ", "
-			//      << static_cast<double>(attrib.normals[3 * idx_n + 1]) << ", "
-			//      << static_cast<double>(attrib.normals[3 * idx_n + 2]) << " )\n";
-
-			// Store the normal.
-			mesh->normals.push_back( Normal3f{ attrib.normals[ 3 * idx_n + 0 ] * flip,
-																			attrib.normals[ 3 * idx_n + 1 ] * flip,
-																			attrib.normals[ 3 * idx_n + 2 ] * flip } );
+	   // TODO: COmpute normals here.
+	   // compute_normals();
 	}
-
+	else {// Read normals from file. This corresponds to the entire 'for' below.
+		// Traverse the normals read from the OBJ file.
+		for ( auto idx_n{0u} ; idx_n < n_normals; idx_n++) {
+			// Store the normal.
+			mesh->normals.push_back(Normal3f{ 
+											attrib.normals[ 3 * idx_n + 0 ] * flip,
+											attrib.normals[ 3 * idx_n + 1 ] * flip,
+											attrib.normals[ 3 * idx_n + 2 ] * flip
+											}
+									);
+		}
+	}
 	// Read the complete list of texture coordinates.
 	auto n_texcoords{ attrib.texcoords.size()/2 };
 	for ( auto idx_tc{0u} ; idx_tc < n_texcoords; idx_tc++)
 	{
-			// cout << "   t[" << static_cast<long>(idx_tc) << "] = ( "
-			//      << static_cast<double>(attrib.texcoords[2 * idx_tc + 0]) << ", "
-			//      << static_cast<double>(attrib.texcoords[2 * idx_tc + 1]) << " )\n";
-
-			// Store the texture coords.
-			mesh->uvcoords.push_back( Point2f{ attrib.texcoords[ 2 * idx_tc + 0 ],
-																				attrib.texcoords[ 2 * idx_tc + 1 ] } );
+		// Store the texture coords.
+		mesh->uvcoords.push_back( Point2f{
+										  attrib.texcoords[ 2 * idx_tc + 0 ],
+								  		  attrib.texcoords[ 2 * idx_tc + 1 ]
+										 }
+								);
 	}
 
 	// Read mesh connectivity and store it as lists of indices to the real data.
@@ -201,74 +182,42 @@ std::shared_ptr<PrimList> API::read_obj_file(std::string filename,
 	// This is why we need to reset the triangle count here.
 	for ( auto idx_s{0u} ; idx_s < n_shapes; idx_s++)
 	{
-			// cout << "The shape[" << idx_s << "].name = " << shapes[idx_s].name << '\n';
-			// cout << "Size of shape["<< idx_s << "].mesh.indices: "
-			//      << static_cast<unsigned long>(shapes[idx_s].mesh.indices.size()) << '\n';
-			// cout << "shape["<< idx_s << "].num_faces: "
-			//     <<  static_cast<unsigned long>(shapes[idx_s].mesh.num_face_vertices.size()) << '\n';
-
-			// For each face print out the indices lists.
-			size_t index_offset = 0;
-			// # of triangles for this "shape" (group).
-			// NOTE that we are accumulate the number of triangles coming from the shapes present in the OBJ file.
-			mesh->n_triangles += shapes[idx_s].mesh.num_face_vertices.size();
-			for ( auto idx_f{0} ; idx_f < mesh->n_triangles; idx_f++)
-			{
-					// Number of vertices per face (always 3, in our case)
-					size_t fnum = shapes[idx_s].mesh.num_face_vertices[idx_f];
-
-					// cout << "  face[" << idx_f << "].fnum = "  << static_cast<unsigned long>(fnum) << '\n';
-
-					// TODO: Invert order of vertices if flag is on. (DONE!)
-					if ( rvo == true ) {
-							std::cout << "Reverse order\n";
-							// For each vertex in the face print the corresponding indices
-							for (int v = fnum-1; v >= 0 ; v--)
-							{
-									tinyobj::index_t idx = shapes[idx_s].mesh.indices[index_offset + v];
-									// cout << "    face[" << idx_f << "].v[" << v << "].indices = "
-									//     << idx.vertex_index << "/" << idx.normal_index << "/" << idx.texcoord_index << '\n';
-									// Add the indices to the global list of indices we need to pass on to the mesh object.
-									mesh->vertex_indices.push_back( idx.vertex_index );
-									mesh->normal_indices.push_back( idx.normal_index );
-									mesh->uvcoord_indices.push_back( idx.texcoord_index );
-							}
-					}
-					else { // Keep the original vertex order
-							// For each vertex in the face get the corresponding indices
-							for (size_t v = 0; v < fnum; v++)
-							{
-									tinyobj::index_t idx = shapes[idx_s].mesh.indices[index_offset + v];
-									// cout << "    face[" << idx_f << "].v[" << v << "].indices = "
-									//     << idx.vertex_index << "/" << idx.normal_index << "/" << idx.texcoord_index << '\n';
-									// Add the indices to the global list of indices we need to pass on to the mesh object.
-									// This goes to the mesh data structure.
-									mesh->vertex_indices.push_back( idx.vertex_index );
-									mesh->normal_indices.push_back( idx.normal_index );
-									mesh->uvcoord_indices.push_back( idx.texcoord_index );
-							}
-					}
-
-
-					// Advance over to the next triangle.
-					index_offset += fnum;
+		// For each face print out the indices lists.
+		size_t index_offset = 0;
+		// # of triangles for this "shape" (group).
+		// NOTE that we are accumulate the number of triangles coming from the shapes present in the OBJ file.
+		mesh->n_triangles += shapes[idx_s].mesh.num_face_vertices.size();
+		for ( auto idx_f{0} ; idx_f < mesh->n_triangles; idx_f++) {
+			// Number of vertices per face (always 3, in our case)
+			size_t fnum = shapes[idx_s].mesh.num_face_vertices[idx_f];
+			if ( rvo == true ) {
+				std::cout << "Reverse order\n";
+				// For each vertex in the face print the corresponding indices
+				for (int v = fnum-1; v >= 0 ; v--)
+				{
+					tinyobj::index_t idx = shapes[idx_s].mesh.indices[index_offset + v];
+					// cout << "    face[" << idx_f << "].v[" << v << "].indices = "
+					//     << idx.vertex_index << "/" << idx.normal_index << "/" << idx.texcoord_index << '\n';
+					// Add the indices to the global list of indices we need to pass on to the mesh object.
+					mesh->vertex_indices.push_back( idx.vertex_index );
+					mesh->normal_indices.push_back( idx.normal_index );
+					mesh->uvcoord_indices.push_back( idx.texcoord_index );
+				}
 			}
+			else { // Keep the original vertex order
+				// For each vertex in the face get the corresponding indices
+				for (size_t v = 0; v < fnum; v++)
+				{
+					tinyobj::index_t idx = shapes[idx_s].mesh.indices[index_offset + v];
+					mesh->vertex_indices.push_back( idx.vertex_index );
+					mesh->normal_indices.push_back( idx.normal_index );
+					mesh->uvcoord_indices.push_back( idx.texcoord_index );
+				}
+			}
+			// Advance over to the next triangle.
+			index_offset += fnum;
+		}
 	}
-
-	// cout << "This is the list of indices: \n";
-
-	// cout << "   + Vertices [ ";
-	// std::copy( md->vertex_indices.begin(), md->vertex_indices.end(), std::ostream_iterator< int > ( std::cout, " " ) );
-	// cout << "]\n";
-
-	// cout << "   + Normals [ ";
-	// std::copy( md->normal_indices.begin(), md->normal_indices.end(), std::ostream_iterator< int > ( std::cout, " " ) );
-	// cout << "]\n";
-
-	// cout << "   + UV coords [ ";
-	// std::copy( md->uvcoord_indices.begin(), md->uvcoord_indices.end(), std::ostream_iterator< int > ( std::cout, " " ) );
-	// cout << "]\n";
-
 	// Loop over shapes
 	// for (size_t s = 0; s < shapes.size(); s++) {
 	//   // Loop over faces(polygon)
@@ -308,17 +257,16 @@ std::shared_ptr<PrimList> API::read_obj_file(std::string filename,
 	//     shapes[s].mesh.material_ids[f];
 	//   }
 	// }
-		vector<shared_ptr<Primitive>> primitives;
-		for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
-			// TODO: esse fn tá errado!!!
-			shared_ptr<Triangle> triangle = std::make_shared<Triangle>(false, mesh, i, fn );
-			primitives.push_back(std::make_shared<GeometricPrimitive>(material, triangle));
-		}  
-		return make_shared<PrimList>(primitives);  
+	vector<shared_ptr<Primitive>> primitives;
+	for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
+		// TODO: esse fn tá errado!!!
+		shared_ptr<Triangle> triangle = std::make_shared<Triangle>(false, mesh, i, fn );
+		primitives.push_back(std::make_shared<GeometricPrimitive>(material, triangle));
+	}  
+	return make_shared<PrimList>(primitives);  
 }
 
 std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt) {
-	
 	std::string name = retrieve(object_ps, "material", std::string{""});
 	std::shared_ptr<Material> materialMesh;
 	if (name == "") {
@@ -349,7 +297,6 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 		mesh->normals = retrieve(object_ps, "normals", std::vector<Normal3f>{});
 		mesh->uvcoords = retrieve(object_ps, "uv", std::vector<Point2f>{});
 		
-		
 		std::vector<int> indices = retrieve(object_ps, "indices", std::vector<int>{});
 		
 		mesh->vertex_indices = indices;
@@ -361,7 +308,12 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 			shared_ptr<Shape> triangle = std::make_shared<Triangle>(false, mesh, i, backface_cull == "true" );
 			primitives.push_back(std::make_shared<GeometricPrimitive>(materialMesh, triangle));
 		}  
-		return make_shared<PrimList>(primitives);  
+		if (opt->accelerator == "bvh") {
+			return make_shared<BVH>(primitives, 0, primitives.size(), opt->bvh_split_method, opt->bvh_leaf_size);  
+		} else if (opt->accelerator == "primlist") {
+			return make_shared<PrimList>(primitives);  
+		}
+		
 	}
 }
 
@@ -655,6 +607,12 @@ void API::integrator(const ParamSet &object_ps) {
 		RT3_ERROR("Type of object not valid.");
 	}
 	render_opt->integrator = object;
+}
+
+void API::accelerator(const ParamSet &object_ps) {
+	render_opt->accelerator = retrieve(object_ps, "type", string{"primlist"});
+	render_opt->bvh_split_method = retrieve(object_ps, "split_method", string{"middle"});
+	render_opt->bvh_leaf_size = retrieve(object_ps, "max_prims_per_node", int{2});
 }
 
 }
