@@ -257,7 +257,16 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 			parse_parameters(p_element, param_list, /* out */ &ps);
 			API::integrator(ps);
 
-		} 
+		} else if (tag_name == "accelerator") {
+			ParamSet ps;
+			vector<std::pair<param_type_e, string>> param_list{ 
+				{ param_type_e::STRING, "type" },
+				{ param_type_e::STRING, "split_method" },
+				{ param_type_e::INT, "max_prims_per_node" }
+				};
+			parse_parameters(p_element, param_list, /* out */ &ps);
+			API::accelerator(ps);
+		}
 		// else RT3_WARNING( "Undefined tag `" + tag_name + "` found!" );
 
 		// Get next (to the right) sibling on this tree level.

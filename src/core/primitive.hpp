@@ -4,6 +4,7 @@
 #include <cassert>
 #include "rt3-base.hpp"
 #include "rt3.hpp"
+#include "bounds3f.hpp"
 #include "paramset.hpp"
 #include "ray.hpp"
 #include "../ext/vec3.hpp"
@@ -13,7 +14,6 @@
 
 namespace rt3 {
 
-using Bounds3f = vec2<Point3f>;
 using ColorXYZ = vec3<real_type>;
 
 class Primitive {

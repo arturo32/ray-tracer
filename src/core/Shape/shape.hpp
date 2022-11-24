@@ -3,11 +3,10 @@
 
 #include "../rt3-base.hpp"
 #include "../ray.hpp"
+#include "../bounds3f.hpp"
 
 
 namespace rt3 {
-
-using Bounds3f = vec2<Point3f>;
 
 class Surfel;
 

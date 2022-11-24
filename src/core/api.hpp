@@ -123,6 +123,7 @@ class API {
 	static void clean_up(void);
 	static void reset_engine(void);
 
+	static void accelerator(const ParamSet &object_ps);
 	static void integrator(const ParamSet &object_ps);
 	static void film(const ParamSet& ps);
 	static void camera(const ParamSet& ps);
