@@ -63,8 +63,9 @@ struct RenderOptions {
 	std::shared_ptr<Material> curr_material;
 	std::map<std::string, std::shared_ptr<Material>> named_materials;
 	Scene curr_scene;
+	std::vector<std::shared_ptr<Primitive>> primitives;
 	string accelerator{"primlist"};
-	string bvh_leaf_size{2};
+	size_t bvh_leaf_size{2};
 	string bvh_split_method{"middle"};
 	std::shared_ptr<Integrator> integrator;
 };

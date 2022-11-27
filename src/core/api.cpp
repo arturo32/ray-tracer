@@ -38,6 +38,23 @@ Film *API::make_film(const std::string &type, const ParamSet &ps) {
 	return film;
 }
 
+std::shared_ptr<Primitive> prepare_obj(std::vector<std::shared_ptr<Primitive>> primitives,
+									   std::string accelerator,
+									   std::string bvh_split_method,
+									   size_t bvh_leaf_size) {
+
+	std::cout << "inside prepare_obj" << std::endl;
+	std::cout << "primitives size = " << primitives.size() << std::endl;
+	if (accelerator == "bvh") {
+		return make_shared<BVH>(primitives, 0, primitives.size(), 0, bvh_split_method, bvh_leaf_size);  
+	} else if (accelerator == "primlist") {
+		return make_shared<PrimList>(primitives);  
+	} else {
+		// Default accelerator
+		return make_shared<PrimList>(primitives);  
+	}
+}
+
 std::unique_ptr<Background> make_background(const std::string &type, const ParamSet &ps) {
 	std::cout << ">>> Inside API::background()\n";
 	std::unique_ptr<Background> bkg{nullptr};
@@ -309,11 +326,13 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 			primitives.push_back(std::make_shared<GeometricPrimitive>(materialMesh, triangle));
 		}  
 		if (opt->accelerator == "bvh") {
-			return make_shared<BVH>(primitives, 0, primitives.size(), opt->bvh_split_method, opt->bvh_leaf_size);  
+			return make_shared<BVH>(primitives, 0, primitives.size(), 0, opt->bvh_split_method, opt->bvh_leaf_size);  
 		} else if (opt->accelerator == "primlist") {
 			return make_shared<PrimList>(primitives);  
+		} else {
+			// Default accelerator
+			return make_shared<PrimList>(primitives);  
 		}
-		
 	}
 }
 
@@ -367,7 +386,11 @@ void API::world_end(void) {
 	// already been parsed. It's time to render the scene.
 
 	render_opt->curr_scene.background = make_background(render_opt->bkg_type, render_opt->bkg_ps);
-	
+	render_opt->curr_scene.agg = prepare_obj(render_opt->primitives,
+											 render_opt->accelerator,
+											 render_opt->bvh_split_method,
+											 render_opt->bvh_leaf_size
+	);
 	// Same with the film, that later on will belong to a camera object.
 	Film* the_film{make_film(render_opt->film_type, render_opt->film_ps)};
 
@@ -422,7 +445,7 @@ void API::object(const ParamSet &ps) {
 	std::cout << ">>> Inside API::object()\n";
 	VERIFY_WORLD_BLOCK("API::object");
 	std::string type = retrieve(ps, "type", string{"unknown"});
-	render_opt->curr_scene.add_object(make_object(type, ps));
+	render_opt->primitives.push_back(make_object(type, ps));
 }
 
 // void API::translate(const ParamSet& ps) {

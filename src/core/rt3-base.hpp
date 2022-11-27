@@ -4,6 +4,7 @@
 
 #include "../ext/lodepng.hpp"
 #include "error.hpp"
+#include "bounds3f.hpp"
 #include "film.hpp"
 #include "image_io.hpp"
 #include "paramset.hpp"

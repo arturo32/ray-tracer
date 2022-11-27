@@ -611,7 +611,7 @@ template <typename T>
 std::optional<T> read_single_value(tinyxml2::XMLElement *p_element, const string &att_key)
 {
 	// C-style string that will store the attributes read from the XML doc.
-	const char *value_cstr;
+	const char *value_cstr = 0;
 	// Retrieve the string value into the `value_str` C-style string.
 	p_element->QueryStringAttribute(att_key.c_str(), &value_cstr);
 

@@ -2,7 +2,41 @@
 
 namespace rt3 {
 
-	bool Triangle::intersect( const Ray& r, real_type& t_hit, Surfel *sf ) const {
+	Triangle::Triangle( bool flip, shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc ) 
+		: Shape(flip), mesh{mesh}, backface_cull{bfc} {
+		
+		// This is just a shortcut to access this triangle's data stored in the mesh database.
+		v  = &mesh->vertex_indices[ 3 * tri_id ];
+		n  = &mesh->normal_indices[ 3 * tri_id ];
+		uv = &mesh->uvcoord_indices[ 3 * tri_id ];
+
+		const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
+		const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
+		const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
+		
+		Point3f s = p0;
+		Point3f b = p0;
+		for (size_t i = 0; i < 3; ++i) {
+			// small
+			if (p1[i] < s[i]) {
+				s[i] = p1[i];
+			}
+			if (p2[i] < s[i]) {
+				s[i] = p2[i];
+			}
+			// big
+			if (p1[i] > b[i]) {
+				b[i] = p1[i];
+			}
+			if (p2[i] > b[i]) {
+				b[i] = p2[i];
+			}
+		}
+		std::cout << "bounds tri = min:" << s << " | max:" << b << std::endl;
+		bounds = Bounds3f{s, b};
+	}
+
+	bool Triangle::intersect( Ray& r, real_type& t_hit, Surfel *sf ) const {
 		const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
 		const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
 		const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
@@ -49,7 +83,7 @@ namespace rt3 {
 		return false;
 	}
 
-	bool Triangle::intersect_p(const Ray& r) const {
+	bool Triangle::intersect_p( Ray& r) const {
 		const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
 		const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
 		const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
@@ -81,10 +115,5 @@ namespace rt3 {
 			return true;
 		}
 		return false;
-	}
-
-	Bounds3f Triangle::world_bounds() const {
-		std::cout << "vish" << std::endl;
-		return Bounds3f{Point3f{0, 0, 0}, Point3f{0, 0, 0}};
 	}
 }

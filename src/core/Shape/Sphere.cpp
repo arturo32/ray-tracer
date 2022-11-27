@@ -2,7 +2,7 @@
 
 namespace rt3 {
 
-	bool Sphere::intersect( const Ray& r, real_type& t_hit, Surfel *sf ) const {
+	bool Sphere::intersect( Ray& r, real_type& t_hit, Surfel *sf ) const {
 		Vector3f oc = (r.origin - this->center);
 		real_type A = dot(r.direction, r.direction);
 		real_type B = dot(oc, r.direction);
@@ -27,7 +27,7 @@ namespace rt3 {
 		}
 	}
 
-	bool Sphere::intersect_p(const Ray& r) const {
+	bool Sphere::intersect_p( Ray& r) const {
 		Vector3f oc = (r.origin - this->center);
 		real_type A = dot(r.direction, r.direction);
 		real_type B = dot(oc, r.direction);
@@ -43,18 +43,23 @@ namespace rt3 {
 		return false;
 	}
 
-	Bounds3f Sphere::world_bounds() const {
-		real_type npX = this->center.x() - this->radius;
-		real_type npY = this->center.y() - this->radius;
-		real_type npZ = this->center.z() + this->radius;
-		Point3f nearest_point = Point3f{npX, npY, npZ};
+	// Bounds3f Sphere::world_bounds() const {
+	// 	// versão inicial
+	// 	real_type npX = this->center.x() - this->radius;
+	// 	real_type npY = this->center.y() - this->radius;
+	// 	real_type npZ = this->center.z() + this->radius;
+	// 	Point3f nearest_point = Point3f{npX, npY, npZ};
 
-		real_type fpX = this->center.x() + this->radius;
-		real_type fpY = this->center.y() + this->radius;
-		real_type fpZ = this->center.z() - this->radius;
-		Point3f furthest_point = Point3f{fpX, fpY, fpZ};
+	// 	real_type fpX = this->center.x() + this->radius;
+	// 	real_type fpY = this->center.y() + this->radius;
+	// 	real_type fpZ = this->center.z() - this->radius;
+	// 	Point3f furthest_point = Point3f{fpX, fpY, fpZ};
+	// 	return Bounds3f{nearest_point, furthest_point};
 
-		return Bounds3f{nearest_point, furthest_point};
-	}
+	// 	// versão do next week
+	// 	Point3f r3 = vec3(radius, radius, radius);
+	// 	std::cout << "bounds sphere = min:" << center - r3 << " | max:" << center + r3 << std::endl;
+	// 	return Bounds3f(center - r3, center + r3);
+	// }
 
 } // rt3 namespace

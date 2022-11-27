@@ -9,12 +9,14 @@ namespace rt3 {
 	class BVH : public AggregatePrimitive {
         public:
         Bounds3f bounds;
-        std::shared_ptr<BVH> left;
-        std::shared_ptr<BVH> right;
+        std::shared_ptr<Primitive> left;
+        std::shared_ptr<Primitive> right;
 
         // methods
 
-        BVH(std::vector<shared_ptr<Primitive>>& objs, size_t start, size_t end, std::string method, size_t leaf_size);
+        BVH(std::vector<shared_ptr<Primitive>>& objs,
+           size_t start, size_t end, short axis, 
+           std::string method, size_t leaf_size);
 		
         Bounds3f world_bounds() {
             return bounds;
@@ -22,7 +24,7 @@ namespace rt3 {
 
 		void intersect( Ray& r, Surfel *sf ) const;
 
-		bool intersect_p( const Ray& r ) const;
+		bool intersect_p( Ray& r ) const;
     };
 }
 

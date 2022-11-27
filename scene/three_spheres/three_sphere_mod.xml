@@ -3,12 +3,16 @@
     <camera type="perspective" fovy="45" />
     <integrator type="blinn_phong" depth="2" />
 
+    <accelerator type="bvh" split_method="middle" max_prims_per_node="4" />
+
     <film type="image" x_res="800" y_res="600" filename="three_spheres_plane" img_type="png" gamma_corrected="no" />
     <include filename="geometry_mod.xml" />
 
     <lookat look_from="0 1 -5" look_at="0 1 1" up="0 1 0" />
     <camera type="orthographic" screen_window="-4 4 -3 3" />
     <integrator type="blinn_phong" depth="2" />
+
+    <accelerator type="bvh" split_method="middle" max_prims_per_node="4" />
 
     <film type="image" x_res="800" y_res="600" filename="three_spheres_plane_ortho" img_type="png" gamma_corrected="no" />
     <include filename="geometry_mod.xml" />

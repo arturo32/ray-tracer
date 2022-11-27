@@ -36,8 +36,10 @@ set( RT3_SOURCE_DIR "src" )
 #=== main  target ===
 add_executable(basic_rt3 ${RT3_SOURCE_DIR}/core/api.cpp
                          ${RT3_SOURCE_DIR}/core/Background/background.cpp
-			 ${RT3_SOURCE_DIR}/core/Background/BackgroundColor.cpp
-			 ${RT3_SOURCE_DIR}/core/Background/BackgroundTexture.cpp
+			             ${RT3_SOURCE_DIR}/core/Background/BackgroundColor.cpp
+			             ${RT3_SOURCE_DIR}/core/Background/BackgroundTexture.cpp
+                         ${RT3_SOURCE_DIR}/core/bounds3f.cpp
+                         ${RT3_SOURCE_DIR}/core/bvh.cpp
                          ${RT3_SOURCE_DIR}/core/material.cpp
                          ${RT3_SOURCE_DIR}/core/camera.cpp
                          ${RT3_SOURCE_DIR}/core/error.cpp
@@ -46,17 +48,17 @@ add_executable(basic_rt3 ${RT3_SOURCE_DIR}/core/api.cpp
                          ${RT3_SOURCE_DIR}/core/parser.cpp
                          ${RT3_SOURCE_DIR}/core/camera.cpp
                          ${RT3_SOURCE_DIR}/core/Integrator/SamplerIntegrator.cpp
-			 ${RT3_SOURCE_DIR}/core/Integrator/BlinnPhongIntegrator.cpp
-			 ${RT3_SOURCE_DIR}/core/Integrator/DepthIntegrator.cpp
-			 ${RT3_SOURCE_DIR}/core/Integrator/FlatIntegrator.cpp
-			 ${RT3_SOURCE_DIR}/core/Integrator/NormalMapIntegrator.cpp
+			             ${RT3_SOURCE_DIR}/core/Integrator/BlinnPhongIntegrator.cpp
+			             ${RT3_SOURCE_DIR}/core/Integrator/DepthIntegrator.cpp
+			             ${RT3_SOURCE_DIR}/core/Integrator/FlatIntegrator.cpp
+			             ${RT3_SOURCE_DIR}/core/Integrator/NormalMapIntegrator.cpp
                          ${RT3_SOURCE_DIR}/core/Shape/Sphere.cpp
-			 ${RT3_SOURCE_DIR}/core/Shape/Triangle.cpp
+			             ${RT3_SOURCE_DIR}/core/Shape/Triangle.cpp
                          ${RT3_SOURCE_DIR}/core/Light/light.cpp
-			 ${RT3_SOURCE_DIR}/core/Light/AmbientLight.cpp
-			 ${RT3_SOURCE_DIR}/core/Light/DirectionalLight.cpp
-			 ${RT3_SOURCE_DIR}/core/Light/PointLight.cpp
-			 ${RT3_SOURCE_DIR}/core/Light/SpotLight.cpp
+			             ${RT3_SOURCE_DIR}/core/Light/AmbientLight.cpp
+			             ${RT3_SOURCE_DIR}/core/Light/DirectionalLight.cpp
+			             ${RT3_SOURCE_DIR}/core/Light/PointLight.cpp
+			             ${RT3_SOURCE_DIR}/core/Light/SpotLight.cpp
                          ${RT3_SOURCE_DIR}/core/tinyxml2.cpp
                          ${RT3_SOURCE_DIR}/ext/lodepng.cpp
                          ${RT3_SOURCE_DIR}/main/rt3.cpp

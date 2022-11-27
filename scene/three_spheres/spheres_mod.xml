@@ -6,7 +6,6 @@
 
         <object type="sphere" center="2 1.0 -2" radius="1" material="gold" />
 
-        <!-- [> <translate value="0 -3.7 4" /> <] -->
         <material type="blinn" ambient="0.1 0.1 0.1" diffuse ="0.8 0.8 0.8"  specular ="0 0 0" mirror ="0.1 0.1 0.1" glossiness ="0"/>
         <object type="trianglemesh" material="grey"
             ntriangles ="2"

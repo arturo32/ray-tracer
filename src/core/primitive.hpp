@@ -4,10 +4,10 @@
 #include <cassert>
 #include "rt3-base.hpp"
 #include "rt3.hpp"
-#include "bounds3f.hpp"
 #include "paramset.hpp"
 #include "ray.hpp"
 #include "../ext/vec3.hpp"
+#include "bounds3f.hpp"
 #include "surfel.hpp"
 #include "Shape/shape.hpp"
 #include "material.hpp"
@@ -24,7 +24,7 @@ class Primitive {
 		virtual void intersect( Ray& r, Surfel *sf ) const = 0;
 		// Simpler & faster version of intersection that only return true/false.
 		// It does not compute the hit point information.
-		virtual bool intersect_p( const Ray& r ) const = 0;
+		virtual bool intersect_p( Ray& r ) const = 0;
 		virtual const std::shared_ptr<Material> get_material(void) const = 0;
 };
 
@@ -33,28 +33,35 @@ class AggregatePrimitive : public Primitive {
 		AggregatePrimitive(){};
 		virtual Bounds3f world_bounds() = 0;
 		virtual void intersect( Ray& r, Surfel *sf ) const = 0;
-		virtual bool intersect_p( const Ray& r ) const = 0;
+		virtual bool intersect_p( Ray& r ) const = 0;
 		const std::shared_ptr<Material> get_material(void) const { 
 			std::cerr << "Não se deve chamar esse método nessa classe!" << std::endl;
 			assert(false);
 		} 
-		virtual void add(std::shared_ptr< Primitive > p) = 0;
 };
 
 class PrimList : public AggregatePrimitive {
 	public:
 		std::vector<std::shared_ptr< Primitive >> primitives;
-		PrimList() = default;
-		PrimList(std::vector<std::shared_ptr< Primitive >> prim) : primitives{prim}{}
+		Bounds3f bounds;
+
+		PrimList(std::vector<std::shared_ptr< Primitive >> prim) : primitives{prim}{
+			this->bounds = prim[0]->world_bounds();
+			for (size_t i = 1; i < prim.size(); ++i){
+				this->bounds = bounds.unite(prim[i]->world_bounds());
+			}
+		}
+		
 		Bounds3f world_bounds() {
-			return Bounds3f(Point3f(0,0,0), Point3f(0,0,0));
-		};
+			return bounds;
+		}
+
 		void intersect( Ray& r, Surfel *sf ) const {
             for (size_t i = 0; i < primitives.size(); ++i) {
                 primitives.at(i)->intersect(r, sf);
             }
 		};
-		bool intersect_p( const Ray& r ) const{
+		bool intersect_p( Ray& r ) const{
 			for (size_t i = 0; i < primitives.size(); ++i) {
                 if(primitives.at(i)->intersect_p(r)) {
                     return true;
@@ -62,9 +69,6 @@ class PrimList : public AggregatePrimitive {
             }
             return false;
 		};
-		void add(std::shared_ptr< Primitive > p){
-			primitives.push_back(p);
-		}
 };
 
 
@@ -89,7 +93,7 @@ class GeometricPrimitive : public Primitive {
 				r.t_max = t_hit;
 			}
 		}
-		bool intersect_p( const Ray& r ) const { 
+		bool intersect_p( Ray& r ) const { 
 			return this->shape->intersect_p(r); 
 		}
 		const std::shared_ptr<Material> get_material(void) const { 
