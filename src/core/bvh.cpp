@@ -29,7 +29,10 @@ namespace rt3 {
 	}	
 
 	void BVH::intersect( Ray& r, Surfel *sf ) const {
-		if (bounds.intersect_p(r)) {
+		Ray r1 = Ray(r.origin, r.direction);
+		r1.t_max = r.t_max;
+		r1.t_min = r.t_min;
+		if (bounds.intersect_p(r1)) {
 			left->intersect(r, sf);
 			right->intersect(r, sf);
 		} else {
@@ -38,7 +41,10 @@ namespace rt3 {
 	}
 
 	bool BVH::intersect_p( Ray& r ) const {
-		if (bounds.intersect_p(r)) {
+		Ray r1 = Ray(r.origin, r.direction);
+		r1.t_max = r.t_max;
+		r1.t_min = r.t_min;
+		if (bounds.intersect_p(r1)) {
 			if (left->intersect_p(r)) {
 				return true;
 			} else {
