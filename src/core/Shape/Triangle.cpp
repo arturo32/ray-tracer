@@ -32,7 +32,7 @@ namespace rt3 {
 				b[i] = p2[i];
 			}
 		}
-		std::cout << "bounds tri = min:" << s << " | max:" << b << std::endl;
+		// std::cout << "bounds tri = min:" << s << " | max:" << b << std::endl;
 		bounds = Bounds3f{s, b};
 	}
 

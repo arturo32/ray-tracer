@@ -11,7 +11,7 @@ class Sphere : public Shape {
 		Sphere(bool flip, const Point3f& c, const real_type& r)
 		: Shape(flip), center{c}, radius{r} {
 			Point3f r3 = vec3(radius, radius, radius);
-			std::cout << "bounds sphere = min:" << center - r3 << " | max:" << center + r3 << std::endl;
+			// std::cout << "bounds sphere = min:" << center - r3 << " | max:" << center + r3 << std::endl;
 			bounds = Bounds3f(center - r3, center + r3);
 		}
 		~Sphere() = default;		

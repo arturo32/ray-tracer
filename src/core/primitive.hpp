@@ -45,7 +45,7 @@ class PrimList : public AggregatePrimitive {
 		std::vector<std::shared_ptr< Primitive >> primitives;
 		Bounds3f bounds;
 
-		PrimList(std::vector<std::shared_ptr< Primitive >> prim) : primitives{prim}{
+		PrimList(std::vector<std::shared_ptr< Primitive >> prim): primitives{prim} {
 			this->bounds = prim[0]->world_bounds();
 			for (size_t i = 1; i < prim.size(); ++i){
 				this->bounds = bounds.unite(prim[i]->world_bounds());

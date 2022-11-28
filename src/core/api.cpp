@@ -122,7 +122,8 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
 std::shared_ptr<Primitive> API::read_obj_file(std::string filename, 
 											 std::shared_ptr<TriangleMesh> mesh,
 											 std::shared_ptr<Material> material,
-											 bool rvo, bool cn, bool fn) {
+											 bool rvo, bool cn, bool fn,
+											 std::unique_ptr<rt3::RenderOptions> &opt) {
 	tinyobj::ObjReaderConfig reader_config;
 	tinyobj::ObjReader reader;
 	if (!reader.ParseFromFile(filename, reader_config)) {
@@ -280,7 +281,14 @@ std::shared_ptr<Primitive> API::read_obj_file(std::string filename,
 		shared_ptr<Triangle> triangle = std::make_shared<Triangle>(false, mesh, i, fn );
 		primitives.push_back(std::make_shared<GeometricPrimitive>(material, triangle));
 	}  
-	return make_shared<PrimList>(primitives);  
+	if (opt->accelerator == "bvh") {
+		return make_shared<BVH>(primitives, 0, primitives.size(), 0, opt->bvh_split_method, opt->bvh_leaf_size);  
+	} else if (opt->accelerator == "primlist") {
+		return make_shared<PrimList>(primitives);  
+	} else {
+		// Default accelerator
+		return make_shared<PrimList>(primitives);  
+	}
 }
 
 std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, std::unique_ptr<rt3::RenderOptions> &opt) {
@@ -306,7 +314,7 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 	
 	if(filename != "") {
 		return read_obj_file(filename, mesh, materialMesh, reverse_vertex_order == "true",
-												 compute_normals == "true", backface_cull == "true");
+							 compute_normals == "true", backface_cull == "true", opt);
 	}
 	else {
 		mesh->n_triangles = retrieve(object_ps, "ntriangles", int{});
