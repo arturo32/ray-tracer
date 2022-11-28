@@ -2,6 +2,16 @@
 
 namespace rt3 {
 
+	void att_surfel(Surfel *sfa, Surfel sfb) {
+		sfa->hit = sfb.hit;
+		sfa->n = sfb.n;
+		sfa->p = sfb.p;
+		sfa->primitive = sfb.primitive;
+		sfa->time = sfb.time;
+		sfa->uv = sfb.uv;
+		sfa->wo = sfb.wo;
+	}
+
 	BVH::BVH(std::vector<shared_ptr<Primitive>>& objs,
 			size_t start, size_t end, short axis,
 			std::string method, size_t leaf_size) {
@@ -25,7 +35,6 @@ namespace rt3 {
 		}
 		bounds = left->world_bounds().unite(right->world_bounds());
 		std::cout << "bounds = min: " << bounds.p_min << " | max: "<< bounds.p_max << std::endl;
-
 	}	
 
 	void BVH::intersect( Ray& r, Surfel *sf ) const {
@@ -46,17 +55,21 @@ namespace rt3 {
 			if(sfl.hit && sfr.hit) {
 				if (rl.t_max < rr.t_max ) {
 					r.t_max = rl.t_max;
-					*sf = sfl;
+					att_surfel(sf, sfl);
+					// *sf = sfl;
 				} else {
 					r.t_max = rr.t_max;
-					*sf = sfr;
+					att_surfel(sf, sfr);
+					// *sf = sfr;
 				}
 			} else if (sfl.hit) {
 				r.t_max = rl.t_max;
-				*sf = sfl;
+				// *sf = sfl;
+				att_surfel(sf, sfl);
 			} else if (sfr.hit) {
 				r.t_max = rr.t_max;
-				*sf = sfr;
+				// *sf = sfr;
+				att_surfel(sf, sfr);
 			} else {
 				sf->hit = false;
 			}

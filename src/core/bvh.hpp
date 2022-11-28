@@ -9,8 +9,8 @@ namespace rt3 {
 	class BVH : public AggregatePrimitive {
         public:
         Bounds3f bounds;
-        std::shared_ptr<Primitive> left;
-        std::shared_ptr<Primitive> right;
+        std::shared_ptr<Primitive> left = nullptr;
+        std::shared_ptr<Primitive> right = nullptr;
 
         // methods
 
