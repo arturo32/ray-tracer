@@ -1,13 +1,13 @@
 <RT3>
     <!--- The Camera -->
-    <lookat look_from="0 -90 30" look_at="0 0 0" up="0 1 0" />
+    <lookat look_from="20 10 -20" look_at="0 0 0" up="0 1 0" />
     <camera type="perspective" fovy="25" />
     <integrator type="blinn_phong" depth="2" />
     <accelerator type="bvh" split_method="middle" max_prims_per_node="4" />
-    <sampler type="stratified" x_samples="4" y_samples="4" dimensions="1" jitter="on" />
-    <filter type="gaussian" alpha="2" x_width="2" y_width="2" />
+    <!-- <sampler type="stratified" x_samples="4" y_samples="4" dimensions="1" jitter="on" /> -->
+    <!-- <filter type="gaussian" alpha="2" x_width="2" y_width="2" /> -->
 
-    <film type="image" x_res="900" y_res="450" filename="teapot_hires_P.png" img_type="png" gamma_corrected="no" />
+    <film type="image" x_res="1920" y_res="1080" filename="teapot_hires_P.png" img_type="png" gamma_corrected="no" />
     <include filename="teapot_geometry.xml" />
 <!-- 
     <lookat look_from="0 0 30" look_at="0 0 0" up="0 1 0" />

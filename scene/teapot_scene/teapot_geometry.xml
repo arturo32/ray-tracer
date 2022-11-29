@@ -6,8 +6,8 @@
         <background type="colors" bl="0.6 0.8 1" tl="0.04 0.04 0.04" tr="0.04 0.04 0.04" br="0.6 0.8 1" />
 
         <!-- Lights -->
-        <light_source type="directional" L="0.9 0.6 0.5" scale="1 1 1" from="-5 -5 10" to="0 0 0" />
-        <light_source type="directional" L="0.9 0.9 0.9" scale="1 1 1" from=" 5 -5 10" to="0 0 0" />
+        <light_source type="directional" L="0.9 0.6 0.5" scale="1 1 1" from="30 30 -30" to="0 0 0" />
+        <light_source type="directional" L="0.9 0.9 0.9" scale="1 1 1" from="-10 0 0" to="0 0 0" />
 
         <!-- Material Library -->
         <include filename="teapot_materials.xml" />
@@ -15,14 +15,15 @@
         <!-- Objects -->
         <!-- <named_material name="gold"/> -->
         <named_material name="jade"/>
-        <object type="trianglemesh" filename="teapot.obj"/>
+        <object type="trianglemesh" filename="body.obj"/>
+        <!-- <object type="trianglemesh" filename="lid.obj"/> -->
 
         <named_material name="indigo"/>
         <object type="trianglemesh"
                 ntriangles ="2"
                 vertices="-30 30.5 -1  30 30.5 -1  30 -30.5 -1  -30 -30.5 -1"
                 indices ="0 1 2   0 2 3"
-                normals ="0 0 1  0 0 1  0 0 1  0 0 1 "
+                normals ="0 1 0  0 1 0  0 1 0  0 1 0 "
                 reverse_vertex_order="false"
                 backface_cull ="off"/>
 

@@ -16,35 +16,35 @@ namespace rt3 {
 		return Bounds3f(small, big);
 	}	
 
-	bool Bounds3f::intersect_p(Ray &ray) const {
-		for (size_t i = 0; i < 3; ++i) {
-			real_type inv = real_type(1.0) / ray.direction[i];
-			real_type t0 = (p_min[i] - ray.origin[i]) * inv;
-			real_type t1 = (p_max[i] - ray.origin[i]) * inv;
-			if (inv < real_type(0.0)) {
-				std::swap(t0, t1);
-			}
-			ray.t_min = t0 > ray.t_min ? t0 : ray.t_min;
-			ray.t_max = t1 > ray.t_max ? t1 : ray.t_max;
-			if (ray.t_max <= ray.t_min) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	// bool Bounds3f::intersect_p(Ray &ray) const {
 	// 	for (size_t i = 0; i < 3; ++i) {
-	// 		real_type a = (p_min[i] - ray.origin[i]) / ray.direction[i];
-	// 		real_type b = (p_max[i] - ray.origin[i]) / ray.direction[i]; 
-	// 		real_type t0 = std::min(a, b);
-	// 		real_type t1 = std::max(a, b);
-	// 		ray.t_min = std::max(t0, ray.t_min);
-	// 		ray.t_max = std::min(t1, ray.t_max);
+	// 		real_type inv = real_type(1.0) / ray.direction[i];
+	// 		real_type t0 = (p_min[i] - ray.origin[i]) * inv;
+	// 		real_type t1 = (p_max[i] - ray.origin[i]) * inv;
+	// 		if (inv < real_type(0.0)) {
+	// 			std::swap(t0, t1);
+	// 		}
+	// 		ray.t_min = t0 > ray.t_min ? t0 : ray.t_min;
+	// 		ray.t_max = t1 > ray.t_max ? t1 : ray.t_max;
 	// 		if (ray.t_max <= ray.t_min) {
 	// 			return false;
 	// 		}
 	// 	}
 	// 	return true;
 	// }
+
+	bool Bounds3f::intersect_p(Ray &ray) const {
+		for (size_t i = 0; i < 3; ++i) {
+			real_type a = (p_min[i] - ray.origin[i]) / ray.direction[i];
+			real_type b = (p_max[i] - ray.origin[i]) / ray.direction[i]; 
+			real_type t0 = std::min(a, b);
+			real_type t1 = std::max(a, b);
+			ray.t_min = std::max(t0, ray.t_min);
+			ray.t_max = std::min(t1, ray.t_max);
+			if (ray.t_max <= ray.t_min) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

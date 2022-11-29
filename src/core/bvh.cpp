@@ -34,7 +34,7 @@ namespace rt3 {
 			right = make_shared<BVH>(objs, mid, end, axis+1, method, leaf_size);
 		}
 		bounds = left->world_bounds().unite(right->world_bounds());
-		std::cout << "bounds = min: " << bounds.p_min << " | max: "<< bounds.p_max << std::endl;
+		// std::cout << "bounds = min: " << bounds.p_min << " | max: "<< bounds.p_max << std::endl;
 	}	
 
 	void BVH::intersect( Ray& r, Surfel *sf ) const {

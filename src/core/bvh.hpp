@@ -4,6 +4,7 @@
 #include "rt3-base.hpp"
 #include "rt3.hpp"
 #include <memory>
+#include <random>
 
 namespace rt3 {
 	class BVH : public AggregatePrimitive {
