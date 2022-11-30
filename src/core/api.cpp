@@ -313,6 +313,14 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 	std::string compute_normals = retrieve(object_ps, "compute_normals", std::string{"false"});
 	
 	if(filename != "") {
+		std::string curr_filename = curr_run_opt.filename.c_str();
+		
+		// Search included file relative to the directory of the current file
+		std::size_t last_index_before_file = curr_filename.find_last_of("/");
+		if(last_index_before_file != string::npos) {
+			filename = curr_filename.substr(0, last_index_before_file) + "/" + filename;
+		}
+
 		return read_obj_file(filename, mesh, materialMesh, reverse_vertex_order == "true",
 							 compute_normals == "true", backface_cull == "true", opt);
 	}
