@@ -19,7 +19,7 @@ class Sphere : public Shape {
 		const Point3f center;
 		const real_type radius;		
 		bool intersect( Ray& r, real_type& t_hit, Surfel *sf ) const;
-		bool intersect_p( Ray& r ) const;
+		bool intersect_p(const Ray& r ) const;
 		Bounds3f world_bounds() const {
 			return bounds;
 		}

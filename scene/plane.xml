@@ -2,7 +2,7 @@
     <lookat look_from="0 10 -50" look_at="0 0 1" up="0 1 0" />
     <camera type="perspective" fovy="65" /> 
     <integrator type="blinn_phong" depth="2"/>
-
+    <accelerator type="bvh" split_method="middle" max_prims_per_node="4" />
     <film type="image" x_res="600" y_res="400" filename="plane" img_type="png"/>
      <world_begin/>
         <background type="colors" color="0 100 200"/>

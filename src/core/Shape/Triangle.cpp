@@ -83,7 +83,7 @@ namespace rt3 {
 		return false;
 	}
 
-	bool Triangle::intersect_p( Ray& r) const {
+	bool Triangle::intersect_p(const Ray& r) const {
 		const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
 		const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
 		const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.

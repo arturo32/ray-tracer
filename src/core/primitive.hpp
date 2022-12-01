@@ -24,7 +24,7 @@ class Primitive {
 		virtual void intersect( Ray& r, Surfel *sf ) const = 0;
 		// Simpler & faster version of intersection that only return true/false.
 		// It does not compute the hit point information.
-		virtual bool intersect_p( Ray& r ) const = 0;
+		virtual bool intersect_p(const Ray& r ) const = 0;
 		virtual const std::shared_ptr<Material> get_material(void) const = 0;
 };
 
@@ -33,7 +33,7 @@ class AggregatePrimitive : public Primitive {
 		AggregatePrimitive(){};
 		virtual Bounds3f world_bounds() = 0;
 		virtual void intersect( Ray& r, Surfel *sf ) const = 0;
-		virtual bool intersect_p( Ray& r ) const = 0;
+		virtual bool intersect_p(const Ray& r ) const = 0;
 		const std::shared_ptr<Material> get_material(void) const { 
 			std::cerr << "Não se deve chamar esse método nessa classe!" << std::endl;
 			assert(false);
@@ -61,7 +61,7 @@ class PrimList : public AggregatePrimitive {
                 primitives.at(i)->intersect(r, sf);
             }
 		};
-		bool intersect_p( Ray& r ) const{
+		bool intersect_p(const Ray& r ) const{
 			for (size_t i = 0; i < primitives.size(); ++i) {
                 if(primitives.at(i)->intersect_p(r)) {
                     return true;
@@ -93,7 +93,7 @@ class GeometricPrimitive : public Primitive {
 				r.t_max = t_hit;
 			}
 		}
-		bool intersect_p( Ray& r ) const { 
+		bool intersect_p(const Ray& r ) const { 
 			return this->shape->intersect_p(r); 
 		}
 		const std::shared_ptr<Material> get_material(void) const { 

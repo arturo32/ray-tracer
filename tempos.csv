@@ -1,0 +1,7 @@
+cpu;flags;cores;scene;resolution;acc;time (ms);
+JV;-O3 -finline-functions -fno-rtti;4;teapot-old;900x450;bvh;347.658599
+JV;-O3 -finline-functions -fno-rtti;4;teapot-old;900x450;primlist;56573.956700
+JV;-O3 -finline-functions -fno-rtti;4;teapot;1920x1080;bvh;2375.500153
+JV;-O3 -finline-functions -fno-rtti;4;teapot;1920x1080;primlist;demorou demais desisti
+JV;-O3 -finline-functions -fno-rtti -fallow-store-data-races -fno-math-errno;4;teapot;1920x1080;bvh;2297.343193
+JV;-O3 -finline-functions -fno-rtti -fallow-store-data-races -fno-math-errno;4;teapot-old;900x450;bvh;307.367387

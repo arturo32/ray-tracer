@@ -51,6 +51,7 @@
         "cstddef": "cpp",
         "set": "cpp",
         "fstream": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "numeric": "cpp"
     }
 }

@@ -407,6 +407,8 @@ void API::world_end(void) {
 											 render_opt->bvh_split_method,
 											 render_opt->bvh_leaf_size
 	);
+	std::cout << "bounds da cena completa" << std::endl;
+	std::cout << render_opt->curr_scene.agg->world_bounds() << std::endl;
 	// Same with the film, that later on will belong to a camera object.
 	Film* the_film{make_film(render_opt->film_type, render_opt->film_ps)};
 

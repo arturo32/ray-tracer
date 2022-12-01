@@ -23,9 +23,9 @@ namespace rt3 {
             return bounds;
         }
 
-		void intersect( Ray& r, Surfel *sf ) const;
+		void intersect(Ray& r, Surfel *sf ) const;
 
-		bool intersect_p( Ray& r ) const;
+		bool intersect_p(const Ray& r ) const;
     };
 }
 

@@ -33,7 +33,7 @@ class Scene {
 		/*! A faster version that only determines whether there is an intersection or not;
 		 * it doesn't calculate the intersection info.
 		 */
-		bool intersect_p( Ray& r ) const {
+		bool intersect_p(const Ray& r ) const {
 			return agg->intersect_p(r);
 		};
 		void add_light(std::shared_ptr<Light> l) {lights.push_back(l);};

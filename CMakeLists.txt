@@ -30,7 +30,7 @@ link_directories( ${TinyXML2_LIB_DIRS} )
 
 #=== SETTING VARIABLES ===#
 # Compiling flags
-set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -pedantic -fopenmp -O3 -finline-functions -fno-rtti" )
+set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -pedantic -fopenmp -O3 -fno-rtti -fallow-store-data-races -fno-math-errno" )
 set( RT3_SOURCE_DIR "src" )
 
 #=== main  target ===

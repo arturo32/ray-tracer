@@ -14,8 +14,13 @@ namespace rt3 {
         Bounds3f(Point3f a, Point3f b): p_min{a}, p_max{b}{};
 
         Bounds3f unite(const Bounds3f &other) const;
-        bool intersect_p(Ray &ray) const;
+        bool intersect_p(const Ray &ray) const;
     };
+
+    inline std::ostream& operator<<(std::ostream &os, const Bounds3f &t) {
+        os << t.p_min << " | " << t.p_max;
+        return os;
+    }
 }
 
 #endif // BOUNDS3f_H

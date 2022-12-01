@@ -24,9 +24,9 @@ namespace rt3 {
 		size_t diff = end-start;
 		// std::cout << "diff: " << diff << std::endl;
 		if (diff == 1) {
-			left = right = objs[start+0];
+			left = right = objs[start];
 		} else if (diff == 2){
-			left = objs[start+0];
+			left = objs[start];
 			right = objs[start+1];
 		} else {
 			size_t mid = start+(diff/2);
@@ -38,37 +38,30 @@ namespace rt3 {
 	}	
 
 	void BVH::intersect( Ray& r, Surfel *sf ) const {
-		Ray rb = Ray(r.origin, r.direction);
-		rb.t_max = r.t_max;
-		rb.t_min = r.t_min;
-		if (bounds.intersect_p(rb)) {
+		if (bounds.intersect_p(r)) {
 			Ray rl = Ray(r.origin, r.direction);
 			rl.t_max = r.t_max;
 			rl.t_min = r.t_min;
 			Surfel sfl;
+			left->intersect(rl, &sfl);
 			Ray rr = Ray(r.origin, r.direction);
 			rr.t_max = r.t_max;
 			rr.t_min = r.t_min;
 			Surfel sfr;
-			left->intersect(rl, &sfl);
 			right->intersect(rr, &sfr);
 			if(sfl.hit && sfr.hit) {
 				if (rl.t_max < rr.t_max ) {
 					r.t_max = rl.t_max;
 					att_surfel(sf, sfl);
-					// *sf = sfl;
 				} else {
 					r.t_max = rr.t_max;
 					att_surfel(sf, sfr);
-					// *sf = sfr;
 				}
 			} else if (sfl.hit) {
 				r.t_max = rl.t_max;
-				// *sf = sfl;
 				att_surfel(sf, sfl);
 			} else if (sfr.hit) {
 				r.t_max = rr.t_max;
-				// *sf = sfr;
 				att_surfel(sf, sfr);
 			} else {
 				sf->hit = false;
@@ -78,11 +71,8 @@ namespace rt3 {
 		}
 	}
 
-	bool BVH::intersect_p( Ray& r ) const {
-		Ray r1 = Ray(r.origin, r.direction);
-		r1.t_max = r.t_max;
-		r1.t_min = r.t_min;
-		if (bounds.intersect_p(r1)) {
+	bool BVH::intersect_p(const Ray& r ) const {
+		if (bounds.intersect_p(r)) {
 			if (left->intersect_p(r)) {
 				return true;
 			} else {

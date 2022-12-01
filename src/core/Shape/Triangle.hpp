@@ -25,7 +25,7 @@ class Triangle : public Shape {
 		Triangle( bool flip, shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc=true );
 		/// The regular intersection methods, as defined in the Shape parent class.
 		bool intersect( Ray &ray, real_type &thit, Surfel *isect ) const;
-		bool intersect_p( Ray &ray ) const;
+		bool intersect_p(const Ray &ray ) const;
 
 		/// This friend function helps us debug the triangles, if we want to.
 		friend std::ostream& operator<<( std::ostream& os, const Triangle & t );

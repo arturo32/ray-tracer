@@ -27,7 +27,7 @@ namespace rt3 {
 		}
 	}
 
-	bool Sphere::intersect_p( Ray& r) const {
+	bool Sphere::intersect_p(const Ray& r) const {
 		Vector3f oc = (r.origin - this->center);
 		real_type A = dot(r.direction, r.direction);
 		real_type B = dot(oc, r.direction);
