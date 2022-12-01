@@ -73,11 +73,7 @@ namespace rt3 {
 
 	bool BVH::intersect_p(const Ray& r ) const {
 		if (bounds.intersect_p(r)) {
-			if (left->intersect_p(r)) {
-				return true;
-			} else {
-				return right->intersect_p(r);
-			}
+			return left->intersect_p(r) || right->intersect_p(r);
 		} else {
 			return false;
 		}
