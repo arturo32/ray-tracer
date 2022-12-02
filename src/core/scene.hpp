@@ -23,7 +23,6 @@ class Scene {
 		shared_ptr<AmbientLight> ambientLight; // ambient light
 		std::shared_ptr<Background> background; // The background object.
 		std::shared_ptr<Primitive> agg; // The scene graph of objects, acceleration structure.
-
 		Scene(){}
 
 		/// Determines the intersection info; return true if there is an intersection.

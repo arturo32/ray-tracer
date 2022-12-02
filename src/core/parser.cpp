@@ -114,7 +114,8 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 				{ param_type_e::INT, "x_res" },
 				{ param_type_e::INT, "y_res" },
 				{ param_type_e::ARR_REAL, "crop_window" },
-				{ param_type_e::STRING, "gamma_corrected" }  // bool
+				{ param_type_e::STRING, "gamma_corrected" },  // bool
+				{ param_type_e::REAL, "gamma" }
 			};
 			parse_parameters(p_element, param_list, /* out */ &ps);
 

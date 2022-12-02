@@ -10,9 +10,11 @@ namespace rt3 {
 
 //=== Film Method Definitions
 Film::Film(const Point2i &resolution, const std::string &filename,
-					 image_type_e imgt, std::vector<real_type> crop)
+		   image_type_e imgt, std::vector<real_type> crop,
+		   bool gamma_corrected, real_type gamma)
 		: m_full_resolution{resolution}, m_filename{filename}, m_image_type{imgt},
-		m_color_buffer_ptr{std::make_unique<unsigned char[]>(resolution.x()*resolution.y()*3)} {
+		m_color_buffer_ptr{std::make_unique<unsigned char[]>(resolution.x()*resolution.y()*3)},
+		gamma_corretion{gamma_corrected}, igamma{1/gamma} {
 			crop_window[0][0] = crop.at(0);
 			crop_window[0][1] = crop.at(1);
 			crop_window[1][0] = crop.at(2);
@@ -112,7 +114,10 @@ Film *create_film(const ParamSet &ps) {
 	std::vector<real_type> crop_window = retrieve(ps, "crop_window", std::vector<real_type>{0,0,0,0});
 	std::cout << crop_window << std::endl;
 
+	std::string gamma_corrected = retrieve(ps, "gamma_corrected", std::string{"false"});
+	real_type gamma = retrieve(ps, "gamma", 2.2);
+
 	// Note that the image type is fixed here. Must be read from ParamSet, though.
-	return new Film(Point2i{xres, yres}, filename, type, crop_window);
+	return new Film(Point2i{xres, yres}, filename, type, crop_window, gamma_corrected=="true", gamma);
 }
 }  // namespace rt3

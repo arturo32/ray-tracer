@@ -35,9 +35,16 @@ void SamplerIntegrator::render( Scene& scene) {
 				// Determine the incoming light.
 				Point2f pixel = Point2f{real_type(i) / real_type(w), real_type(j) / real_type(h)};
 				Spectrum L = Li( ray, scene, pixel, 1);
+				
+				if (camera->film->gamma_corretion) {
+					L[0] = pow(L[0], camera->film->igamma);
+					L[1] = pow(L[1], camera->film->igamma);
+					L[2] = pow(L[2], camera->film->igamma);
+				}
+				
 				L *= 255.0;
 				L.clamp(0.0, 255.0);
-				
+
 				// Add color (radiance) to the image.
 				camera->film->add_sample( Point2i( i, h-(j+1) ), L ); // Set color of pixel (x,y) to L.
 			}

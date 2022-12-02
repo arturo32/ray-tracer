@@ -16,7 +16,8 @@ class Film {
 
 		//=== Film Public Methods
 		Film(const Point2i &resolution, const std::string &filename,
-			image_type_e imgt, std::vector<real_type> crop_window);
+			image_type_e imgt, std::vector<real_type> crop_window,
+		    bool gamma_corrected, real_type gamma);
 		virtual ~Film();
 
 		/// Retrieve original Film resolution.
@@ -24,6 +25,7 @@ class Film {
 		/// Takes a sample `p` and its radiance `L` and updates the image.
 		void add_sample(const Point2i &, const ColorXYZ &);
 		void write_image() const;
+
 
 		//=== Film Public Data
 		const Point2i m_full_resolution;  //!< The image's full resolution values.
@@ -33,6 +35,9 @@ class Film {
 		std::unique_ptr<unsigned char[]> m_color_buffer_ptr; //!< Reference to the
 		// color buffer (image) object.
 		real_type crop_window[2][2];
+
+		bool gamma_corretion = false;
+		real_type igamma = 1/2.2;
 };
 
 // Factory pattern. It's not part of this class.
