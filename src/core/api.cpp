@@ -3,6 +3,7 @@
 #include "camera.hpp"
 #include "Shape/Sphere.hpp"
 #include "scene.hpp"
+#include "Transform.hpp"
 
 #include <chrono>
 #include <memory>
@@ -24,6 +25,13 @@ void normalize_spectrum(Vector3f& a){
 API::APIState API::curr_state = APIState::Uninitialized;
 RunningOptions API::curr_run_opt;
 std::unique_ptr<RenderOptions> API::render_opt;
+
+static Transform curr_TM = Transform();
+
+// static std::stack< GraphicsState > saved_GS;
+// static std::stack< GraphicsState > saved_GS;
+
+
 // GraphicsState API::curr_GS;
 
 // THESE FUNCTIONS ARE NEEDED ONLY IN THIS SOURCE FILE (NO HEADER NECESSARY)
@@ -466,12 +474,32 @@ void API::object(const ParamSet &ps) {
 	render_opt->primitives.push_back(make_object(type, ps));
 }
 
-// void API::translate(const ParamSet& ps) {
-//   std::cout << ">>> Inside API::translate()\n";
-//   VERIFY_WORLD_BLOCK("API::translate");
-//   Point3f translation = retrieve(ps, "value", Point3f{0, 0, 0});
-//   render_opt->curr_scene.translation = translation;
-// }
+void API::translate(const ParamSet& ps) {
+  std::cout << ">>> Inside API::translate()\n";
+  VERIFY_WORLD_BLOCK("API::translate");
+  Vector3f translation = retrieve(ps, "value", Vector3f{0, 0, 0});
+  curr_TM = Transform::Translate(translation) * curr_TM;
+}
+
+// TODO
+void API::rotate(const ParamSet& ps) {
+	std::cout << ">>> Inside API::translate()\n";
+	VERIFY_WORLD_BLOCK("API::translate");
+}
+
+void API::scale(const ParamSet& ps) {
+	std::cout << ">>> Inside API::scale()\n";
+	VERIFY_WORLD_BLOCK("API::scale");
+	Vector3f scaling_factors = retrieve(ps, "value", Vector3f{1, 1, 1});
+	curr_TM = Transform::Scale(scaling_factors.x(), scaling_factors.y(), scaling_factors.z()) * curr_TM;
+}
+
+void API::identity() {
+	std::cout << ">>> Inside API::identity()\n";
+	VERIFY_WORLD_BLOCK("API::identity");
+	curr_TM = Transform();
+}
+
 
 void API::background(const ParamSet &ps) {
 	std::cout << ">>> Inside API::background()\n";

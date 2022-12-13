@@ -144,9 +144,21 @@ class API {
 	/// @param ps parameters
 	static void named_material(const ParamSet& ps);
 
-	// /// @brief Add translation to all objects of the current scene
-	// /// @param ps parameters
-	// static void translate(const ParamSet& ps);
+	/// @brief Add translation to all objects of the current scene
+	/// @param ps parameters
+	static void translate(const ParamSet& ps);
+
+	/// @brief Add rotation to all objects of the current scene
+	/// @param ps parameters
+	static void rotate(const ParamSet& ps);
+
+	/// @brief Resets transformation matrix to the identity matrix
+	/// @param ps parameters
+	static void identity();
+
+	/// @brief Scale all objects of the current scene
+	/// @param ps parameters
+	static void scale(const ParamSet& ps);
 
 	
 	

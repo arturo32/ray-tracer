@@ -154,18 +154,7 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 			parse_parameters(p_element, param_list, /* out */ &ps);
 			API::object(ps);
 
-		}
-		//  else if(tag_name == "translate") {
-		//   ParamSet ps;
-		//   vector<std::pair<param_type_e, string>> param_list{ 
-		//     { param_type_e::POINT3F, "value"}
-		//   };
-		//   parse_parameters(p_element, param_list, /* out */ &ps);
-
-		//   API::translate(ps);
-		// }
-		
-		else if (tag_name == "include") {
+		} else if (tag_name == "include") {
 			ParamSet ps;
 			vector<std::pair<param_type_e, string>> param_list{
 				{ param_type_e::STRING, "filename" }
@@ -181,8 +170,32 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 			}
 			
 			parse(filename.begin().base());
-		} 
-		else if (tag_name == "world_end") {
+		} else if(tag_name == "identity") {
+			API::identity();
+
+		} else if(tag_name == "translate") {
+			ParamSet ps;
+			vector<std::pair<param_type_e, string>> param_list{
+				{ param_type_e::VEC3F, "value" }
+			};
+			parse_parameters(p_element, param_list, /* out */ &ps);
+			API::translate(ps);
+		} else if(tag_name == "scale") {
+			ParamSet ps;
+			vector<std::pair<param_type_e, string>> param_list{
+				{ param_type_e::VEC3F, "value" }
+			};
+			parse_parameters(p_element, param_list, /* out */ &ps);
+			API::scale(ps);
+		} else if(tag_name == "rotate") {
+			ParamSet ps;
+			vector<std::pair<param_type_e, string>> param_list{
+				{ param_type_e::REAL, "angle" },
+				{ param_type_e::VEC3F, "axis" }
+			};
+			parse_parameters(p_element, param_list, /* out */ &ps);
+			API::rotate(ps);
+		} else if (tag_name == "world_end") {
 			API::world_end();
 			// std::clog << ">>> Leaving WorldBegin, at level " << level+1 << std::endl;
 		} else if (tag_name == "material") {
