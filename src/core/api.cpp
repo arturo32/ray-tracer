@@ -4,6 +4,7 @@
 #include "Shape/Sphere.hpp"
 #include "scene.hpp"
 #include "Transform.hpp"
+#include <fstream>
 
 #include <chrono>
 #include <memory>
@@ -27,6 +28,22 @@ RunningOptions API::curr_run_opt;
 std::unique_ptr<RenderOptions> API::render_opt;
 
 static Transform curr_TM = Transform();
+
+
+/* --------------------------------------------------------------------------------
+* The matrix lookup is unique map (hash table) of transformation matrices.
+* Every new transformation that is created in `API::transform()`
+* should be stored in this map.
+* So, whenever we generate a transformation matrix (either defined
+* directly in the scene file or as a result of composition of other
+* matrices), we do the following: we look it up in the dictionary;
+* if it's there, we return the shared pointer stored in the map;
+* if it's NOT there yet, we store it in the dictionary and return
+* the shared pointer stored in the map.
+* -------------------------------------------------------------------------------- */
+/// The Dictionary of instantiated transformation matrix.
+static Dictionary< string, shared_ptr< const Transform > > transformation_cache;
+
 
 // static std::stack< GraphicsState > saved_GS;
 // static std::stack< GraphicsState > saved_GS;
@@ -111,7 +128,10 @@ std::shared_ptr<Primitive> API::make_object(const std::string &type, const Param
 std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps, std::unique_ptr<RenderOptions> &opt) {
 	real_type radius = retrieve(object_ps, "radius", real_type{0});
 	Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
-	std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, center, radius);
+	
+	const shared_ptr< const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+	
+	std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, o2w, center, radius);
 
 	std::string name = retrieve(object_ps, "material", std::string{""});
 
@@ -286,7 +306,8 @@ std::shared_ptr<Primitive> API::read_obj_file(std::string filename,
 	vector<shared_ptr<Primitive>> primitives;
 	for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
 		// TODO: esse fn tá errado!!!
-		shared_ptr<Triangle> triangle = std::make_shared<Triangle>(false, mesh, i, fn );
+		const shared_ptr< const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+		shared_ptr<Triangle> triangle = std::make_shared<Triangle>(false, o2w, mesh, i, fn );
 		primitives.push_back(std::make_shared<GeometricPrimitive>(material, triangle));
 	}  
 	if (opt->accelerator == "bvh") {
@@ -346,7 +367,8 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 
 		vector<shared_ptr<Primitive>> primitives;
 		for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
-			shared_ptr<Shape> triangle = std::make_shared<Triangle>(false, mesh, i, backface_cull == "true" );
+			const shared_ptr< const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+			shared_ptr<Shape> triangle = std::make_shared<Triangle>(false, o2w, mesh, i, backface_cull == "true" );
 			primitives.push_back(std::make_shared<GeometricPrimitive>(materialMesh, triangle));
 		}  
 		if (opt->accelerator == "bvh") {
@@ -375,6 +397,12 @@ void API::init_engine(const RunningOptions &opt) {
 	curr_state = APIState::SetupBlock;
 	// Preprare render infrastructure for a new scene.
 	render_opt = std::make_unique<RenderOptions>();
+
+	const Transform new_TM = Transform(curr_TM);
+	string new_matrix_string = new_TM.GetMatrix().Print();
+	transformation_cache.insert(
+		std::pair<string, shared_ptr< const Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
+
 	// Create a new initial GS
 	// curr_GS = GraphicsState();
 	RT3_MESSAGE("[1] Rendering engine initiated.\n");
@@ -475,10 +503,16 @@ void API::object(const ParamSet &ps) {
 }
 
 void API::translate(const ParamSet& ps) {
-  std::cout << ">>> Inside API::translate()\n";
-  VERIFY_WORLD_BLOCK("API::translate");
-  Vector3f translation = retrieve(ps, "value", Vector3f{0, 0, 0});
-  curr_TM = Transform::Translate(translation) * curr_TM;
+	std::cout << ">>> Inside API::translate()\n";
+	VERIFY_WORLD_BLOCK("API::translate");
+	Vector3f translation = retrieve(ps, "value", Vector3f{0, 0, 0});
+
+	curr_TM = Transform::Translate(translation) * curr_TM;
+	
+	const Transform new_TM = Transform(curr_TM);
+	string new_matrix_string = new_TM.GetMatrix().Print();
+	transformation_cache.insert(
+		std::pair<string, shared_ptr< const Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
 }
 
 // TODO
@@ -492,6 +526,11 @@ void API::scale(const ParamSet& ps) {
 	VERIFY_WORLD_BLOCK("API::scale");
 	Vector3f scaling_factors = retrieve(ps, "value", Vector3f{1, 1, 1});
 	curr_TM = Transform::Scale(scaling_factors.x(), scaling_factors.y(), scaling_factors.z()) * curr_TM;
+
+	const Transform new_TM = Transform(curr_TM);
+	string new_matrix_string = new_TM.GetMatrix().Print();
+	transformation_cache.insert(
+		std::pair<string, shared_ptr< const Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
 }
 
 void API::identity() {

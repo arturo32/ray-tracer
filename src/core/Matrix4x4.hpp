@@ -31,17 +31,22 @@ namespace rt3 {
 			return false;
 		}
 		friend Matrix4x4 Transpose(const Matrix4x4 &);
-		void Print(FILE *f) const {
-			fprintf(f, "[ ");
+		string Print() const {
+			string s = "";
+			s += "[ ";
 			for (int i = 0; i < 4; ++i) {
-				fprintf(f, "  [ ");
+				s += "  [ ";
 				for (int j = 0; j < 4; ++j)  {
-					fprintf(f, "%f", m[i][j]);
-					if (j != 3) fprintf(f, ", ");
+					s += m[i][j];
+					if (j != 3){
+						s += ", ";
+					}
 				}
-				fprintf(f, " ]\n");
+				s += " ]\n";
 			}
-			fprintf(f, " ] ");
+			s += " ] ";
+			
+			return s;
 		}
 		static Matrix4x4 Mul(const Matrix4x4 &m1, const Matrix4x4 &m2) {
 			Matrix4x4 r;

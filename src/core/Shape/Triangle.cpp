@@ -2,8 +2,8 @@
 
 namespace rt3 {
 
-	Triangle::Triangle( bool flip, shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc ) 
-		: Shape(flip), mesh{mesh}, backface_cull{bfc} {
+	Triangle::Triangle( bool flip, const shared_ptr< const Transform >& o2w, shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc ) 
+		: Shape(flip, o2w), mesh{mesh}, backface_cull{bfc} {
 		
 		// This is just a shortcut to access this triangle's data stored in the mesh database.
 		v  = &mesh->vertex_indices[ 3 * tri_id ];
