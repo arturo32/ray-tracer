@@ -49,6 +49,15 @@
 namespace rt3 {
 /// Collection of objects and diretives that control rendering, such as camera,
 /// lights, prims.
+
+struct GraphicsState {
+	std::shared_ptr<Material> curr_material;  //!< Current material that globally affects all objects.
+	bool flip_normals{false};              //!< When true, we flip the normals
+	std::map<std::string, std::shared_ptr<Material>> named_materials;      //!< Library of materials.
+	bool mats_lib_cloned{false};           //!< We only actually clone the library if a new material is added to it.
+};
+
+
 struct RenderOptions {
 	// the Film
 	std::string film_type{"image"};  // The only type available.
@@ -60,8 +69,8 @@ struct RenderOptions {
 	/// the Background
 	string bkg_type{"solid"};  // "image", "interpolated"
 	ParamSet bkg_ps;
-	std::shared_ptr<Material> curr_material;
-	std::map<std::string, std::shared_ptr<Material>> named_materials;
+	// std::shared_ptr<Material> curr_material;
+	// std::map<std::string, std::shared_ptr<Material>> named_materials;
 	Scene curr_scene;
 	std::vector<std::shared_ptr<Primitive>> primitives;
 	string accelerator{"primlist"};
@@ -101,7 +110,17 @@ class API {
 	static std::unique_ptr<RenderOptions> render_opt;
 	// [NO NECESSARY IN THIS PROJECT]
 	// /// The current GraphicsState
-	// static GraphicsState curr_GS;
+	
+	static std::unique_ptr<GraphicsState> curr_GS;
+	static std::unique_ptr<Transform> curr_TM;
+
+	static std::stack<GraphicsState> saved_GS;
+	static std::stack<Transform> saved_TM;
+	
+	static Dictionary<std::string, std::shared_ptr< const Transform > > transformation_cache;
+	static Dictionary< string, Transform > named_coord_system;
+
+
 	// [NOT NECESSARY IN THIS PROJECT]
 	// /// Pointer to the scene. We keep it as parte of the API because it may be
 	// reused later [1] Create the integrator. static unique_ptr< Scene >
