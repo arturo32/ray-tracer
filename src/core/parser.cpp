@@ -122,10 +122,11 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 			API::film(ps);
 		} else if (tag_name == "lookat") {
 			ParamSet ps;
-			vector<std::pair<param_type_e, string>> param_list{ { param_type_e::POINT3F, "look_from" },
-																													{ param_type_e::POINT3F, "look_at" },
-																													{ param_type_e::VEC3F, "up" } };
-
+			vector<std::pair<param_type_e, string>> param_list{ 
+				{ param_type_e::POINT3F, "look_from" },
+				{ param_type_e::POINT3F, "look_at" },
+				{ param_type_e::VEC3F, "up" }
+			};
 			parse_parameters(p_element, param_list, /* out */ &ps);
 			API::look_at(ps);
 		} else if (tag_name == "world_begin") {
@@ -147,8 +148,6 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 				{ param_type_e::ARR_POINT3F, "normals" },
 				{ param_type_e::ARR_POINT3F, "uvs" },
 				{ param_type_e::INT, "ntriangles" }
-				
-
 			};
 
 			parse_parameters(p_element, param_list, /* out */ &ps);

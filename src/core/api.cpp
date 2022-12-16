@@ -26,9 +26,12 @@ void normalize_spectrum(Vector3f& a){
 API::APIState API::curr_state = APIState::Uninitialized;
 RunningOptions API::curr_run_opt;
 std::unique_ptr<RenderOptions> API::render_opt;
-
-static Transform curr_TM = Transform();
-
+GraphicsState API::curr_GS;
+Transform API::curr_TM;
+std::stack<GraphicsState> API::saved_GS;
+std::stack<const Transform> API::saved_TM;
+Dictionary<std::string, std::shared_ptr<const Transform > > API::transformation_cache;
+Dictionary< string,const Transform > API::named_coord_system;
 
 /* --------------------------------------------------------------------------------
 * The matrix lookup is unique map (hash table) of transformation matrices.
@@ -42,7 +45,7 @@ static Transform curr_TM = Transform();
 * the shared pointer stored in the map.
 * -------------------------------------------------------------------------------- */
 /// The Dictionary of instantiated transformation matrix.
-static Dictionary< string, shared_ptr< const Transform > > transformation_cache;
+// static Dictionary< string, shared_ptr<const  Transform > > transformation_cache;
 
 
 // static std::stack< GraphicsState > saved_GS;
@@ -129,7 +132,7 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
 	real_type radius = retrieve(object_ps, "radius", real_type{0});
 	Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
 	
-	const shared_ptr< const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+	const shared_ptr<const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
 	
 	std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, o2w, center, radius);
 
@@ -137,12 +140,12 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
 
 	std::shared_ptr<Material> materialSphere;
 	if (name == "") {
-		materialSphere = opt->curr_material;
+		materialSphere = curr_GS.curr_material;
 	} else {
-		if (opt->named_materials.find(name) == opt->named_materials.end()){
+		if (curr_GS.named_materials.find(name) == curr_GS.named_materials.end()){
 			RT3_ERROR("Material of name '" + name + "' not found!");
 		}
-		materialSphere = opt->named_materials[name];
+		materialSphere = curr_GS.named_materials[name];
 	}
 	return make_shared<GeometricPrimitive>(materialSphere, sphere);
 }
@@ -306,7 +309,7 @@ std::shared_ptr<Primitive> API::read_obj_file(std::string filename,
 	vector<shared_ptr<Primitive>> primitives;
 	for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
 		// TODO: esse fn tá errado!!!
-		const shared_ptr< const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+		const shared_ptr<const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
 		shared_ptr<Triangle> triangle = std::make_shared<Triangle>(false, o2w, mesh, i, fn );
 		primitives.push_back(std::make_shared<GeometricPrimitive>(material, triangle));
 	}  
@@ -324,14 +327,14 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 	std::string name = retrieve(object_ps, "material", std::string{""});
 	std::shared_ptr<Material> materialMesh;
 	if (name == "") {
-		materialMesh = opt->curr_material;
-		std::cout << opt->curr_material << "=====================================================================" <<std::endl;
+		materialMesh = curr_GS.curr_material;
+		std::cout << curr_GS.curr_material << "=====================================================================" <<std::endl;
 	}
 	else {
-		if (opt->named_materials.find(name) == opt->named_materials.end()){
+		if (curr_GS.named_materials.find(name) == curr_GS.named_materials.end()){
 			RT3_ERROR("Material of name '" + name + "' not found!");
 		}
-		materialMesh = opt->named_materials[name];
+		materialMesh = curr_GS.named_materials[name];
 	}
 	
 	std::shared_ptr<TriangleMesh> mesh = make_shared<TriangleMesh>();
@@ -367,7 +370,7 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 
 		vector<shared_ptr<Primitive>> primitives;
 		for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
-			const shared_ptr< const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+			const shared_ptr<const Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
 			shared_ptr<Shape> triangle = std::make_shared<Triangle>(false, o2w, mesh, i, backface_cull == "true" );
 			primitives.push_back(std::make_shared<GeometricPrimitive>(materialMesh, triangle));
 		}  
@@ -398,10 +401,10 @@ void API::init_engine(const RunningOptions &opt) {
 	// Preprare render infrastructure for a new scene.
 	render_opt = std::make_unique<RenderOptions>();
 
-	const Transform new_TM = Transform(curr_TM);
+	const Transform new_TM = Transform(curr_TM.GetMatrix(), curr_TM.GetInverseMatrix());
 	string new_matrix_string = new_TM.GetMatrix().Print();
 	transformation_cache.insert(
-		std::pair<string, shared_ptr< const Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
+		std::pair<string, std::shared_ptr<const Transform >>(new_matrix_string, std::make_shared<const Transform>(new_TM)));
 
 	// Create a new initial GS
 	// curr_GS = GraphicsState();
@@ -509,10 +512,10 @@ void API::translate(const ParamSet& ps) {
 
 	curr_TM = Transform::Translate(translation) * curr_TM;
 	
-	const Transform new_TM = Transform(curr_TM);
+	const Transform new_TM = Transform(curr_TM.GetMatrix(), curr_TM.GetInverseMatrix());
 	string new_matrix_string = new_TM.GetMatrix().Print();
 	transformation_cache.insert(
-		std::pair<string, shared_ptr< const Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
+		std::pair<string, shared_ptr<const Transform >>(new_matrix_string, std::make_shared<const Transform>(new_TM)));
 }
 
 // TODO
@@ -527,10 +530,10 @@ void API::scale(const ParamSet& ps) {
 	Vector3f scaling_factors = retrieve(ps, "value", Vector3f{1, 1, 1});
 	curr_TM = Transform::Scale(scaling_factors.x(), scaling_factors.y(), scaling_factors.z()) * curr_TM;
 
-	const Transform new_TM = Transform(curr_TM);
+	Transform new_TM = Transform(curr_TM.GetMatrix(), curr_TM.GetInverseMatrix());
 	string new_matrix_string = new_TM.GetMatrix().Print();
 	transformation_cache.insert(
-		std::pair<string, shared_ptr< const Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
+		std::pair<string, shared_ptr<const Transform >>(new_matrix_string, std::make_shared<const Transform>(new_TM)));
 }
 
 void API::identity() {
@@ -565,7 +568,7 @@ void API::material(const ParamSet &ps) {
 				c *= 255.0;
 				c.clamp(0.0, 255.0);
 			}
-			render_opt->curr_material = std::make_shared<FlatMaterial>(c);
+			curr_GS.curr_material = std::make_shared<FlatMaterial>(c);
 	} else if (type == "blinn") {
 			Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
 			normalize_spectrum(a);
@@ -576,7 +579,7 @@ void API::material(const ParamSet &ps) {
 			Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
 			normalize_spectrum(m);
 			real_type g = retrieve(ps, "glossiness", real_type{0});
-			render_opt->curr_material = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
+			curr_GS.curr_material = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
 	}
 
 }
@@ -599,7 +602,7 @@ void API::make_named_material(const ParamSet &ps) {
 			c.clamp(0.0, 255.0);
 		}
 		std::cout << "color: " << c << std::endl;
-		render_opt->named_materials[name] = std::make_shared<FlatMaterial>(c);
+		curr_GS.named_materials[name] = std::make_shared<FlatMaterial>(c);
 	} else if (type == "blinn") {
 		// check interval of values and convert if needed?
 		Vector3f a = retrieve(ps, "ambient", Vector3f{0,0,0});
@@ -611,7 +614,7 @@ void API::make_named_material(const ParamSet &ps) {
 		Vector3f m = retrieve(ps, "mirror", Vector3f{0,0,0});
 		normalize_spectrum(m);
 		real_type g = retrieve(ps, "glossiness", real_type{0});
-		render_opt->named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
+		curr_GS.named_materials[name] = std::make_shared<BlinnPhongMaterial>(a,d,s,m,g);
 	}
 	
 }
@@ -621,11 +624,11 @@ void API::named_material(const ParamSet &ps) {
 	VERIFY_WORLD_BLOCK("API::named_material");
 
 	std::string name = retrieve(ps, "name", string{"unknown"});
-	if(render_opt->named_materials.find(name) == render_opt->named_materials.end()) { 
+	if(curr_GS.named_materials.find(name) == curr_GS.named_materials.end()) { 
 		RT3_ERROR("Material of name '" + name + "' not found!");
 	}
 
-	render_opt->curr_material = render_opt->named_materials[name];
+	curr_GS.curr_material = curr_GS.named_materials[name];
 }
 
 void API::light_source(const ParamSet &ps) {

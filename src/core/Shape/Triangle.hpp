@@ -22,7 +22,7 @@ class Triangle : public Shape {
 		Bounds3f bounds;
 	public:
         // The single constructor, that receives the mesh, this triangle id, and an indication for backface culling.
-		Triangle( bool flip, const shared_ptr< const Transform >& o2w, shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc=true );
+		Triangle( bool flip, const shared_ptr<const Transform >& o2w, shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc=true );
 		/// The regular intersection methods, as defined in the Shape parent class.
 		bool intersect( Ray &ray, real_type &thit, Surfel *isect ) const;
 		bool intersect_p(const Ray &ray ) const;

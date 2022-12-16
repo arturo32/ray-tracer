@@ -1,9 +1,7 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#include "rt3-base.hpp"
 #include "Matrix4x4.hpp"
-
 
 
 namespace rt3 {

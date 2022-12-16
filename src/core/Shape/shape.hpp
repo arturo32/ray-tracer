@@ -15,7 +15,7 @@ class Shape {
 	protected:
 		bool flip_normals;
 	public:
-		Shape(bool flip, const shared_ptr< const Transform >& o2w) :
+		Shape(bool flip, const std::shared_ptr<const Transform >& o2w) :
 			flip_normals{flip}, obj_to_world{o2w}{}
 		~Shape() = default;
 		virtual Bounds3f world_bounds() const = 0;
@@ -23,7 +23,7 @@ class Shape {
 		virtual bool intersect_p(const Ray& r ) const = 0;
 
 		// === Shape Public Data
-		const shared_ptr< const Transform > obj_to_world; //!< Object to World transformation (scene specified).
+		const std::shared_ptr<const Transform > obj_to_world; //!< Object to World transformation (scene specified).
 
 };
 

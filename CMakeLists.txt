@@ -60,6 +60,7 @@ add_executable(basic_rt3 ${RT3_SOURCE_DIR}/core/api.cpp
 			             ${RT3_SOURCE_DIR}/core/Light/PointLight.cpp
 			             ${RT3_SOURCE_DIR}/core/Light/SpotLight.cpp
                          ${RT3_SOURCE_DIR}/core/tinyxml2.cpp
+                         ${RT3_SOURCE_DIR}/core/Transform.cpp
                          ${RT3_SOURCE_DIR}/ext/lodepng.cpp
                          ${RT3_SOURCE_DIR}/main/rt3.cpp
                         )
