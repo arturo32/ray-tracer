@@ -12,8 +12,7 @@ ColorXYZ BlinnPhongIntegrator::Li( Ray& ray, Scene& scene, Point2f pixel, uint d
 	if (!isect.hit) {
 		if(scene.background->mapping_type == Background::mapping_t::screen) {
 			return scene.background->sampleXYZ(pixel);
-		}
-		else {
+		} else {
 			return scene.background->sampleXYZ(ray);
 		}
 	} else {

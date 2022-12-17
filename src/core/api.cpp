@@ -181,12 +181,13 @@ std::shared_ptr<Primitive> API::read_obj_file(std::string filename,
 	// Retrieve the complete list of vertices.
 	auto n_vertices{ attrib.vertices.size() / 3 };
 	for ( auto idx_v{0u} ; idx_v < n_vertices; idx_v++)	{
-			mesh->vertices.push_back(Point3f{
-											attrib.vertices[ 3 * idx_v + 0 ],
-											attrib.vertices[ 3 * idx_v + 1 ],
-											attrib.vertices[ 3 * idx_v + 2 ]
-											}
-									);
+		mesh->vertices.push_back(
+			Point3f{
+				attrib.vertices[ 3 * idx_v + 0 ],
+				attrib.vertices[ 3 * idx_v + 1 ],
+				attrib.vertices[ 3 * idx_v + 2 ]
+			}
+		);
 	}
 	// Read the normals
 	// TODO: flip normals if requested.
@@ -216,11 +217,12 @@ std::shared_ptr<Primitive> API::read_obj_file(std::string filename,
 	for ( auto idx_tc{0u} ; idx_tc < n_texcoords; idx_tc++)
 	{
 		// Store the texture coords.
-		mesh->uvcoords.push_back( Point2f{
-										  attrib.texcoords[ 2 * idx_tc + 0 ],
-								  		  attrib.texcoords[ 2 * idx_tc + 1 ]
-										 }
-								);
+		mesh->uvcoords.push_back( 
+			Point2f{
+				attrib.texcoords[ 2 * idx_tc + 0 ],
+				attrib.texcoords[ 2 * idx_tc + 1 ]
+			}
+		);
 	}
 
 	// Read mesh connectivity and store it as lists of indices to the real data.
@@ -267,45 +269,7 @@ std::shared_ptr<Primitive> API::read_obj_file(std::string filename,
 			index_offset += fnum;
 		}
 	}
-	// Loop over shapes
-	// for (size_t s = 0; s < shapes.size(); s++) {
-	//   // Loop over faces(polygon)
-	//   size_t index_offset = 0;
-	//   for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-	//     size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
-
-	//     // Loop over vertices in the face.
-	//     for (size_t v = 0; v < fv; v++) {
-	//       // access to vertex
-	//       tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-	//       tinyobj::real_t vx = attrib.vertices[3*size_t(idx.vertex_index)+0];
-	//       tinyobj::real_t vy = attrib.vertices[3*size_t(idx.vertex_index)+1];
-	//       tinyobj::real_t vz = attrib.vertices[3*size_t(idx.vertex_index)+2];
-
-	//       // Check if `normal_index` is zero or positive. negative = no normal data
-	//       if (idx.normal_index >= 0) {
-	//         tinyobj::real_t nx = attrib.normals[3*size_t(idx.normal_index)+0];
-	//         tinyobj::real_t ny = attrib.normals[3*size_t(idx.normal_index)+1];
-	//         tinyobj::real_t nz = attrib.normals[3*size_t(idx.normal_index)+2];
-	//       }
-
-	//       // Check if `texcoord_index` is zero or positive. negative = no texcoord data
-	//       if (idx.texcoord_index >= 0) {
-	//         tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
-	//         tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
-	//       }
-
-	//       // Optional: vertex colors
-	//       // tinyobj::real_t red   = attrib.colors[3*size_t(idx.vertex_index)+0];
-	//       // tinyobj::real_t green = attrib.colors[3*size_t(idx.vertex_index)+1];
-	//       // tinyobj::real_t blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
-	//     }
-	//     index_offset += fv;
-
-	//     // per-face material
-	//     shapes[s].mesh.material_ids[f];
-	//   }
-	// }
+	
 	vector<shared_ptr<Primitive>> primitives;
 	for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
 		// TODO: esse fn tá errado!!!
@@ -329,8 +293,7 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 	if (name == "") {
 		materialMesh = curr_GS.curr_material;
 		std::cout << curr_GS.curr_material << "=====================================================================" <<std::endl;
-	}
-	else {
+	} else {
 		if (curr_GS.named_materials.find(name) == curr_GS.named_materials.end()){
 			RT3_ERROR("Material of name '" + name + "' not found!");
 		}

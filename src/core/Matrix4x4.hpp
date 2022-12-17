@@ -2,7 +2,7 @@
 #define MATRIX4X4_H
 
 #include "rt3.hpp"
-
+#include <sstream>
 
 namespace rt3 {
 
@@ -55,7 +55,9 @@ namespace rt3 {
 			for (int i = 0; i < 4; ++i) {
 				s += "  [ ";
 				for (int j = 0; j < 4; ++j)  {
-					s += m[i][j];
+					std::ostringstream ss;
+					ss << m[i][j];
+					s += ss.str();
 					if (j != 3){
 						s += ", ";
 					}

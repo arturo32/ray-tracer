@@ -11,6 +11,7 @@
         <light_source type="point" L="1 1 1" scale="1 1 1" from="-3 10 0" />
 
         <material type="blinn" ambient="0.1 0.1 0.1" diffuse="1 0 0" specular="0 0 0" mirror="0.1 0.1 0.1" glossiness="256" /> <!-- Red -->
+        <scale value="20 1 1"/>
         <object type="sphere" radius=".4" center="0 1 0"/>
 
         <object type="trianglemesh" 
