@@ -41,15 +41,15 @@ namespace rt3 {
 			return Transform(m_s, minv_s);
 		}
 
-		friend Transform Inverse(const Transform &t) {
+		friend Transform Inverse(Transform &t) {
 			return Transform(t.mInv, t.m);
 		}
-		friend Transform Transpose(const Transform &t) {
+		friend Transform Transpose(Transform &t) {
 			return Transform(Transpose(t.m), Transpose(t.mInv));
 		}
-		bool operator==(const Transform &t) const;
-		bool operator!=(const Transform &t) const;
-		bool operator<(const Transform &t2) const;
+		bool operator==(Transform &t) const;
+		bool operator!=(Transform &t) const;
+		bool operator<(Transform &t2) const;
 		bool IsIdentity() const;
 		const Matrix4x4 &GetMatrix() const;
 		const Matrix4x4 &GetInverseMatrix() const;
@@ -62,7 +62,7 @@ namespace rt3 {
 		// inline Ray operator()(const Ray &r) const;
 		// Bounds3f operator()(const Bounds3f &b) const;
 		
-		Transform operator*(const Transform &t2) const;
+		Transform operator*(Transform &t2) const;
 
 		// bool SwapsHandedness() const;
 		// Surfel operator()(const Surfel &si) const;

@@ -106,10 +106,10 @@ class API {
 	static Transform curr_TM;
 
 	static std::stack<GraphicsState> saved_GS;
-	static std::stack<const Transform> saved_TM;
+	static std::stack<Transform> saved_TM;
 	
-	static Dictionary<std::string, std::shared_ptr<const Transform > > transformation_cache;
-	static Dictionary< string,const Transform > named_coord_system;
+	static Dictionary<std::string, std::shared_ptr<Transform > > transformation_cache;
+	static Dictionary< string,Transform > named_coord_system;
 
 
 	// [NOT NECESSARY IN THIS PROJECT]

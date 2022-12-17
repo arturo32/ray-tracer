@@ -16,13 +16,13 @@ namespace rt3 {
 		return m.Print();
 	}
 
-	bool Transform::operator==(const Transform &t) const {
+	bool Transform::operator==(Transform &t) const {
 		return t.m == m && t.mInv == mInv;
 	}
-	bool Transform::operator!=(const Transform &t) const {
+	bool Transform::operator!=(Transform &t) const {
 		return t.m != m || t.mInv != mInv;
 	}
-	bool Transform::operator<(const Transform &t2) const {
+	bool Transform::operator<(Transform &t2) const {
 		for (int i = 0; i < 4; ++i)
 			for (int j = 0; j < 4; ++j) {
 				if (m.m[i][j] < t2.m.m[i][j]) return true;
@@ -52,7 +52,7 @@ namespace rt3 {
 	}
 
 	
-	Transform Transform::operator*(const Transform &t2) const {
+	Transform Transform::operator*(Transform &t2) const {
 		return Matrix4x4::Mul(m, t2.GetMatrix());
 	}
 
