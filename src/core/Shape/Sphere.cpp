@@ -3,9 +3,11 @@
 namespace rt3 {
 
 	bool Sphere::intersect( Ray& r, real_type& t_hit, Surfel *sf ) const {
-		Vector3f oc = (r.origin - this->center);
-		real_type A = dot(r.direction, r.direction);
-		real_type B = dot(oc, r.direction);
+		//Ray newR = r;
+		Ray newR = this->obj_to_world->GetInverseMatrix() * r;
+		Vector3f oc = (newR.origin - this->center);
+		real_type A = dot(newR.direction, newR.direction);
+		real_type B = dot(oc, newR.direction);
 		real_type C = dot(oc, oc) - (this->radius * this->radius);
 		real_type delta = B*B - A*C;
 		if (delta >= 0) {
@@ -13,10 +15,10 @@ namespace rt3 {
 			real_type t1 = (-B + sqrtD) / A;
 			real_type t2 = (-B - sqrtD) / A;
 			t_hit = (t1 < t2) ? t1 : t2;
-			if (t_hit < r.t_max && t_hit > r.t_min) {
+			if (t_hit < newR.t_max && t_hit > newR.t_min) {
 				// TODO: calcular as outras informações do surfel
-				sf->wo = -r.direction;
-				sf->p = r(t_hit);
+				sf->wo = -newR.direction;
+				sf->p = newR(t_hit);
 				sf->n = sf->p - this->center;
 				sf->n.make_unit_vector();
 				return true;    
@@ -28,9 +30,11 @@ namespace rt3 {
 	}
 
 	bool Sphere::intersect_p(const Ray& r) const {
-		Vector3f oc = (r.origin - this->center);
-		real_type A = dot(r.direction, r.direction);
-		real_type B = dot(oc, r.direction);
+		//Ray newR = r;
+		Ray newR = this->obj_to_world->GetInverseMatrix() * r;
+		Vector3f oc = (newR.origin - this->center);
+		real_type A = dot(newR.direction, newR.direction);
+		real_type B = dot(oc, newR.direction);
 		real_type C = dot(oc, oc) - (this->radius * this->radius);
 		real_type delta = B*B - A*C;
 		if (delta >= 0) {
@@ -38,7 +42,7 @@ namespace rt3 {
 			real_type t1 = (-B + sqrtD) / A;
 			real_type t2 = (-B - sqrtD) / A;
 			real_type t_hit = (t1 < t2) ? t1 : t2;
-			return (t_hit < r.t_max && t_hit > r.t_min);
+			return (t_hit < newR.t_max && t_hit > newR.t_min);
 		}
 		return false;
 	}
