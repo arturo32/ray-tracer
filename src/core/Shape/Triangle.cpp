@@ -37,6 +37,9 @@ namespace rt3 {
 	}
 
 	bool Triangle::intersect( Ray& r, real_type& t_hit, Surfel *sf ) const {
+		Ray newR = this->obj_to_world->GetInverseMatrix() * r;
+		//Ray newR = r;
+
 		const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
 		const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
 		const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
@@ -51,7 +54,7 @@ namespace rt3 {
 		
 		Vector3f edge1 = p1 - p0;
 		Vector3f edge2 = p2 - p0;
-		Vector3f pvec = cross(edge2, r.direction);
+		Vector3f pvec = cross(edge2, newR.direction);
 		real_type det = dot(edge1, pvec);
 
 		if(det > -EPSILON && det < EPSILON) {
@@ -60,22 +63,22 @@ namespace rt3 {
 		
 		real_type inv_det = 1.0 / det;
 
-		Vector3f tvec = r.origin - p0;
+		Vector3f tvec = newR.origin - p0;
 		sf->uv[0] = dot(tvec, pvec) * inv_det;
 		if(sf->uv[0] < 0.0  || sf->uv[0] > 1.0) {
 			return false;
 		}
 
 		Vector3f qvec = cross(edge1, tvec);
-		sf->uv[1] = dot(r.direction, qvec) * inv_det;
+		sf->uv[1] = dot(newR.direction, qvec) * inv_det;
 		if(sf->uv[1] < 0.0  || (sf->uv[0] + sf->uv[1]) > 1.0) {
 			return false;
 		}
 
 		t_hit = dot(edge2, qvec) * inv_det;
-		if (t_hit < r.t_max && t_hit > r.t_min) {
-			sf->wo = -r.direction;
-			sf->p = r(t_hit);
+		if (t_hit < newR.t_max && t_hit > newR.t_min) {
+			sf->wo = -newR.direction;
+			sf->p = newR(t_hit);
 			sf->n = sf->uv[0] * n1 + sf->uv[1] * n2 + (1- sf->uv[0] - sf->uv[1])*n0; // cross(edge1, edge2);
 			sf->n.make_unit_vector();
 			return true;
@@ -84,13 +87,15 @@ namespace rt3 {
 	}
 
 	bool Triangle::intersect_p(const Ray& r) const {
+		Ray newR = this->obj_to_world->GetInverseMatrix() * r;
+		//Ray newR = r;
 		const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
 		const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
 		const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
 
 		Vector3f edge1 = p1 - p0;
 		Vector3f edge2 = p2 - p0;
-		Vector3f pvec = cross(edge2, r.direction);
+		Vector3f pvec = cross(edge2, newR.direction);
 		real_type det = dot(edge1, pvec);
 
 		if(det > -EPSILON && det < EPSILON) {
@@ -99,19 +104,19 @@ namespace rt3 {
 		
 		real_type inv_det = 1.0 / det;
 
-		Vector3f tvec = r.origin - p0;
+		Vector3f tvec = newR.origin - p0;
 		real_type u = dot(tvec, pvec) * inv_det;
 		if(u < 0.0  || u > 1.0) {
 			return false;
 		}
 
 		Vector3f qvec = cross(edge1, tvec);
-		real_type v = dot(r.direction, qvec) * inv_det;
+		real_type v = dot(newR.direction, qvec) * inv_det;
 		if(v < 0.0  || (u + v) > 1.0) {
 			return false;
 		}
 		real_type t_hit = dot(edge2, qvec) * inv_det;
-		if(t_hit < r.t_max && t_hit > r.t_min) {
+		if(t_hit < newR.t_max && t_hit > newR.t_min) {
 			return true;
 		}
 		return false;

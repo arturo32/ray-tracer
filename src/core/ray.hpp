@@ -25,12 +25,12 @@ using Vector3f = vec3<real_type>;
 				//normal_direction.make_unit_vector();
 				real_type x = normal_direction.x();
 				real_type y = normal_direction.y();
-				real_type z = normal_direction.y();
+				real_type z = normal_direction.z();
 				
 				
-				Vector3f result = Vector3f(x*m.m[0][0] + x*m.m[0][1] + x*m.m[0][2] + m.m[0][3],
-											y*m.m[1][0] + y*m.m[1][1] + y*m.m[1][2] + m.m[1][3],
-											z*m.m[2][0] + z*m.m[2][1] + z*m.m[2][2] + m.m[2][3]);
+				Vector3f result = Vector3f(x*m.m[0][0] + y*m.m[0][1] + z*m.m[0][2] + m.m[0][3],
+											x*m.m[1][0] + y*m.m[1][1] + z*m.m[1][2] + m.m[1][3],
+											x*m.m[2][0] + y*m.m[2][1] + z*m.m[2][2] + m.m[2][3]);
 
 
 				Ray newR = Ray(r.origin, result);

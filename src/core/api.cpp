@@ -364,10 +364,14 @@ void API::init_engine(const RunningOptions &opt) {
 	// Preprare render infrastructure for a new scene.
 	render_opt = std::make_unique<RenderOptions>();
 
+	curr_TM = Transform();
 	Transform new_TM = Transform(curr_TM.GetMatrix(), curr_TM.GetInverseMatrix());
 	string new_matrix_string = new_TM.GetMatrix().Print();
 	transformation_cache.insert(
 		std::pair<string, std::shared_ptr<Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
+
+	
+
 
 	// Create a new initial GS
 	// curr_GS = GraphicsState();
@@ -474,6 +478,20 @@ void API::translate(const ParamSet& ps) {
 	Vector3f translation = retrieve(ps, "value", Vector3f{0, 0, 0});
 
 	curr_TM = Transform::Translate(translation) * curr_TM;
+	// cout << curr_TM.Print() << std::endl;
+	// cout << "INVERSA:" << endl;
+	// cout << curr_TM.GetInverseMatrix().Print() << std::endl;
+	// cout << "SUPOSTA IDENTIDADE:" << endl;
+	// Transform inv = Transform(curr_TM.GetInverseMatrix());
+	// Transform inden = curr_TM*inv;
+	// cout << inden.Print() << endl;
+
+	Ray testRay = Ray(Point3f(0, 0, 0), Vector3f(2, 4, -5));
+	Transform testT = Transform();
+	Ray resultTestRay = testT.GetMatrix() * testRay;
+	cout << resultTestRay.direction << "-----------------------------------------------------------------------------------------------------" <<  endl;
+
+
 	
 	Transform new_TM = Transform(curr_TM.GetMatrix(), curr_TM.GetInverseMatrix());
 	string new_matrix_string = new_TM.GetMatrix().Print();

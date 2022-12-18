@@ -10,7 +10,7 @@ class Sphere : public Shape {
 	public:
 		Sphere(bool flip, const shared_ptr<Transform >& o2w, const Point3f& c, const real_type& r)
 		: Shape(flip, o2w), center{c}, radius{r} {
-			Point3f r3 = vec3(radius, radius, radius);
+			Point3f r3 = Point3f(radius, radius, radius);
 			// std::cout << "bounds sphere = min:" << center - r3 << " | max:" << center + r3 << std::endl;
 			bounds = Bounds3f(center - r3, center + r3);
 		}
