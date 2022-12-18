@@ -116,7 +116,13 @@ std::shared_ptr<Camera> make_camera(const std::string &type, const ParamSet &cam
 
 std::shared_ptr<Primitive> API::make_object(const std::string &type, const ParamSet &object_ps) {
 	std::shared_ptr<Primitive> object{nullptr};
-	if(type == "sphere") {
+	
+	
+	string new_matrix_string = curr_TM.GetMatrix().Print();
+	transformation_cache.insert(
+			std::pair<string, shared_ptr<Transform >>(new_matrix_string, std::make_shared<Transform>(curr_TM)));
+	
+	if(type == "sphere") {		
 		object = create_sphere(object_ps, render_opt);
 	}
 	else if(type == "trianglemesh") {
@@ -133,6 +139,10 @@ std::shared_ptr<GeometricPrimitive> API::create_sphere(const ParamSet &object_ps
 	Point3f center = retrieve(object_ps, "center", Point3f{0.0,0.0,0.0});
 	
 	const shared_ptr<Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+
+	cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
+	cout << o2w->Print() << endl;
+	cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
 	
 	std::shared_ptr<Sphere> sphere = make_shared<Sphere>(false, o2w, center, radius);
 
@@ -273,6 +283,7 @@ std::shared_ptr<Primitive> API::read_obj_file(std::string filename,
 	vector<shared_ptr<Primitive>> primitives;
 	for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
 		// TODO: esse fn tá errado!!!
+
 		const shared_ptr<Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
 		shared_ptr<Triangle> triangle = std::make_shared<Triangle>(false, o2w, mesh, i, fn );
 		primitives.push_back(std::make_shared<GeometricPrimitive>(material, triangle));
@@ -334,6 +345,7 @@ std::shared_ptr<Primitive> API::create_triangle_mesh(const ParamSet &object_ps, 
 		vector<shared_ptr<Primitive>> primitives;
 		for ( int i = 0 ; i < mesh->n_triangles ; ++i ) {
 			const shared_ptr<Transform > o2w = transformation_cache.at(curr_TM.GetMatrix().Print());
+			
 			shared_ptr<Shape> triangle = std::make_shared<Triangle>(false, o2w, mesh, i, backface_cull == "true" );
 			primitives.push_back(std::make_shared<GeometricPrimitive>(materialMesh, triangle));
 		}  
@@ -476,7 +488,6 @@ void API::translate(const ParamSet& ps) {
 	std::cout << ">>> Inside API::translate()\n";
 	VERIFY_WORLD_BLOCK("API::translate");
 	Vector3f translation = retrieve(ps, "value", Vector3f{0, 0, 0});
-
 	curr_TM = Transform::Translate(translation) * curr_TM;
 	// cout << curr_TM.Print() << std::endl;
 	// cout << "INVERSA:" << endl;
@@ -486,17 +497,17 @@ void API::translate(const ParamSet& ps) {
 	// Transform inden = curr_TM*inv;
 	// cout << inden.Print() << endl;
 
-	Ray testRay = Ray(Point3f(0, 0, 0), Vector3f(2, 4, -5));
-	Transform testT = Transform();
-	Ray resultTestRay = testT.GetMatrix() * testRay;
-	cout << resultTestRay.direction << "-----------------------------------------------------------------------------------------------------" <<  endl;
 
-
+	// Ray testRay = Ray(Point3f(0, 0, 0), Vector3f(2, 4, -5));
+	// Transform testT = Transform();
+	// Ray resultTestRay = testT.GetMatrix() * testRay;
+	// cout << resultTestRay.direction << "-----------------------------------------------------------------------------------------------------" <<  endl;
 	
-	Transform new_TM = Transform(curr_TM.GetMatrix(), curr_TM.GetInverseMatrix());
-	string new_matrix_string = new_TM.GetMatrix().Print();
-	transformation_cache.insert(
-		std::pair<string, shared_ptr<Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
+	// cout << "TESTE MULTIPLICAO/TRANSLAÇÃO: " << endl;
+	// Transform testeT2  = Transform::Translate(Vector3f(1, 1, 1));
+	// Ray resultTestRay2 = testeT2.GetMatrix() * testRay;
+	// cout << resultTestRay2.direction << endl;
+
 }
 
 // TODO
@@ -510,11 +521,6 @@ void API::scale(const ParamSet& ps) {
 	VERIFY_WORLD_BLOCK("API::scale");
 	Vector3f scaling_factors = retrieve(ps, "value", Vector3f{1, 1, 1});
 	curr_TM = Transform::Scale(scaling_factors.x(), scaling_factors.y(), scaling_factors.z()) * curr_TM;
-
-	Transform new_TM = Transform(curr_TM.GetMatrix(), curr_TM.GetInverseMatrix());
-	string new_matrix_string = new_TM.GetMatrix().Print();
-	transformation_cache.insert(
-		std::pair<string, shared_ptr<Transform >>(new_matrix_string, std::make_shared<Transform>(new_TM)));
 }
 
 void API::identity() {

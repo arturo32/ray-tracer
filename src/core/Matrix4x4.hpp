@@ -51,7 +51,7 @@ namespace rt3 {
 		}
 		string Print() const {
 			string s = "";
-			s += "[ ";
+			//s += "[ ";
 			for (int i = 0; i < 4; ++i) {
 				s += "  [ ";
 				for (int j = 0; j < 4; ++j)  {
@@ -64,7 +64,7 @@ namespace rt3 {
 				}
 				s += " ]\n";
 			}
-			s += " ] ";
+			//s += " ] ";
 			
 			return s;
 		}
