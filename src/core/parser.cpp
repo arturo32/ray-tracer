@@ -489,7 +489,7 @@ bool parse_array_COMPOSITE_attrib(tinyxml2::XMLElement *p_element,
 		// For example, if we have values = { 1, 1, 1, 2, 2, 2, 4, 4, 4, 8, 8, 8}
 		// and COMPOSITE = Vector3f, we must extract 4 Vector3f: Vector3f{1,1,1}, {2,2,2}, ..., {8,8,8}.
 		for (auto i{ 0u }; i < n_basic / COMPOSITE_SIZE; i++) {
-			std::cout << "COMPOSITE_SIZE = " << COMPOSITE_SIZE << std::endl;
+			// std::cout << "COMPOSITE_SIZE = " << COMPOSITE_SIZE << std::endl;
 			// Call the proper constructor, as in Vector3f{x,y,z} or Vector2f{x,y}.
 			// If, say, COMPOSITE = Vector3f, this will call the constructor Vector3f{x,y,z}.
 			if (COMPOSITE_SIZE == 3)

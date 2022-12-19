@@ -488,8 +488,18 @@ void API::translate(const ParamSet& ps) {
 	std::cout << ">>> Inside API::translate()\n";
 	VERIFY_WORLD_BLOCK("API::translate");
 	Vector3f translation = retrieve(ps, "value", Vector3f{0, 0, 0});
-	curr_TM = Transform::Translate(translation) * curr_TM;
-	// cout << curr_TM.Print() << std::endl;
+	
+	std::cout << "BEFORE: " << std::endl; 
+	std::cout << curr_TM.Print() << std::endl;
+
+	Transform translate = Transform::Translate(translation);
+	std::cout << "TRANSLATE: " << std::endl; 
+	std::cout << translate.Print() << std::endl;
+	
+	curr_TM = translate * curr_TM;
+	
+	std::cout << "AFTER: " << std::endl;
+	std::cout << curr_TM.Print() << std::endl;
 	// cout << "INVERSA:" << endl;
 	// cout << curr_TM.GetInverseMatrix().Print() << std::endl;
 	// cout << "SUPOSTA IDENTIDADE:" << endl;
@@ -510,17 +520,41 @@ void API::translate(const ParamSet& ps) {
 
 }
 
-// TODO
 void API::rotate(const ParamSet& ps) {
 	std::cout << ">>> Inside API::translate()\n";
 	VERIFY_WORLD_BLOCK("API::translate");
+	Vector3f axis = retrieve(ps, "axis", Vector3f{1, 1, 1});
+	real_type angle = retrieve(ps, "angle", real_type{0});
+
+	std::cout << "BEFORE: " << std::endl; 
+	std::cout << curr_TM.Print() << std::endl;
+
+	Transform rotation = Transform::Rotate(axis, angle);
+	std::cout << "ROTATION: " << std::endl; 
+	std::cout << rotation.Print() << std::endl;
+	
+	curr_TM = rotation * curr_TM;
+	
+	std::cout << "AFTER: " << std::endl;
+	std::cout << curr_TM.Print() << std::endl;
 }
 
 void API::scale(const ParamSet& ps) {
 	std::cout << ">>> Inside API::scale()\n";
 	VERIFY_WORLD_BLOCK("API::scale");
 	Vector3f scaling_factors = retrieve(ps, "value", Vector3f{1, 1, 1});
-	curr_TM = Transform::Scale(scaling_factors.x(), scaling_factors.y(), scaling_factors.z()) * curr_TM;
+	
+	std::cout << "BEFORE: " << std::endl; 
+	std::cout << curr_TM.Print() << std::endl;
+
+	Transform scale = Transform::Scale(scaling_factors.x(), scaling_factors.y(), scaling_factors.z());
+	std::cout << "SCALE: " << std::endl; 
+	std::cout << scale.Print() << std::endl;
+	
+	curr_TM = scale * curr_TM;
+	
+	std::cout << "AFTER: " << std::endl;
+	std::cout << curr_TM.Print() << std::endl;
 }
 
 void API::identity() {
