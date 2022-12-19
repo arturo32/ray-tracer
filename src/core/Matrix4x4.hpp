@@ -127,6 +127,24 @@ namespace rt3 {
 		real_type m[4][4];
 	};
 
+inline rt3::Vector3f MultVector(const rt3::Matrix4x4 &m, const rt3::Vector3f &v) {
+    real_type x = v.x();
+    real_type y = v.y();
+    real_type z = v.z();
+    return rt3::Vector3f(x*m.m[0][0] + y*m.m[0][1] + z*m.m[0][2],
+                         x*m.m[1][0] + y*m.m[1][1] + z*m.m[1][2],
+						 x*m.m[2][0] + y*m.m[2][1] + z*m.m[2][2]);
+}
+
+inline rt3::Point3f MultPoint(const rt3::Matrix4x4 &m,const rt3::Point3f &v) {
+    real_type x = v.x();
+    real_type y = v.y();
+    real_type z = v.z();
+    return rt3::Point3f(x*m.m[0][0] + y*m.m[0][1] + z*m.m[0][2] + m.m[0][3],
+						x*m.m[1][0] + y*m.m[1][1] + z*m.m[1][2] + m.m[1][3],
+						x*m.m[2][0] + y*m.m[2][1] + z*m.m[2][2] + m.m[2][3]);
+}
+
 } // rt3 namespace
 
 #endif

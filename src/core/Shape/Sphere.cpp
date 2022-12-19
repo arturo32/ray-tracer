@@ -31,6 +31,8 @@ namespace rt3 {
 				sf->wo = -newR.direction;
 				sf->p = newR(t_hit);
 				sf->n = sf->p - this->center;
+				Matrix4x4 it = Transpose(this->obj_to_world->GetInverseMatrix());
+				sf->n = MultVector(it, sf->n);
 				sf->n.make_unit_vector();
 				return true;    
 			}
