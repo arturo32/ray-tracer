@@ -10,9 +10,11 @@ namespace rt3 {
 		n  = &mesh->normal_indices[ 3 * tri_id ];
 		uv = &mesh->uvcoord_indices[ 3 * tri_id ];
 
-		const Point3f& p0 = this->mesh->vertices[this->v[0]]; // Get the 3D coordinate of the 0-vertex of this triangle.
-		const Point3f& p1 = this->mesh->vertices[this->v[1]]; // Same for the 1-vertex.
-		const Point3f& p2 = this->mesh->vertices[this->v[2]]; // Same for the 2-vertex.
+		Matrix4x4 m = this->obj_to_world->GetMatrix();
+
+		const Point3f& p0 = MultPoint(m, this->mesh->vertices[this->v[0]]); // Get the 3D coordinate of the 0-vertex of this triangle.
+		const Point3f& p1 = MultPoint(m, this->mesh->vertices[this->v[1]]); // Same for the 1-vertex.
+		const Point3f& p2 = MultPoint(m, this->mesh->vertices[this->v[2]]); // Same for the 2-vertex.
 		
 		Point3f s = p0;
 		Point3f b = p0;
@@ -45,14 +47,6 @@ namespace rt3 {
 		const Point3f& p1 = MultPoint(m, this->mesh->vertices[this->v[1]]); // Same for the 1-vertex.
 		const Point3f& p2 = MultPoint(m, this->mesh->vertices[this->v[2]]); // Same for the 2-vertex.
 
-		const Normal3f& n0 = MultVector(m, this->mesh->normals[this->n[0]]); // Retrieve the normal at vertex 0.
-		const Normal3f& n1 = MultVector(m, this->mesh->normals[this->n[1]]); // Retrieve the normal at vertex 1.
-		const Normal3f& n2 = MultVector(m, this->mesh->normals[this->n[2]]); // Retrieve the normal at vertex 2.
-
-		//const Point2f& uv0 = this->mesh->uvcoords[this->uv[0]]; // Retrieve the uv coord at vertex 0.
-		//const Point2f& uv1 = this->mesh->uvcoords[this->uv[1]]; // Retrieve the uv coord at vertex 1.
-		//const Point2f& uv2 = this->mesh->uvcoords[this->uv[2]]; // Retrieve the uv coord at vertex 2.
-		
 		Vector3f edge1 = p1 - p0;
 		Vector3f edge2 = p2 - p0;
 		Vector3f pvec = cross(edge2, newR.direction);
@@ -78,6 +72,9 @@ namespace rt3 {
 
 		t_hit = dot(edge2, qvec) * inv_det;
 		if (t_hit < newR.t_max && t_hit > newR.t_min) {
+			const Normal3f& n0 = MultVector(m, this->mesh->normals[this->n[0]]); // Retrieve the normal at vertex 0.
+			const Normal3f& n1 = MultVector(m, this->mesh->normals[this->n[1]]); // Retrieve the normal at vertex 1.
+			const Normal3f& n2 = MultVector(m, this->mesh->normals[this->n[2]]); // Retrieve the normal at vertex 2.
 			sf->wo = -newR.direction;
 			sf->p = newR(t_hit);
 			sf->n = sf->uv[0] * n1 + sf->uv[1] * n2 + (1- sf->uv[0] - sf->uv[1])*n0; // cross(edge1, edge2);
@@ -90,8 +87,8 @@ namespace rt3 {
 	}
 
 	bool Triangle::intersect_p(const Ray& r) const {
-		// Ray newR = this->obj_to_world->GetInverseMatrix() * r;
-		Ray newR = r;
+		Ray newR = this->obj_to_world->GetInverseMatrix() * r;
+		// Ray newR = r;
 		Matrix4x4 m = this->obj_to_world->GetMatrix();
 
 		const Point3f& p0 = MultPoint(m, this->mesh->vertices[this->v[0]]); // Get the 3D coordinate of the 0-vertex of this triangle.
