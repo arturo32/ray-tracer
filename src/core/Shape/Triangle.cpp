@@ -35,7 +35,7 @@ namespace rt3 {
 			}
 		}
 		// std::cout << "bounds tri = min:" << s << " | max:" << b << std::endl;
-		bounds = Bounds3f{s, b};
+		bounds = MultBounds(o2w->GetMatrix(), Bounds3f{s, b});
 	}
 
 	bool Triangle::intersect( Ray& r, real_type& t_hit, Surfel *sf ) const {

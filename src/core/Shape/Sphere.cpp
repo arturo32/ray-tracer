@@ -5,12 +5,8 @@ namespace rt3 {
 	Sphere::Sphere(bool flip, const shared_ptr<Transform >& o2w, const Point3f& c, const real_type& r):
 	Shape(flip, o2w), center{c}, radius{r} {
 		Point3f r3 = Point3f(radius, radius, radius);
-			
-		Point3f result = Point3f(c.x()*o2w->GetMatrix().m[0][0] + c.y()*o2w->GetMatrix().m[0][1] + c.z()*o2w->GetMatrix().m[0][2] + o2w->GetMatrix().m[0][3],
-								 c.x()*o2w->GetMatrix().m[1][0] + c.y()*o2w->GetMatrix().m[1][1] + c.z()*o2w->GetMatrix().m[1][2] + o2w->GetMatrix().m[1][3],
-								 c.x()*o2w->GetMatrix().m[2][0] + c.y()*o2w->GetMatrix().m[2][1] + c.z()*o2w->GetMatrix().m[2][2] + o2w->GetMatrix().m[2][3]);
-		std::cout << "bounds sphere = min:" << result - r3 << " | max:" << result + r3 << std::endl;
-		bounds = Bounds3f(result - r3, result + r3);
+		std::cout << "bounds sphere = min:" << c - r3 << " | max:" << c + r3 << std::endl;
+		bounds = MultBounds(o2w->GetMatrix(), Bounds3f(c - r3, c + r3));
 	}
 
 	bool Sphere::intersect( Ray& r, real_type& t_hit, Surfel *sf ) const {
