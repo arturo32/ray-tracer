@@ -2,6 +2,7 @@
 #define RAY_H
 
 #include "rt3.hpp"
+#include "Matrix4x4.hpp"
 
 #include "../ext/vec3.hpp"
 
@@ -18,7 +19,8 @@ using Vector3f = vec3<real_type>;
 			// O que precisa ser normalizado exatamente?
 			// Point3f normalize() const { return ???; }
 			Point3f operator()(real_type t) const { return origin + direction * t; }
-			
+
+			friend Ray operator*(const Matrix4x4& m, const Ray& r);
 	};
 }
 #endif // RAY_H

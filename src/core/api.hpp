@@ -60,8 +60,8 @@ struct RenderOptions {
 	/// the Background
 	string bkg_type{"solid"};  // "image", "interpolated"
 	ParamSet bkg_ps;
-	std::shared_ptr<Material> curr_material;
-	std::map<std::string, std::shared_ptr<Material>> named_materials;
+	// std::shared_ptr<Material> curr_material;
+	// std::map<std::string, std::shared_ptr<Material>> named_materials;
 	Scene curr_scene;
 	std::vector<std::shared_ptr<Primitive>> primitives;
 	string accelerator{"primlist"};
@@ -73,7 +73,10 @@ struct RenderOptions {
 /// Collection of data related to a Graphics state, such as current material,
 /// lib of material, etc.
 struct GraphicsState {
-	// Not necessary in Project 01 through Project 07.
+	std::shared_ptr<Material> curr_material;  //!< Current material that globally affects all objects.
+	bool flip_normals{false};              //!< When true, we flip the normals
+	std::map<std::string, std::shared_ptr<Material>> named_materials;      //!< Library of materials.
+	bool mats_lib_cloned{false};           //!< We only actually clone the library if a new material is added to it.
 };
 
 /// Static class that manages the render process
@@ -89,7 +92,6 @@ class API {
 	/// Stores the running options collect in main().
 	static RunningOptions curr_run_opt;
 
- private:
 	/// Current API state
 	static APIState curr_state;
 	/*
@@ -99,9 +101,17 @@ class API {
 	 */
 	/// Unique infrastructure to render a scene (camera, integrator, etc.).
 	static std::unique_ptr<RenderOptions> render_opt;
-	// [NO NECESSARY IN THIS PROJECT]
 	// /// The current GraphicsState
-	// static GraphicsState curr_GS;
+	static GraphicsState curr_GS;
+	static Transform curr_TM;
+
+	static std::stack<GraphicsState> saved_GS;
+	static std::stack<Transform> saved_TM;
+	
+	static Dictionary<std::string, std::shared_ptr<Transform > > transformation_cache;
+	static Dictionary< string,Transform > named_coord_system;
+
+
 	// [NOT NECESSARY IN THIS PROJECT]
 	// /// Pointer to the scene. We keep it as parte of the API because it may be
 	// reused later [1] Create the integrator. static unique_ptr< Scene >
@@ -144,9 +154,21 @@ class API {
 	/// @param ps parameters
 	static void named_material(const ParamSet& ps);
 
-	// /// @brief Add translation to all objects of the current scene
-	// /// @param ps parameters
-	// static void translate(const ParamSet& ps);
+	/// @brief Add translation to all objects of the current scene
+	/// @param ps parameters
+	static void translate(const ParamSet& ps);
+
+	/// @brief Add rotation to all objects of the current scene
+	/// @param ps parameters
+	static void rotate(const ParamSet& ps);
+
+	/// @brief Resets transformation matrix to the identity matrix
+	/// @param ps parameters
+	static void identity();
+
+	/// @brief Scale all objects of the current scene
+	/// @param ps parameters
+	static void scale(const ParamSet& ps);
 
 	
 	

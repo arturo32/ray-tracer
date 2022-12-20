@@ -8,12 +8,7 @@ namespace rt3 {
 
 class Sphere : public Shape {
 	public:
-		Sphere(bool flip, const Point3f& c, const real_type& r)
-		: Shape(flip), center{c}, radius{r} {
-			Point3f r3 = vec3(radius, radius, radius);
-			// std::cout << "bounds sphere = min:" << center - r3 << " | max:" << center + r3 << std::endl;
-			bounds = Bounds3f(center - r3, center + r3);
-		}
+		Sphere(bool flip, const shared_ptr<Transform >& o2w, const Point3f& c, const real_type& r);
 		~Sphere() = default;		
 		Bounds3f bounds;
 		const Point3f center;

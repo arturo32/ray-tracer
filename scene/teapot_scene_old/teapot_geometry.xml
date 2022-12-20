@@ -15,9 +15,14 @@
         <!-- Objects -->
         <!-- <named_material name="gold"/> -->
         <named_material name="jade"/>
-        <object type="trianglemesh" filename="teapot.obj"/>
+        <rotate axis="0 0 1" angle="-45.0"/>
+        <rotate axis="1 0 0" angle="30.0"/>
+        <scale value="0.5 0.5 0.5"/>
+        <translate value="0 0 5"/>
+        <object type="trianglemesh" filename="teapot-low.obj"/>
 
         <named_material name="indigo"/>
+        <identity/>
         <object type="trianglemesh"
                 ntriangles ="2"
                 vertices="-30 30.5 -1  30 30.5 -1  30 -30.5 -1  -30 -30.5 -1"

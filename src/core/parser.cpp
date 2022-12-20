@@ -122,10 +122,11 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 			API::film(ps);
 		} else if (tag_name == "lookat") {
 			ParamSet ps;
-			vector<std::pair<param_type_e, string>> param_list{ { param_type_e::POINT3F, "look_from" },
-																													{ param_type_e::POINT3F, "look_at" },
-																													{ param_type_e::VEC3F, "up" } };
-
+			vector<std::pair<param_type_e, string>> param_list{ 
+				{ param_type_e::POINT3F, "look_from" },
+				{ param_type_e::POINT3F, "look_at" },
+				{ param_type_e::VEC3F, "up" }
+			};
 			parse_parameters(p_element, param_list, /* out */ &ps);
 			API::look_at(ps);
 		} else if (tag_name == "world_begin") {
@@ -147,25 +148,12 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 				{ param_type_e::ARR_POINT3F, "normals" },
 				{ param_type_e::ARR_POINT3F, "uvs" },
 				{ param_type_e::INT, "ntriangles" }
-				
-
 			};
 
 			parse_parameters(p_element, param_list, /* out */ &ps);
 			API::object(ps);
 
-		}
-		//  else if(tag_name == "translate") {
-		//   ParamSet ps;
-		//   vector<std::pair<param_type_e, string>> param_list{ 
-		//     { param_type_e::POINT3F, "value"}
-		//   };
-		//   parse_parameters(p_element, param_list, /* out */ &ps);
-
-		//   API::translate(ps);
-		// }
-		
-		else if (tag_name == "include") {
+		} else if (tag_name == "include") {
 			ParamSet ps;
 			vector<std::pair<param_type_e, string>> param_list{
 				{ param_type_e::STRING, "filename" }
@@ -181,8 +169,32 @@ void parse_tags(tinyxml2::XMLElement *p_element, int level, std::string curr_fil
 			}
 			
 			parse(filename.begin().base());
-		} 
-		else if (tag_name == "world_end") {
+		} else if(tag_name == "identity") {
+			API::identity();
+
+		} else if(tag_name == "translate") {
+			ParamSet ps;
+			vector<std::pair<param_type_e, string>> param_list{
+				{ param_type_e::VEC3F, "value" }
+			};
+			parse_parameters(p_element, param_list, /* out */ &ps);
+			API::translate(ps);
+		} else if(tag_name == "scale") {
+			ParamSet ps;
+			vector<std::pair<param_type_e, string>> param_list{
+				{ param_type_e::VEC3F, "value" }
+			};
+			parse_parameters(p_element, param_list, /* out */ &ps);
+			API::scale(ps);
+		} else if(tag_name == "rotate") {
+			ParamSet ps;
+			vector<std::pair<param_type_e, string>> param_list{
+				{ param_type_e::REAL, "angle" },
+				{ param_type_e::VEC3F, "axis" }
+			};
+			parse_parameters(p_element, param_list, /* out */ &ps);
+			API::rotate(ps);
+		} else if (tag_name == "world_end") {
 			API::world_end();
 			// std::clog << ">>> Leaving WorldBegin, at level " << level+1 << std::endl;
 		} else if (tag_name == "material") {
@@ -477,7 +489,7 @@ bool parse_array_COMPOSITE_attrib(tinyxml2::XMLElement *p_element,
 		// For example, if we have values = { 1, 1, 1, 2, 2, 2, 4, 4, 4, 8, 8, 8}
 		// and COMPOSITE = Vector3f, we must extract 4 Vector3f: Vector3f{1,1,1}, {2,2,2}, ..., {8,8,8}.
 		for (auto i{ 0u }; i < n_basic / COMPOSITE_SIZE; i++) {
-			std::cout << "COMPOSITE_SIZE = " << COMPOSITE_SIZE << std::endl;
+			// std::cout << "COMPOSITE_SIZE = " << COMPOSITE_SIZE << std::endl;
 			// Call the proper constructor, as in Vector3f{x,y,z} or Vector2f{x,y}.
 			// If, say, COMPOSITE = Vector3f, this will call the constructor Vector3f{x,y,z}.
 			if (COMPOSITE_SIZE == 3)
