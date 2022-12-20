@@ -11,8 +11,9 @@ namespace rt3 {
 
 	bool Sphere::intersect( Ray& r, real_type& t_hit, Surfel *sf ) const {
 		//Ray newR = r;
+		Point3f n_c = MultPoint(this->obj_to_world->GetMatrix(), this->center);
 		Ray newR = this->obj_to_world->GetInverseMatrix() * r;
-		Vector3f oc = (newR.origin - this->center);
+		Vector3f oc = (newR.origin - n_c);
 		real_type A = dot(newR.direction, newR.direction);
 		real_type B = dot(oc, newR.direction);
 		real_type C = dot(oc, oc) - (this->radius * this->radius);
@@ -26,7 +27,7 @@ namespace rt3 {
 				// TODO: calcular as outras informações do surfel
 				sf->wo = -newR.direction;
 				sf->p = newR(t_hit);
-				sf->n = sf->p - this->center;
+				sf->n = sf->p - n_c;
 				Matrix4x4 it = Transpose(this->obj_to_world->GetInverseMatrix());
 				sf->n = MultVector(it, sf->n);
 				sf->n.make_unit_vector();
@@ -40,8 +41,9 @@ namespace rt3 {
 
 	bool Sphere::intersect_p(const Ray& r) const {
 		//Ray newR = r;
+		Point3f n_c = MultPoint(this->obj_to_world->GetMatrix(), this->center);
 		Ray newR = this->obj_to_world->GetInverseMatrix() * r;
-		Vector3f oc = (newR.origin - this->center);
+		Vector3f oc = (newR.origin - n_c);
 		real_type A = dot(newR.direction, newR.direction);
 		real_type B = dot(oc, newR.direction);
 		real_type C = dot(oc, oc) - (this->radius * this->radius);

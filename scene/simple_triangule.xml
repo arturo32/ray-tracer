@@ -3,18 +3,18 @@
     <camera type="perspective" fovy="65" /> 
     <integrator type="blinn_phong" depth="2"/>
 
-    <film type="image" x_res="600" y_res="400" filename="simple_scene" img_type="png"/>
+    <film type="image" x_res="1200" y_res="800" filename="simple_scene" img_type="png"/>
      <world_begin/>
         <background type="colors" color="0 100 200"/>
 
         <light_source type="ambient" L="0.1 0.1 0.1" />
-        <light_source type="point" L="1 1 1" scale="1 1 1" from="0 10 10" />
-
+        <light_source type="point" L="1 1 1" scale="1 1 1" from="10 0 -10" />
+        
         <material type="blinn" ambient="0.1 0.1 0.1" diffuse="1 0 0" specular="0 0 0" mirror="0.1 0.1 0.1" glossiness="256" /> <!-- Red -->
 
         <!-- <scale value="1 1 1"/> -->
-        <translate value="0 1 0"/>
-        <object type="sphere" radius=".5" center="0 0 0"/>
+        <translate value="0 0 0"/>
+        <object type="sphere" radius=".5" center="0 1 0"/>
 
         <identity/>
         <material type="blinn" ambient="0.1 0.1 0.1" diffuse="1 1 0" specular="0 0 0" mirror="0.1 0.1 0.1" glossiness="256" />
